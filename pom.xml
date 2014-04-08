@@ -41,8 +41,8 @@
         <version>3.1</version>
         <configuration>
           <compilerArgument>-Xlint:unchecked</compilerArgument>
-          <source>7</source>
-          <target>7</target>
+          <source>8</source>
+          <target>8</target>
         </configuration>
       </plugin>
       <plugin>
@@ -54,7 +54,7 @@
           </descriptorRefs>
           <archive>
             <manifest>
-              <mainClass>resourceManagement.pipelines.ResourceManagementPipeline</mainClass>
+              <mainClass>jgreg.internship.nii.AE.GetStartedQuickAE</mainClass>
             </manifest>
           </archive>
         </configuration>
