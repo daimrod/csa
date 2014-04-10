@@ -7,8 +7,10 @@
 package jgreg.internship.nii.CR;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Iterator;
+import jgreg.internship.nii.XML.PubMedXMLParser;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.FileFilterUtils;
 import org.apache.log4j.Logger;
@@ -53,14 +55,15 @@ public class PubMedReaderCR extends JCasCollectionReader_ImplBase {
         }
 
         files = FileUtils.listFiles(pubmedFile,
-                FileFilterUtils.trueFileFilter(),
+                FileFilterUtils.suffixFileFilter(".nxml"),
                 FileFilterUtils.trueFileFilter()).iterator();
     }
 
     @Override
-    public void getNext(JCas jCas) throws IOException, CollectionException {
+    public void getNext(JCas jCas) throws IOException, CollectionException, FileNotFoundException {
         File file = files.next();
-        
+        PubMedXMLParser parser = new PubMedXMLParser(file.getPath());
+        jCas.setDocumentText(parser.getText());
         docIndex++;
     }
 
