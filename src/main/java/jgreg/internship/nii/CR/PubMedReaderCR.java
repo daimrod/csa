@@ -32,9 +32,9 @@ public class PubMedReaderCR extends JCasCollectionReader_ImplBase {
     /**
      * Path to the PubMed Corpus
      */
-    public static final String PARAM_PUBMED_PATH = "pubmedPath";
-    @ConfigurationParameter(name = PARAM_PUBMED_PATH, mandatory = true)
-    private String pubmedPath;
+    public static final String INPUT_DIRECTORY = "inputDirectory";
+    @ConfigurationParameter(name = INPUT_DIRECTORY, mandatory = true)
+    private String inputDirectory;
 
     private Iterator<File> files;
     private File pubmedFile;
@@ -42,15 +42,15 @@ public class PubMedReaderCR extends JCasCollectionReader_ImplBase {
     
 
     /**
-     * Get PubMedReaderCR ready to read files in PARAM_PUBMED_PATH.
+     * Get PubMedReaderCR ready to read files in INPUT_DIRECTORY.
      * @param context
      * @throws ResourceInitializationException
      */
     @Override
     public void initialize(UimaContext context) throws ResourceInitializationException {
-        pubmedFile = new File(pubmedPath);
+        pubmedFile = new File(inputDirectory);
         if (!pubmedFile.exists()) {
-            logger.error("could not find the PubMed directory at `" + pubmedPath + "'");
+            logger.error("could not find the PubMed directory at `" + inputDirectory + "'");
             throw new ResourceInitializationException();
         }
 
