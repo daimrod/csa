@@ -7,8 +7,9 @@ package jgreg.internship.nii.XML;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.function.Predicate;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamConstants;
@@ -28,7 +29,7 @@ public class PubMedXMLParser {
     private String filename;
     private String PMID;
     private StringBuilder text;
-    private ArrayList<String> citations;
+    private List<String> citations;
 
     private XMLStreamReader xmlr;
     private XMLInputFactory xmlif;
@@ -44,8 +45,6 @@ public class PubMedXMLParser {
     public static void main(String[] args) throws XMLStreamException, FileNotFoundException {
         PubMedXMLParser parser = new PubMedXMLParser();
 
-        parser.parse();
-
         System.out.println(parser.getFilename() + ": " + parser.getPMID());
         System.out.println(parser.getText());
         System.out.println(parser.getCitations());
@@ -55,20 +54,23 @@ public class PubMedXMLParser {
      * Initialize a parser
      *
      * @param filename to parse
-     * @throws XMLStreamException
      * @throws FileNotFoundException
      */
-    public PubMedXMLParser(String filename) throws XMLStreamException, FileNotFoundException {
+    public PubMedXMLParser(String filename) throws FileNotFoundException {
         this.filename = filename;
         text = new StringBuilder();
         PMID = "";
-        citations = new ArrayList<>();
+        citations = new LinkedList<>();
 
         /* Initialization */
         xmlif = XMLInputFactory.newInstance();
-        xmlr = xmlif.createXMLStreamReader(filename,
-                new FileInputStream(filename));
-        logger.log(Level.INFO, "Initialized", null);
+        try {
+            xmlr = xmlif.createXMLStreamReader(filename,
+                    new FileInputStream(filename));
+        } catch (XMLStreamException ex) {
+            logger.log(Level.FATAL, null, ex);
+        }
+        parse();
     }
 
     /**
@@ -86,7 +88,7 @@ public class PubMedXMLParser {
      *
      * @throws javax.xml.stream.XMLStreamException
      */
-    public void parseBody() throws XMLStreamException {
+    private void parseBody() throws XMLStreamException {
         boolean continue_ = true;
         while (xmlr.hasNext() && continue_) {
             eventType = xmlr.next();
@@ -128,7 +130,7 @@ public class PubMedXMLParser {
      *
      * @throws javax.xml.stream.XMLStreamException
      */
-    public void parseReferences() throws XMLStreamException {
+    private void parseReferences() throws XMLStreamException {
         boolean continue_ = true;
         HashMap<String, String> references = new HashMap<>();
         while (xmlr.hasNext() && continue_) {
@@ -137,14 +139,18 @@ public class PubMedXMLParser {
                     && xmlr.hasName()
                     && xmlr.getLocalName().equals("ref")) {
                 String localId = xmlr.getAttributeValue(null, "id");
-                gotoTag("pub-id", (XMLStreamReader xr) -> xr.getAttributeValue(null, "pub-id-type").equals("pmid"));
-                String pmid = StringUtils.trim(xmlr.getElementText());
-                references.put(localId, pmid);
+                if (gotoTag("pub-id", 
+                            (XMLStreamReader xr) -> xr.getAttributeValue(null, "pub-id-type").equals("pmid"))) {
+                    String pmid = StringUtils.trim(xmlr.getElementText());
+                    references.put(localId, pmid);
+                } else {
+                    logger.log(Level.WARN, "Could not find PMID for `" + localId + "'");
+                }
             }
         }
         /**
-         * Update the citations
-         * Replace the local reference by the appropriate PMID
+         * Update the citations Replace the local reference by the appropriate
+         * PMID
          */
         for (int i = 0; i < citations.size(); i++) {
             if (references.containsKey(citations.get(i))) {
@@ -156,7 +162,7 @@ public class PubMedXMLParser {
     /**
      * Extract the important stuff from the XML
      */
-    public void parse() {
+    private void parse() {
         try {
             while (xmlr.hasNext()) {
                 eventType = xmlr.next();
@@ -225,26 +231,40 @@ public class PubMedXMLParser {
     }
 
     /**
-     * Go to the next specified tag
+     * Go to the next specified tag in the current subtree.
      *
      * @param tag to go
      * @param op is a predicate
      * @throws XMLStreamException
+     * @return true if the op returned true during the last run, false
+     * otherwise
      */
-    private void gotoTag(String tag, Predicate<XMLStreamReader> op) throws XMLStreamException {
-        while (xmlr.hasNext()) {
+    private boolean gotoTag(String tag, Predicate<XMLStreamReader> op) throws XMLStreamException {
+        int depth = 1;
+        boolean continue_ = true;
+        while (xmlr.hasNext()
+               && continue_
+               && depth > 0) {
             eventType = xmlr.next();
-            if (XMLStreamConstants.START_ELEMENT == eventType
+            continue_ = !(XMLStreamConstants.START_ELEMENT == eventType
                     && xmlr.hasName()
                     && xmlr.getLocalName().equals(tag)
-                    && op != null && op.test(xmlr)) {
-                return;
+                    && op != null && op.test(xmlr));
+            switch (eventType) {
+                case XMLStreamConstants.START_ELEMENT:
+                    depth += 1;
+                    break;
+                case XMLStreamConstants.END_ELEMENT:
+                    depth -= 1;
+                    break;
             }
+
         }
+        return !continue_;
     }
 
-    private void gotoTag(String tag) throws XMLStreamException {
-        gotoTag(tag, null);
+    private boolean gotoTag(String tag) throws XMLStreamException {
+        return gotoTag(tag, null);
     }
 
     /**
@@ -265,7 +285,7 @@ public class PubMedXMLParser {
         return text.toString();
     }
 
-    public ArrayList<String> getCitations() {
+    public List<String> getCitations() {
         return citations;
     }
 
