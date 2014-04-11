@@ -58,11 +58,6 @@
           <descriptorRefs>
             <descriptorRef>jar-with-dependencies</descriptorRef>
           </descriptorRefs>
-          <archive>
-            <manifest>
-              <mainClass>jgreg.internship.nii.AE.GetStartedQuickAE</mainClass>
-            </manifest>
-          </archive>
         </configuration>
         <executions>
           <execution>
