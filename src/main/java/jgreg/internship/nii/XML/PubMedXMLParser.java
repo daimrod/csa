@@ -10,12 +10,15 @@ import java.io.FileNotFoundException;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Predicate;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.Pair;
 import org.apache.log4j.Level;
 
 /**
@@ -29,7 +32,7 @@ public class PubMedXMLParser {
     private String filename;
     private String PMID;
     private StringBuilder text;
-    private List<String> citations;
+    private Map<String, List<Pair<Integer, Integer>>> citations;
 
     private XMLStreamReader xmlr;
     private XMLInputFactory xmlif;
@@ -60,7 +63,7 @@ public class PubMedXMLParser {
         this.filename = filename;
         text = new StringBuilder();
         PMID = "";
-        citations = new LinkedList<>();
+        citations = new HashMap<>();
 
         /* Initialization */
         xmlif = XMLInputFactory.newInstance();
@@ -110,8 +113,12 @@ public class PubMedXMLParser {
                     && xmlr.getLocalName().equals("xref")
                     && xmlr.getAttributeValue(null, "ref-type").equals("bibr")) {
                 // Store references
-                citations.add(xmlr.getAttributeValue(null, "rid"));
-                addText(xmlr.getElementText());
+                String citationId = xmlr.getAttributeValue(null, "rid"); // 1
+                String citation = xmlr.getElementText();                 // 2
+                int start = text.length();
+                int end = start + citation.length();
+                addCitation(citationId, start, end);
+                addText(citation);
             } else if (xmlr.hasName()
                     && XMLStreamConstants.START_ELEMENT == eventType
                     && (xmlr.getLocalName().equals("table-wrap")
@@ -132,29 +139,28 @@ public class PubMedXMLParser {
      */
     private void parseReferences() throws XMLStreamException {
         boolean continue_ = true;
-        HashMap<String, String> references = new HashMap<>();
+
         while (xmlr.hasNext() && continue_) {
             eventType = xmlr.next();
             if (XMLStreamConstants.START_ELEMENT == eventType
                     && xmlr.hasName()
                     && xmlr.getLocalName().equals("ref")) {
                 String localId = xmlr.getAttributeValue(null, "id");
-                if (gotoTag("pub-id", 
-                            (XMLStreamReader xr) -> xr.getAttributeValue(null, "pub-id-type").equals("pmid"))) {
+                if (citations.containsKey(localId)
+                    && gotoTag("pub-id", 
+                               (XMLStreamReader xr) -> xr.getAttributeValue(null, "pub-id-type").equals("pmid"))) {
+                    /**
+                     * Update the citations Replace the local reference by the appropriate
+                     * PMID
+                     */
                     String pmid = StringUtils.trim(xmlr.getElementText());
-                    references.put(localId, pmid);
+                    List<Pair<Integer, Integer>> tmp = citations.get(localId);
+                    citations.remove(localId);
+                    citations.put(pmid, tmp);
                 } else {
+                    citations.remove(localId);
                     logger.log(Level.WARN, "Could not find PMID for `" + localId + "'");
                 }
-            }
-        }
-        /**
-         * Update the citations Replace the local reference by the appropriate
-         * PMID
-         */
-        for (int i = 0; i < citations.size(); i++) {
-            if (references.containsKey(citations.get(i))) {
-                citations.set(i, references.get(citations.get(i)));
             }
         }
     }
@@ -268,6 +274,22 @@ public class PubMedXMLParser {
     }
 
     /**
+     * Add a citation at the given position
+     * @param citation to add
+     * @param start of the citation
+     * @param end of the citation
+     */
+    private void addCitation(String citation, int start, int end) {
+        if (citations.containsKey(citation)) {
+            citations.get(citation).add(new ImmutablePair<>(start, end));
+        } else {
+            List<Pair<Integer, Integer>> tmp = new LinkedList<>();
+            tmp.add(new ImmutablePair<>(start, end));
+            citations.put(citation, tmp);
+        }
+    }
+
+    /**
      * *************************************************************************
      * Getters
      * ************************************************************************
@@ -285,7 +307,7 @@ public class PubMedXMLParser {
         return text.toString();
     }
 
-    public List<String> getCitations() {
+    public Map<String, List<Pair<Integer, Integer>>> getCitations() {
         return citations;
     }
 
