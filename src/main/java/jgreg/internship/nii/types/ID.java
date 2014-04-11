@@ -10,16 +10,16 @@ import org.apache.uima.jcas.cas.TOP_Type;
 import org.apache.uima.jcas.tcas.Annotation;
 
 
-/** A citation.
+/** ID(s) of the document.
  * Updated by JCasGen Fri Apr 11 16:21:42 JST 2014
  * XML source: src/main/resources/jgreg/internship/nii/types/CitationSentimentAnalysisTS.xml
  * @generated */
-public class Citation extends Annotation {
+public class ID extends Annotation {
   /** @generated
    * @ordered 
    */
   @SuppressWarnings ("hiding")
-  public final static int typeIndexID = JCasRegistry.register(Citation.class);
+  public final static int typeIndexID = JCasRegistry.register(ID.class);
   /** @generated
    * @ordered 
    */
@@ -33,14 +33,14 @@ public class Citation extends Annotation {
  
   /** Never called.  Disable default constructor
    * @generated */
-  protected Citation() {/* intentionally empty block */}
+  protected ID() {/* intentionally empty block */}
     
   /** Internal - constructor used by generator 
    * @generated
    * @param addr low level Feature Structure reference
    * @param type the type of this Feature Structure 
    */
-  public Citation(int addr, TOP_Type type) {
+  public ID(int addr, TOP_Type type) {
     super(addr, type);
     readObject();
   }
@@ -48,7 +48,7 @@ public class Citation extends Annotation {
   /** @generated
    * @param jcas JCas to which this Feature Structure belongs 
    */
-  public Citation(JCas jcas) {
+  public ID(JCas jcas) {
     super(jcas);
     readObject();   
   } 
@@ -58,7 +58,7 @@ public class Citation extends Annotation {
    * @param begin offset to the begin spot in the SofA
    * @param end offset to the end spot in the SofA 
   */  
-  public Citation(JCas jcas, int begin, int end) {
+  public ID(JCas jcas, int begin, int end) {
     super(jcas);
     setBegin(begin);
     setEnd(end);
@@ -77,25 +77,25 @@ public class Citation extends Annotation {
  
     
   //*--------------*
-  //* Feature: pmid
+  //* Feature: PMID
 
-  /** getter for pmid - gets 
+  /** getter for PMID - gets The PMID of the document.
    * @generated
    * @return value of the feature 
    */
-  public String getPmid() {
-    if (Citation_Type.featOkTst && ((Citation_Type)jcasType).casFeat_pmid == null)
-      jcasType.jcas.throwFeatMissing("pmid", "jgreg.internship.nii.types.Citation");
-    return jcasType.ll_cas.ll_getStringValue(addr, ((Citation_Type)jcasType).casFeatCode_pmid);}
+  public String getPMID() {
+    if (ID_Type.featOkTst && ((ID_Type)jcasType).casFeat_PMID == null)
+      jcasType.jcas.throwFeatMissing("PMID", "jgreg.internship.nii.types.ID");
+    return jcasType.ll_cas.ll_getStringValue(addr, ((ID_Type)jcasType).casFeatCode_PMID);}
     
-  /** setter for pmid - sets  
+  /** setter for PMID - sets The PMID of the document. 
    * @generated
    * @param v value to set into the feature 
    */
-  public void setPmid(String v) {
-    if (Citation_Type.featOkTst && ((Citation_Type)jcasType).casFeat_pmid == null)
-      jcasType.jcas.throwFeatMissing("pmid", "jgreg.internship.nii.types.Citation");
-    jcasType.ll_cas.ll_setStringValue(addr, ((Citation_Type)jcasType).casFeatCode_pmid, v);}    
+  public void setPMID(String v) {
+    if (ID_Type.featOkTst && ((ID_Type)jcasType).casFeat_PMID == null)
+      jcasType.jcas.throwFeatMissing("PMID", "jgreg.internship.nii.types.ID");
+    jcasType.ll_cas.ll_setStringValue(addr, ((ID_Type)jcasType).casFeatCode_PMID, v);}    
   }
 
     
