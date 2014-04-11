@@ -1,21 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <typeSystemDescription xmlns="http://uima.apache.org/resourceSpecifier">
-    <name>Citation Sentiment Analysis Types</name>
-    <description/>
-    <version>1.0</version>
-    <vendor/>
-    <types>
-        <typeDescription>
-            <name>jgreg.internship.nii.types.Citation</name>
-            <description/>
-            <supertypeName>uima.tcas.Annotation</supertypeName>
-            <features>
-                <featureDescription>
-                    <name>pmid</name>
-                    <description/>
-                    <rangeTypeName>uima.cas.String</rangeTypeName>
-                </featureDescription>
-            </features>
-        </typeDescription>
-    </types>
+  <name>Citation Sentiment Analysis Types</name>
+  <description/>
+  <version>1.0</version>
+  <vendor/>
+  <types>
+    <typeDescription>
+      <name>jgreg.internship.nii.types.ID</name>
+      <description>ID(s) of the document.</description>
+      <supertypeName>uima.tcas.Annotation</supertypeName>
+      <featureDescription>
+        <name>PMID</name>
+        <description>The PMID of the document.</description>
+        <rangeTypeName>uima.cas.String</rangeTypeName>
+      </featureDescription>
+    </typeDescription>
+    
+    <typeDescription>
+      <name>jgreg.internship.nii.types.Citation</name>
+      <description>A citation.</description>
+      <supertypeName>uima.tcas.Annotation</supertypeName>
+      <features>
+        <featureDescription>
+          <name>pmid</name>
+          <description/>
+          <rangeTypeName>uima.cas.String</rangeTypeName>
+        </featureDescription>
+      </features>
+    </typeDescription>
+  </types>
 </typeSystemDescription>
