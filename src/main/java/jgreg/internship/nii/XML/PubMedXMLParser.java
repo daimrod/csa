@@ -19,7 +19,6 @@ import javax.xml.stream.XMLStreamReader;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
-import org.apache.log4j.Level;
 
 /**
  *
@@ -71,7 +70,7 @@ public class PubMedXMLParser {
             xmlr = xmlif.createXMLStreamReader(filename,
                     new FileInputStream(filename));
         } catch (XMLStreamException ex) {
-            logger.log(Level.FATAL, null, ex);
+            logger.fatal(null, ex);
         }
         parse();
     }
@@ -159,7 +158,7 @@ public class PubMedXMLParser {
                     citations.put(pmid, tmp);
                 } else {
                     citations.remove(localId);
-                    logger.log(Level.WARN, "Could not find PMID for `" + localId + "'");
+                    logger.warn("Could not find PMID for `" + localId + "'");
                 }
             }
         }
@@ -199,7 +198,7 @@ public class PubMedXMLParser {
 
             }
         } catch (XMLStreamException ex) {
-            logger.log(Level.FATAL, null, ex);
+            logger.fatal(null, ex);
         }
     }
 
