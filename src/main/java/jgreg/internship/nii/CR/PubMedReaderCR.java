@@ -14,10 +14,10 @@ import java.util.List;
 import java.util.Map.Entry;
 import jgreg.internship.nii.XML.PubMedXMLParser;
 import jgreg.internship.nii.types.Citation;
+import jgreg.internship.nii.types.ID;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.FileFilterUtils;
 import org.apache.commons.lang3.tuple.Pair;
-import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.apache.uima.UimaContext;
 import org.apache.uima.collection.CollectionException;
@@ -52,7 +52,7 @@ public class PubMedReaderCR extends JCasCollectionReader_ImplBase {
      */
     @Override
     public void initialize(UimaContext context) throws ResourceInitializationException {
-        logger.log(Level.INFO, "Listing `" + inputDirectory + "'...");
+        logger.info("Listing `" + inputDirectory + "'...");
         pubmedFile = new File(inputDirectory);
         if (!pubmedFile.exists()) {
             logger.error("could not find the PubMed directory at `" + inputDirectory + "'");
@@ -69,6 +69,9 @@ public class PubMedReaderCR extends JCasCollectionReader_ImplBase {
         File file = files.next();
         PubMedXMLParser parser = new PubMedXMLParser(file.getPath());
         jCas.setDocumentText(parser.getText());
+        ID docId = new ID(jCas);
+        docId.setPMID(parser.getPMID());
+        docId.addToIndexes();
 
         // Add Citation annotations
         for (Entry<String, List<Pair<Integer, Integer>>> entry : parser.getCitations().entrySet()) {
@@ -77,6 +80,7 @@ public class PubMedReaderCR extends JCasCollectionReader_ImplBase {
                 citation.setBegin(citationIdx.getLeft());
                 citation.setEnd(citationIdx.getRight());
                 citation.setPmid(entry.getKey());
+                citation.addToIndexes();
             }
         }
         docIndex++;
