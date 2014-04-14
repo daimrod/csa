@@ -1,5 +1,5 @@
 
-/* First created by JCasGen Fri Apr 11 16:21:42 JST 2014 */
+/* First created by JCasGen Mon Apr 14 16:17:16 JST 2014 */
 package jgreg.internship.nii.types;
 
 import org.apache.uima.jcas.JCas;
@@ -14,7 +14,7 @@ import org.apache.uima.cas.Feature;
 import org.apache.uima.jcas.tcas.Annotation_Type;
 
 /** A citation.
- * Updated by JCasGen Fri Apr 11 16:21:42 JST 2014
+ * Updated by JCasGen Mon Apr 14 16:17:16 JST 2014
  * @generated */
 public class Citation_Type extends Annotation_Type {
   /** @generated 
@@ -47,26 +47,26 @@ public class Citation_Type extends Annotation_Type {
   public final static boolean featOkTst = JCasRegistry.getFeatOkTst("jgreg.internship.nii.types.Citation");
  
   /** @generated */
-  final Feature casFeat_pmid;
+  final Feature casFeat_PMID;
   /** @generated */
-  final int     casFeatCode_pmid;
+  final int     casFeatCode_PMID;
   /** @generated
    * @param addr low level Feature Structure reference
    * @return the feature value 
    */ 
-  public String getPmid(int addr) {
-        if (featOkTst && casFeat_pmid == null)
-      jcas.throwFeatMissing("pmid", "jgreg.internship.nii.types.Citation");
-    return ll_cas.ll_getStringValue(addr, casFeatCode_pmid);
+  public String getPMID(int addr) {
+        if (featOkTst && casFeat_PMID == null)
+      jcas.throwFeatMissing("PMID", "jgreg.internship.nii.types.Citation");
+    return ll_cas.ll_getStringValue(addr, casFeatCode_PMID);
   }
   /** @generated
    * @param addr low level Feature Structure reference
    * @param v value to set 
    */    
-  public void setPmid(int addr, String v) {
-        if (featOkTst && casFeat_pmid == null)
-      jcas.throwFeatMissing("pmid", "jgreg.internship.nii.types.Citation");
-    ll_cas.ll_setStringValue(addr, casFeatCode_pmid, v);}
+  public void setPMID(int addr, String v) {
+        if (featOkTst && casFeat_PMID == null)
+      jcas.throwFeatMissing("PMID", "jgreg.internship.nii.types.Citation");
+    ll_cas.ll_setStringValue(addr, casFeatCode_PMID, v);}
     
   
 
@@ -82,8 +82,8 @@ public class Citation_Type extends Annotation_Type {
     casImpl.getFSClassRegistry().addGeneratorForType((TypeImpl)this.casType, getFSGenerator());
 
  
-    casFeat_pmid = jcas.getRequiredFeatureDE(casType, "pmid", "uima.cas.String", featOkTst);
-    casFeatCode_pmid  = (null == casFeat_pmid) ? JCas.INVALID_FEATURE_CODE : ((FeatureImpl)casFeat_pmid).getCode();
+    casFeat_PMID = jcas.getRequiredFeatureDE(casType, "PMID", "uima.cas.String", featOkTst);
+    casFeatCode_PMID  = (null == casFeat_PMID) ? JCas.INVALID_FEATURE_CODE : ((FeatureImpl)casFeat_PMID).getCode();
 
   }
 }

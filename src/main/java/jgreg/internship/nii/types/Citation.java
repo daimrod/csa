@@ -1,6 +1,6 @@
 
 
-/* First created by JCasGen Fri Apr 11 16:21:42 JST 2014 */
+/* First created by JCasGen Mon Apr 14 16:17:16 JST 2014 */
 package jgreg.internship.nii.types;
 
 import org.apache.uima.jcas.JCas; 
@@ -11,7 +11,7 @@ import org.apache.uima.jcas.tcas.Annotation;
 
 
 /** A citation.
- * Updated by JCasGen Fri Apr 11 16:21:42 JST 2014
+ * Updated by JCasGen Mon Apr 14 16:17:16 JST 2014
  * XML source: src/main/resources/jgreg/internship/nii/types/CitationSentimentAnalysisTS.xml
  * @generated */
 public class Citation extends Annotation {
@@ -77,25 +77,25 @@ public class Citation extends Annotation {
  
     
   //*--------------*
-  //* Feature: pmid
+  //* Feature: PMID
 
-  /** getter for pmid - gets 
+  /** getter for PMID - gets 
    * @generated
    * @return value of the feature 
    */
-  public String getPmid() {
-    if (Citation_Type.featOkTst && ((Citation_Type)jcasType).casFeat_pmid == null)
-      jcasType.jcas.throwFeatMissing("pmid", "jgreg.internship.nii.types.Citation");
-    return jcasType.ll_cas.ll_getStringValue(addr, ((Citation_Type)jcasType).casFeatCode_pmid);}
+  public String getPMID() {
+    if (Citation_Type.featOkTst && ((Citation_Type)jcasType).casFeat_PMID == null)
+      jcasType.jcas.throwFeatMissing("PMID", "jgreg.internship.nii.types.Citation");
+    return jcasType.ll_cas.ll_getStringValue(addr, ((Citation_Type)jcasType).casFeatCode_PMID);}
     
-  /** setter for pmid - sets  
+  /** setter for PMID - sets  
    * @generated
    * @param v value to set into the feature 
    */
-  public void setPmid(String v) {
-    if (Citation_Type.featOkTst && ((Citation_Type)jcasType).casFeat_pmid == null)
-      jcasType.jcas.throwFeatMissing("pmid", "jgreg.internship.nii.types.Citation");
-    jcasType.ll_cas.ll_setStringValue(addr, ((Citation_Type)jcasType).casFeatCode_pmid, v);}    
+  public void setPMID(String v) {
+    if (Citation_Type.featOkTst && ((Citation_Type)jcasType).casFeat_PMID == null)
+      jcasType.jcas.throwFeatMissing("PMID", "jgreg.internship.nii.types.Citation");
+    jcasType.ll_cas.ll_setStringValue(addr, ((Citation_Type)jcasType).casFeatCode_PMID, v);}    
   }
 
     
