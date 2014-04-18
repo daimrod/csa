@@ -59,6 +59,8 @@ public class PubMedXMLParser {
      * @throws FileNotFoundException
      */
     public PubMedXMLParser(String filename) throws FileNotFoundException {
+        logger.info("Parsing `" + filename + "'...");
+
         this.filename = filename;
         text = new StringBuilder();
         PMID = "";
@@ -146,11 +148,11 @@ public class PubMedXMLParser {
                     && xmlr.getLocalName().equals("ref")) {
                 String localId = xmlr.getAttributeValue(null, "id");
                 if (citations.containsKey(localId)
-                    && gotoTag("pub-id", 
-                               (XMLStreamReader xr) -> xr.getAttributeValue(null, "pub-id-type").equals("pmid"))) {
+                        && gotoTag("pub-id",
+                                (XMLStreamReader xr) -> xr.getAttributeValue(null, "pub-id-type").equals("pmid"))) {
                     /**
-                     * Update the citations Replace the local reference by the appropriate
-                     * PMID
+                     * Update the citations Replace the local reference by the
+                     * appropriate PMID
                      */
                     String pmid = StringUtils.trim(xmlr.getElementText());
                     List<Pair<Integer, Integer>> tmp = citations.get(localId);
@@ -185,7 +187,7 @@ public class PubMedXMLParser {
                             break;
                     }
                 }
-
+                
                 /**
                  * Extract the PMID from the document
                  */
@@ -195,10 +197,10 @@ public class PubMedXMLParser {
                         && xmlr.getAttributeValue(null, "pub-id-type").equals("pmid")) {
                     PMID = StringUtils.trim(xmlr.getElementText());
                 }
-
+                
             }
         } catch (XMLStreamException ex) {
-            logger.fatal(null, ex);
+            logger.fatal("Could not parse `" + filename + "' (" + PMID + ")", ex);
         }
     }
 
@@ -241,15 +243,14 @@ public class PubMedXMLParser {
      * @param tag to go
      * @param op is a predicate
      * @throws XMLStreamException
-     * @return true if the op returned true during the last run, false
-     * otherwise
+     * @return true if the op returned true during the last run, false otherwise
      */
     private boolean gotoTag(String tag, Predicate<XMLStreamReader> op) throws XMLStreamException {
         int depth = 1;
         boolean continue_ = true;
         while (xmlr.hasNext()
-               && continue_
-               && depth > 0) {
+                && continue_
+                && depth > 0) {
             eventType = xmlr.next();
             continue_ = !(XMLStreamConstants.START_ELEMENT == eventType
                     && xmlr.hasName()
@@ -274,6 +275,7 @@ public class PubMedXMLParser {
 
     /**
      * Add a citation at the given position
+     *
      * @param citation to add
      * @param start of the citation
      * @param end of the citation

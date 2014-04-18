@@ -17,7 +17,7 @@ public class TestWF01 {
         CollectionReaderDescription reader =
             CollectionReaderFactory.createReaderDescription(
                     PubMedReaderCR.class, 
-                    PubMedReaderCR.INPUT_DIRECTORY, "/home/daimrod/corpus/pubmed/");
+                    PubMedReaderCR.INPUT_DIRECTORY, "/home/daimrod/corpus/pubmed/cpa_dump/");
         
         AnalysisEngineDescription writer =
                 AnalysisEngineFactory.createEngineDescription(

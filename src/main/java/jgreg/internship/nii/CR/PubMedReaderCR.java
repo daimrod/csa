@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package jgreg.internship.nii.CR;
 
 import java.io.File;
@@ -32,6 +31,7 @@ import org.apache.uima.util.Progress;
  * @author daimrod
  */
 public class PubMedReaderCR extends JCasCollectionReader_ImplBase {
+
     private static final Logger logger = Logger.getLogger(PubMedReaderCR.class.getCanonicalName());
 
     /**
@@ -44,9 +44,10 @@ public class PubMedReaderCR extends JCasCollectionReader_ImplBase {
     private Iterator<File> files;
     private File pubmedFile;
     private int docIndex = 0;
-    
+
     /**
      * Get PubMedReaderCR ready to read files in INPUT_DIRECTORY.
+     *
      * @param context
      * @throws ResourceInitializationException
      */
@@ -54,6 +55,7 @@ public class PubMedReaderCR extends JCasCollectionReader_ImplBase {
     public void initialize(UimaContext context) throws ResourceInitializationException {
         logger.info("Listing `" + inputDirectory + "'...");
         pubmedFile = new File(inputDirectory);
+
         if (!pubmedFile.exists()) {
             logger.error("could not find the PubMed directory at `" + inputDirectory + "'");
             throw new ResourceInitializationException();
@@ -67,7 +69,9 @@ public class PubMedReaderCR extends JCasCollectionReader_ImplBase {
     @Override
     public void getNext(JCas jCas) throws IOException, CollectionException, FileNotFoundException {
         File file = files.next();
-        PubMedXMLParser parser = new PubMedXMLParser(file.getPath());
+        PubMedXMLParser parser;
+        parser = new PubMedXMLParser(file.getPath());
+        
         jCas.setDocumentText(parser.getText());
         ID docId = new ID(jCas);
         docId.setPMID(parser.getPMID());
@@ -79,7 +83,7 @@ public class PubMedReaderCR extends JCasCollectionReader_ImplBase {
                 Citation citation = new Citation(jCas);
                 citation.setBegin(citationIdx.getLeft());
                 citation.setEnd(citationIdx.getRight());
-                citation.setPmid(entry.getKey());
+                citation.setPMID(entry.getKey());
                 citation.addToIndexes();
             }
         }
