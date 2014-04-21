@@ -15,6 +15,12 @@
         <rangeTypeName>uima.cas.String</rangeTypeName>
       </featureDescription>
     </typeDescription>
+
+    <typeDescription>
+      <name>jgreg.internship.nii.types.Sentence</name>
+      <description>Mark a Sentence</description>
+      <supertypeName>uima.tcas.Annotation</supertypeName>
+    </typeDescription>
     
     <typeDescription>
       <name>jgreg.internship.nii.types.Citation</name>
