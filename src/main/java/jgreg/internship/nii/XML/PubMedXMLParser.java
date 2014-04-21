@@ -124,7 +124,7 @@ public class PubMedXMLParser {
                         || xmlr.getLocalName().equals("title")
                         || xmlr.getLocalName().equals("sec"))) {
                 // Add newline when it's necessary
-                text.append(" \n\n");
+                text.append("\n\n");
                 addEnd(text.length(), xmlr.getLocalName());
             } else if (xmlr.hasName()
                     && XMLStreamConstants.START_ELEMENT == eventType
