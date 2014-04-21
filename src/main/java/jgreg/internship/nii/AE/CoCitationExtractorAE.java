@@ -24,8 +24,8 @@ import org.apache.uima.fit.util.JCasUtil;
 import org.apache.uima.jcas.JCas;
 import org.apache.uima.resource.ResourceInitializationException;
 
-public class CoCitationExtractor extends org.apache.uima.fit.component.JCasAnnotator_ImplBase {
-    private static final Logger logger = Logger.getLogger(CoCitationExtractor.class.getCanonicalName());
+public class CoCitationExtractorAE extends org.apache.uima.fit.component.JCasAnnotator_ImplBase {
+    private static final Logger logger = Logger.getLogger(CoCitationExtractorAE.class.getCanonicalName());
     
     public static final String OUTPUT_FILE = "outputFilePath";
     @ConfigurationParameter(name = OUTPUT_FILE, mandatory = true)

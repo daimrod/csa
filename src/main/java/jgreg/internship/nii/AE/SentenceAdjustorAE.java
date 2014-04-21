@@ -14,8 +14,9 @@ import org.apache.uima.analysis_engine.AnalysisEngineProcessException;
 import org.apache.uima.fit.util.JCasUtil;
 import org.apache.uima.jcas.JCas;
 
-public class SentenceAdjustor extends org.apache.uima.fit.component.JCasAnnotator_ImplBase {
-    private static final Logger logger = Logger.getLogger(SentenceAdjustor.class.getCanonicalName());
+// Deprecated, the option opennlp.uima.ContainerType did the job
+public class SentenceAdjustorAE extends org.apache.uima.fit.component.JCasAnnotator_ImplBase {
+    private static final Logger logger = Logger.getLogger(SentenceAdjustorAE.class.getCanonicalName());
     
     @Override
     public void process(JCas jCas) throws AnalysisEngineProcessException {
