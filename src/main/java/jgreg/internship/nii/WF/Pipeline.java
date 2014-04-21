@@ -8,6 +8,8 @@ import jgreg.internship.nii.types.Sentence;
 import jgreg.internship.nii.types.Title;
 import opennlp.uima.sentdetect.SentenceDetector;
 import opennlp.uima.sentdetect.SentenceModelResourceImpl;
+import opennlp.uima.tokenize.Tokenizer;
+import opennlp.uima.tokenize.TokenizerModelResourceImpl;
 import org.apache.uima.analysis_engine.AnalysisEngineDescription;
 import org.apache.uima.collection.CollectionReaderDescription;
 import org.apache.uima.fit.factory.AggregateBuilder;
@@ -36,15 +38,31 @@ public class Pipeline {
 
         AnalysisEngineDescription sentenceDetector
                 = AnalysisEngineFactory.createEngineDescription(
-                        SentenceDetector.class,
-                        "opennlp.uima.ModelName",
-                        sentenceModel,
-                        "opennlp.uima.SentenceType",
-                        "jgreg.internship.nii.types.Sentence",
-                        "opennlp.uima.ContainerType",
-                        "jgreg.internship.nii.types.Paragraph",
-                        "opennlp.uima.IsRemoveExistingAnnotations",
-                        false);
+                        SentenceDetector.class
+                        , "opennlp.uima.ModelName"
+                        , sentenceModel
+                        , "opennlp.uima.SentenceType"
+                        , "jgreg.internship.nii.types.Sentence"
+                        , "opennlp.uima.ContainerType"
+                        , "jgreg.internship.nii.types.Paragraph"
+                        , "opennlp.uima.IsRemoveExistingAnnotations"
+                        , false
+                        );
+        
+        ExternalResourceDescription tokenModel
+                = ExternalResourceFactory.createExternalResourceDescription(
+                        TokenizerModelResourceImpl.class
+                        , "file:opennlp/uima/models/en-token.bin");
+
+        AnalysisEngineDescription tokenizer
+                = AnalysisEngineFactory.createEngineDescription(
+                        Tokenizer.class
+                        , "opennlp.uima.ModelName"
+                        , tokenModel
+                        , "opennlp.uima.SentenceType"
+                        , "jgreg.internship.nii.types.Sentence"
+                        , "opennlp.uima.TokenType"
+                        , "jgreg.internship.nii.types.Token");
 
         AnalysisEngineDescription XMIWriter
                 = AnalysisEngineFactory.createEngineDescription(
@@ -61,7 +79,9 @@ public class Pipeline {
                                 Sentence.class,
                                 Title.class),
                         null);
+        
         builder.add(sentenceDetector);
+        builder.add(tokenizer);
         builder.add(XMIWriter);
         SimplePipeline.runPipeline(reader,
                 builder.createAggregateDescription());
