@@ -2,8 +2,8 @@ package jgreg.internship.nii.WF;
 
 import jgreg.internship.nii.AE.PubMedXMIWriter;
 import jgreg.internship.nii.CR.PubMedReaderCR;
+import opennlp.uima.sentdetect.SentenceDetector;
 import opennlp.uima.sentdetect.SentenceModelResourceImpl;
-import org.apache.ctakes.core.ae.SentenceDetector;
 import org.apache.uima.analysis_engine.AnalysisEngineDescription;
 import org.apache.uima.collection.CollectionReaderDescription;
 import org.apache.uima.fit.factory.AnalysisEngineFactory;
@@ -23,7 +23,7 @@ public class TestWF03 {
                         PubMedReaderCR.class,
                         PubMedReaderCR.INPUT_DIRECTORY, "/home/daimrod/corpus/pubmed/cpa_dump/");
 
-        String sdModelPath = "/tmp/sd-med-model.zip";
+        String sdModelPath = "file:///tmp/sd-med-model.zip";
 
         ExternalResourceDescription sentenceModel
                 = ExternalResourceFactory.createExternalResourceDescription(
@@ -36,7 +36,7 @@ public class TestWF03 {
                         "opennlp.uima.ModelName",
                         sentenceModel,
                         "opennlp.uima.SentenceType",
-                        "jgreg.internship.nii.uima.ts.Sentence");
+                        "jgreg.internship.nii.types.Sentence");
 
         AnalysisEngineDescription writer
                 = AnalysisEngineFactory.createEngineDescription(
