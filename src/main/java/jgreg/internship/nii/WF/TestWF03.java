@@ -21,14 +21,12 @@ public class TestWF03 {
         CollectionReaderDescription reader
                 = CollectionReaderFactory.createReaderDescription(
                         PubMedReaderCR.class,
-                        PubMedReaderCR.INPUT_DIRECTORY, "/home/daimrod/corpus/pubmed/cpa_dump/");
-
-        String sdModelPath = "file:///tmp/sd-med-model.zip";
+                        PubMedReaderCR.INPUT_DIRECTORY, "/home/daimrod/corpus/pubmed/cpa_dump/PLoS_Med/");
 
         ExternalResourceDescription sentenceModel
                 = ExternalResourceFactory.createExternalResourceDescription(
                         SentenceModelResourceImpl.class,
-                        sdModelPath);
+                        "file:org/apache/ctakes/core/sentdetect/sd-med-model.zip");
 
         AnalysisEngineDescription sentenceSplitter
                 = AnalysisEngineFactory.createEngineDescription(
@@ -36,7 +34,9 @@ public class TestWF03 {
                         "opennlp.uima.ModelName",
                         sentenceModel,
                         "opennlp.uima.SentenceType",
-                        "jgreg.internship.nii.types.Sentence");
+                        "jgreg.internship.nii.types.Sentence",
+                        "opennlp.uima.IsRemoveExistingAnnotations",
+                        false);
 
         AnalysisEngineDescription writer
                 = AnalysisEngineFactory.createEngineDescription(
