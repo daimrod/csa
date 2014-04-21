@@ -32,6 +32,12 @@ public class PubMedXMLParser {
     private String PMID;
     private StringBuilder text;
     private Map<String, List<Pair<Integer, Integer>>> citations;
+    private List<Pair<Integer, Integer>> sections;
+    private Integer sectionStart;
+    private List<Pair<Integer, Integer>> paragraphs;
+    private Integer paragraphStart;
+    private List<Pair<Integer, Integer>> titles;
+    private Integer titleStart;
 
     private XMLStreamReader xmlr;
     private XMLInputFactory xmlif;
@@ -65,6 +71,10 @@ public class PubMedXMLParser {
         text = new StringBuilder();
         PMID = "";
         citations = new HashMap<>();
+
+        sections = new LinkedList<>();
+        titles = new LinkedList<>();
+        paragraphs = new LinkedList<>();
 
         /* Initialization */
         xmlif = XMLInputFactory.newInstance();
@@ -102,13 +112,20 @@ public class PubMedXMLParser {
                     && xmlr.getLocalName().equals("body")) {
                 continue_ = false;
             } else if (xmlr.hasName()
+                       && XMLStreamConstants.START_ELEMENT == eventType
+                       && (xmlr.getLocalName().equals("p")
+                           || xmlr.getLocalName().equals("title")
+                           || xmlr.getLocalName().equals("sec"))) {
+                addStart(text.length(), xmlr.getLocalName());
+            }
+            else if (xmlr.hasName()
                     && XMLStreamConstants.END_ELEMENT == eventType
                     && (xmlr.getLocalName().equals("p")
-                    || xmlr.getLocalName().equals("section")
-                    || xmlr.getLocalName().equals("title")
-                    || xmlr.getLocalName().equals("sec"))) {
+                        || xmlr.getLocalName().equals("title")
+                        || xmlr.getLocalName().equals("sec"))) {
                 // Add newline when it's necessary
-                text.append('\n');
+                text.append(" \n\n");
+                addEnd(text.length(), xmlr.getLocalName());
             } else if (xmlr.hasName()
                     && XMLStreamConstants.START_ELEMENT == eventType
                     && xmlr.getLocalName().equals("xref")
@@ -187,7 +204,7 @@ public class PubMedXMLParser {
                             break;
                     }
                 }
-                
+
                 /**
                  * Extract the PMID from the document
                  */
@@ -197,7 +214,7 @@ public class PubMedXMLParser {
                         && xmlr.getAttributeValue(null, "pub-id-type").equals("pmid")) {
                     PMID = StringUtils.trim(xmlr.getElementText());
                 }
-                
+
             }
         } catch (XMLStreamException ex) {
             logger.fatal("Could not parse `" + filename + "' (" + PMID + ")", ex);
@@ -290,6 +307,34 @@ public class PubMedXMLParser {
         }
     }
 
+    private void addStart(Integer start, String name) {
+        switch (name.toLowerCase()) {
+        case "p":
+            paragraphStart = start;
+            break;
+        case "title":
+            titleStart = start;
+            break;
+        case "sec":
+            sectionStart = start;
+            break;
+        }
+    }
+
+    private void addEnd(Integer end, String name) {
+        switch (name.toLowerCase()) {
+        case "p":
+            paragraphs.add(new ImmutablePair<>(paragraphStart, end));
+            break;
+        case "title":
+            titles.add(new ImmutablePair<>(titleStart, end));
+            break;
+        case "sec":
+            sections.add(new ImmutablePair<>(sectionStart, end));
+            break;
+        }
+    }
+
     /**
      * *************************************************************************
      * Getters
@@ -310,6 +355,18 @@ public class PubMedXMLParser {
 
     public Map<String, List<Pair<Integer, Integer>>> getCitations() {
         return citations;
+    }
+
+    public List<Pair<Integer, Integer>> getSections() {
+        return sections;
+    }
+
+    public List<Pair<Integer, Integer>> getTitles() {
+        return titles;
+    }
+
+    public List<Pair<Integer, Integer>> getParagraphs() {
+        return paragraphs;
     }
 
     public String getPMID() {
