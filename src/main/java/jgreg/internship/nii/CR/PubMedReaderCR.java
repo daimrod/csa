@@ -87,6 +87,27 @@ public class PubMedReaderCR extends JCasCollectionReader_ImplBase {
                 citation.addToIndexes();
             }
         }
+
+        for (Pair<Integer, Integer> section : parser.getSections()) {
+            Section annotation = new Section(jCas);
+            annotation.setBegin(section.getLeft());
+            annotation.setEnd(section.getRight());
+            annotation.addToIndexes();
+        }
+
+        for (Pair<Integer, Integer> title : parser.getTitles()) {
+            Title annotation = new Title(jCas);
+            annotation.setBegin(title.getLeft());
+            annotation.setEnd(title.getRight());
+            annotation.addToIndexes();
+        }
+
+        for (Pair<Integer, Integer> paragraph : parser.getParagraphs()) {
+            Paragraph annotation = new Paragraph(jCas);
+            annotation.setBegin(paragraph.getLeft());
+            annotation.setEnd(paragraph.getRight());
+            annotation.addToIndexes();
+        }
         docIndex++;
     }
 
