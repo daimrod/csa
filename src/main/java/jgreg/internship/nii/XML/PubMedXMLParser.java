@@ -160,7 +160,7 @@ public class PubMedXMLParser {
                     citations.put(pmid, tmp);
                 } else {
                     citations.remove(localId);
-                    logger.warn("Could not find PMID for `" + localId + "'");
+                    logger.debug("Could not find PMID for `" + localId + "'");
                 }
             }
         }
