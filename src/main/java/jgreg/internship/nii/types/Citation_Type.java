@@ -1,5 +1,5 @@
 
-/* First created by JCasGen Mon Apr 21 14:43:41 JST 2014 */
+/* First created by JCasGen Mon Apr 21 15:16:41 JST 2014 */
 package jgreg.internship.nii.types;
 
 import org.apache.uima.jcas.JCas;
@@ -14,7 +14,7 @@ import org.apache.uima.cas.Feature;
 import org.apache.uima.jcas.tcas.Annotation_Type;
 
 /** A citation.
- * Updated by JCasGen Mon Apr 21 14:43:41 JST 2014
+ * Updated by JCasGen Mon Apr 21 15:16:41 JST 2014
  * @generated */
 public class Citation_Type extends Annotation_Type {
   /** @generated 
