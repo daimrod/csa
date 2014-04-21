@@ -41,6 +41,8 @@ public class Pipeline {
                         sentenceModel,
                         "opennlp.uima.SentenceType",
                         "jgreg.internship.nii.types.Sentence",
+                        "opennlp.uima.ContainerType",
+                        "jgreg.internship.nii.types.Paragraph",
                         "opennlp.uima.IsRemoveExistingAnnotations",
                         false);
 
