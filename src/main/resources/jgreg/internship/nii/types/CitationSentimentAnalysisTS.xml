@@ -6,6 +6,18 @@
   <vendor/>
   <types>
     <typeDescription>
+      <name>jgreg.internship.nii.types.Token</name>
+      <description/>
+      <supertypeName>uima.tcas.Annotation</supertypeName>
+      <features>
+        <featureDescription>
+          <name>POS</name>
+          <rangeTypeName>uima.cas.String</rangeTypeName>
+        </featureDescription>
+      </features>
+    </typeDescription>
+    
+    <typeDescription>
       <name>jgreg.internship.nii.types.Citation</name>
       <description>A citation.</description>
       <supertypeName>uima.tcas.Annotation</supertypeName>

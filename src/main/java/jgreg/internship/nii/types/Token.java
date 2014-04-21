@@ -10,16 +10,16 @@ import org.apache.uima.jcas.cas.TOP_Type;
 import org.apache.uima.jcas.tcas.Annotation;
 
 
-/** Mark a Sentence
+/** 
  * Updated by JCasGen Mon Apr 21 17:43:10 JST 2014
  * XML source: src/main/resources/jgreg/internship/nii/types/CitationSentimentAnalysisTS.xml
  * @generated */
-public class Sentence extends Annotation {
+public class Token extends Annotation {
   /** @generated
    * @ordered 
    */
   @SuppressWarnings ("hiding")
-  public final static int typeIndexID = JCasRegistry.register(Sentence.class);
+  public final static int typeIndexID = JCasRegistry.register(Token.class);
   /** @generated
    * @ordered 
    */
@@ -33,14 +33,14 @@ public class Sentence extends Annotation {
  
   /** Never called.  Disable default constructor
    * @generated */
-  protected Sentence() {/* intentionally empty block */}
+  protected Token() {/* intentionally empty block */}
     
   /** Internal - constructor used by generator 
    * @generated
    * @param addr low level Feature Structure reference
    * @param type the type of this Feature Structure 
    */
-  public Sentence(int addr, TOP_Type type) {
+  public Token(int addr, TOP_Type type) {
     super(addr, type);
     readObject();
   }
@@ -48,7 +48,7 @@ public class Sentence extends Annotation {
   /** @generated
    * @param jcas JCas to which this Feature Structure belongs 
    */
-  public Sentence(JCas jcas) {
+  public Token(JCas jcas) {
     super(jcas);
     readObject();   
   } 
@@ -58,7 +58,7 @@ public class Sentence extends Annotation {
    * @param begin offset to the begin spot in the SofA
    * @param end offset to the end spot in the SofA 
   */  
-  public Sentence(JCas jcas, int begin, int end) {
+  public Token(JCas jcas, int begin, int end) {
     super(jcas);
     setBegin(begin);
     setEnd(end);
@@ -74,6 +74,28 @@ public class Sentence extends Annotation {
    */
   private void readObject() {/*default - does nothing empty block */}
      
-}
+ 
+    
+  //*--------------*
+  //* Feature: POS
+
+  /** getter for POS - gets 
+   * @generated
+   * @return value of the feature 
+   */
+  public String getPOS() {
+    if (Token_Type.featOkTst && ((Token_Type)jcasType).casFeat_POS == null)
+      jcasType.jcas.throwFeatMissing("POS", "jgreg.internship.nii.types.Token");
+    return jcasType.ll_cas.ll_getStringValue(addr, ((Token_Type)jcasType).casFeatCode_POS);}
+    
+  /** setter for POS - sets  
+   * @generated
+   * @param v value to set into the feature 
+   */
+  public void setPOS(String v) {
+    if (Token_Type.featOkTst && ((Token_Type)jcasType).casFeat_POS == null)
+      jcasType.jcas.throwFeatMissing("POS", "jgreg.internship.nii.types.Token");
+    jcasType.ll_cas.ll_setStringValue(addr, ((Token_Type)jcasType).casFeatCode_POS, v);}    
+  }
 
     

@@ -1,6 +1,6 @@
 
 
-/* First created by JCasGen Mon Apr 21 15:16:41 JST 2014 */
+/* First created by JCasGen Mon Apr 21 17:43:10 JST 2014 */
 package jgreg.internship.nii.types;
 
 import org.apache.uima.jcas.JCas; 
@@ -11,7 +11,7 @@ import org.apache.uima.jcas.tcas.Annotation;
 
 
 /** A citation.
- * Updated by JCasGen Mon Apr 21 15:16:41 JST 2014
+ * Updated by JCasGen Mon Apr 21 17:43:10 JST 2014
  * XML source: src/main/resources/jgreg/internship/nii/types/CitationSentimentAnalysisTS.xml
  * @generated */
 public class Citation extends Annotation {
