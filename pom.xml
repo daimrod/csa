@@ -46,8 +46,28 @@
     </dependency>
     <dependency>
       <groupId>org.apache.ctakes</groupId>
-      <artifactId>ctakes</artifactId>
+      <artifactId>ctakes-core</artifactId>
       <version>3.1.1</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.ctakes</groupId>
+      <artifactId>ctakes-chunker</artifactId>
+      <version>3.1.1</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.ctakes</groupId>
+      <artifactId>ctakes-preprocessor</artifactId>
+      <version>3.1.1</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.ctakes</groupId>
+      <artifactId>ctakes-type-system</artifactId>
+      <version>3.1.1</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.opennlp</groupId>
+      <artifactId>opennlp-uima</artifactId>
+      <version>1.5.3</version>
     </dependency>
   </dependencies>
 
