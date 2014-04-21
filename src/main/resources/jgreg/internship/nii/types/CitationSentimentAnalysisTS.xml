@@ -21,6 +21,24 @@
       <description>Mark a Sentence</description>
       <supertypeName>uima.tcas.Annotation</supertypeName>
     </typeDescription>
+
+    <typeDescription>
+      <name>jgreg.internship.nii.types.Section</name>
+      <description>Mark a Section</description>
+      <supertypeName>uima.tcas.Annotation</supertypeName>
+    </typeDescription>
+
+    <typeDescription>
+      <name>jgreg.internship.nii.types.Title</name>
+      <description>Mark a Title</description>
+      <supertypeName>uima.tcas.Annotation</supertypeName>
+    </typeDescription>
+
+    <typeDescription>
+      <name>jgreg.internship.nii.types.Paragraph</name>
+      <description>Mark a Paragraph</description>
+      <supertypeName>uima.tcas.Annotation</supertypeName>
+    </typeDescription>
     
     <typeDescription>
       <name>jgreg.internship.nii.types.Citation</name>
