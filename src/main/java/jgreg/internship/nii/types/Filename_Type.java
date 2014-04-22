@@ -13,10 +13,10 @@ import org.apache.uima.cas.impl.FeatureImpl;
 import org.apache.uima.cas.Feature;
 import org.apache.uima.jcas.tcas.Annotation_Type;
 
-/** 
+/** filename of the document.
  * Updated by JCasGen Tue Apr 22 20:32:10 JST 2014
  * @generated */
-public class Token_Type extends Annotation_Type {
+public class Filename_Type extends Annotation_Type {
   /** @generated 
    * @return the generator for this type
    */
@@ -26,47 +26,47 @@ public class Token_Type extends Annotation_Type {
   private final FSGenerator fsGenerator = 
     new FSGenerator() {
       public FeatureStructure createFS(int addr, CASImpl cas) {
-  			 if (Token_Type.this.useExistingInstance) {
+  			 if (Filename_Type.this.useExistingInstance) {
   			   // Return eq fs instance if already created
-  		     FeatureStructure fs = Token_Type.this.jcas.getJfsFromCaddr(addr);
+  		     FeatureStructure fs = Filename_Type.this.jcas.getJfsFromCaddr(addr);
   		     if (null == fs) {
-  		       fs = new Token(addr, Token_Type.this);
-  			   Token_Type.this.jcas.putJfsFromCaddr(addr, fs);
+  		       fs = new Filename(addr, Filename_Type.this);
+  			   Filename_Type.this.jcas.putJfsFromCaddr(addr, fs);
   			   return fs;
   		     }
   		     return fs;
-        } else return new Token(addr, Token_Type.this);
+        } else return new Filename(addr, Filename_Type.this);
   	  }
     };
   /** @generated */
   @SuppressWarnings ("hiding")
-  public final static int typeIndexID = Token.typeIndexID;
+  public final static int typeIndexID = Filename.typeIndexID;
   /** @generated 
      @modifiable */
   @SuppressWarnings ("hiding")
-  public final static boolean featOkTst = JCasRegistry.getFeatOkTst("jgreg.internship.nii.types.Token");
+  public final static boolean featOkTst = JCasRegistry.getFeatOkTst("jgreg.internship.nii.types.Filename");
  
   /** @generated */
-  final Feature casFeat_POS;
+  final Feature casFeat_Filename;
   /** @generated */
-  final int     casFeatCode_POS;
+  final int     casFeatCode_Filename;
   /** @generated
    * @param addr low level Feature Structure reference
    * @return the feature value 
    */ 
-  public String getPOS(int addr) {
-        if (featOkTst && casFeat_POS == null)
-      jcas.throwFeatMissing("POS", "jgreg.internship.nii.types.Token");
-    return ll_cas.ll_getStringValue(addr, casFeatCode_POS);
+  public String getFilename(int addr) {
+        if (featOkTst && casFeat_Filename == null)
+      jcas.throwFeatMissing("Filename", "jgreg.internship.nii.types.Filename");
+    return ll_cas.ll_getStringValue(addr, casFeatCode_Filename);
   }
   /** @generated
    * @param addr low level Feature Structure reference
    * @param v value to set 
    */    
-  public void setPOS(int addr, String v) {
-        if (featOkTst && casFeat_POS == null)
-      jcas.throwFeatMissing("POS", "jgreg.internship.nii.types.Token");
-    ll_cas.ll_setStringValue(addr, casFeatCode_POS, v);}
+  public void setFilename(int addr, String v) {
+        if (featOkTst && casFeat_Filename == null)
+      jcas.throwFeatMissing("Filename", "jgreg.internship.nii.types.Filename");
+    ll_cas.ll_setStringValue(addr, casFeatCode_Filename, v);}
     
   
 
@@ -77,13 +77,13 @@ public class Token_Type extends Annotation_Type {
 	 * @param jcas JCas
 	 * @param casType Type 
 	 */
-  public Token_Type(JCas jcas, Type casType) {
+  public Filename_Type(JCas jcas, Type casType) {
     super(jcas, casType);
     casImpl.getFSClassRegistry().addGeneratorForType((TypeImpl)this.casType, getFSGenerator());
 
  
-    casFeat_POS = jcas.getRequiredFeatureDE(casType, "POS", "uima.cas.String", featOkTst);
-    casFeatCode_POS  = (null == casFeat_POS) ? JCas.INVALID_FEATURE_CODE : ((FeatureImpl)casFeat_POS).getCode();
+    casFeat_Filename = jcas.getRequiredFeatureDE(casType, "Filename", "uima.cas.String", featOkTst);
+    casFeatCode_Filename  = (null == casFeat_Filename) ? JCas.INVALID_FEATURE_CODE : ((FeatureImpl)casFeat_Filename).getCode();
 
   }
 }
