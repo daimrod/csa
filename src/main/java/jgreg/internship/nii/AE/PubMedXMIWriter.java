@@ -6,11 +6,13 @@ import java.io.IOException;
 import java.io.OutputStream;
 import jgreg.internship.nii.types.ID;
 import org.apache.log4j.Logger;
+import org.apache.uima.UimaContext;
 import org.apache.uima.analysis_engine.AnalysisEngineProcessException;
 import org.apache.uima.fit.descriptor.ConfigurationParameter;
 import org.apache.uima.fit.util.CasIOUtil;
 import org.apache.uima.fit.util.JCasUtil;
 import org.apache.uima.jcas.JCas;
+import org.apache.uima.resource.ResourceInitializationException;
 import org.apache.uima.util.TypeSystemUtil;
 import org.xml.sax.SAXException;
 
@@ -19,10 +21,19 @@ public class PubMedXMIWriter
     private static final Logger logger = Logger.getLogger(PubMedXMIWriter.class.getCanonicalName());
 
     public static final String OUTPUT_DIRECTORY = "outputDirectory";
-    @ConfigurationParameter(name = OUTPUT_DIRECTORY, mandatory = false, defaultValue="/tmp/xmi/")
-    private String outputDirectory;
-    
+    @ConfigurationParameter(name = OUTPUT_DIRECTORY, mandatory = true)
+    File outputDir;
+
     private boolean ts_dumped = false;
+
+    @Override
+    public void initialize(UimaContext context) throws ResourceInitializationException {
+        String outputDirectory = (String) context.getConfigParameterValue(OUTPUT_DIRECTORY);
+        outputDir = new File(outputDirectory);
+        outputDir.mkdirs();                
+    }
+
+    
     
     @Override
     public void process(JCas jCas) throws AnalysisEngineProcessException {
@@ -30,12 +41,9 @@ public class PubMedXMIWriter
             writeTs(jCas);
         }
         String pmid = JCasUtil.selectSingle(jCas, ID.class).getPMID();
-        
-        // Ensure that the outputDirectory exists
-        File dir = new File(outputDirectory);
-        dir.mkdirs();
 
-        File outputFile = new File(outputDirectory, pmid + ".xmi");
+
+        File outputFile = new File(outputDir, pmid + ".xmi");
 
         logger.info("Dumping to `" + outputFile.getAbsolutePath() + "'...");
         try {
@@ -47,7 +55,7 @@ public class PubMedXMIWriter
 
     private void writeTs(JCas jcas) throws AnalysisEngineProcessException {
         try (OutputStream os = new FileOutputStream(
-                new File(outputDirectory, "ts.xml"))) {
+                new File(outputDir, "ts.xml"))) {
             TypeSystemUtil.typeSystem2TypeSystemDescription(
                     jcas.getTypeSystem())
                     .toXML(os);
