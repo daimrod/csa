@@ -2,7 +2,6 @@ package jgreg.internship.nii.AE;
 
 import java.util.Collection;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 import jgreg.internship.nii.types.Citation;
 import jgreg.internship.nii.types.CitationContext;
@@ -19,22 +18,32 @@ public class CitationContextExtractorAE extends org.apache.uima.fit.component.JC
     public static final String PARAM_WINDOW_SIZE = "windowSize";
     @ConfigurationParameter(name = PARAM_WINDOW_SIZE, mandatory = true)
     private Integer windowSize;
-    
+
     @Override
     public void process(JCas jCas) throws AnalysisEngineProcessException {
-        List<Sentence> ring = new LinkedList<>();
+        // Let WINDOW_SIZE = 2
+        //  /-----\  /-----\ 2 windows (before & after) of WINDOW_SIZE
+        // [ s1 s2 s3 s4 s5]
+        //   ^^^^^           context before the citation
+        //         ^^        the sentence in which the citation occurs
+        //            ^^^^^  context after the citation
+
+        LinkedList<Sentence> ring = new LinkedList<>();
         Map<Sentence, Collection<Citation>> map = JCasUtil.indexCovered(jCas, Sentence.class, Citation.class);
+        int MIDDLE = windowSize;
+        int SIZE_MAX = windowSize * 2 + 1;
         for (Sentence sentence : JCasUtil.select(jCas, Sentence.class)) {
-            if (ring.size() == windowSize) {
-                ring.remove(0);
+            if (ring.size() == SIZE_MAX) {
+                ring.removeFirst();
             }
-            
-            ring.add(ring.size(), sentence);
-            
-            if (map.containsKey(sentence)) {            
+
+            ring.add(sentence); // add at the end of the List
+
+            if (ring.size() > MIDDLE &&
+                map.containsKey(ring.get(MIDDLE))) {
                 CitationContext context = new CitationContext(jCas);
-                context.setBegin(ring.get(0).getBegin());
-                context.setEnd(ring.get(ring.size() - 1).getEnd());
+                context.setBegin(ring.getFirst().getBegin());
+                context.setEnd(ring.getLast().getEnd());
                 context.addToIndexes();
             }
         }
