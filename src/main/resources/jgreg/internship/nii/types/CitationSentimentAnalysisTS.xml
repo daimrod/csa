@@ -43,6 +43,12 @@
     </typeDescription>
 
     <typeDescription>
+      <name>jgreg.internship.nii.types.CitationContext</name>
+      <description>Mark a Citation Context</description>
+      <supertypeName>uima.tcas.Annotation</supertypeName>
+    </typeDescription>
+
+    <typeDescription>
       <name>jgreg.internship.nii.types.Paragraph</name>
       <description>Mark a Paragraph</description>
       <supertypeName>uima.tcas.Annotation</supertypeName>
