@@ -41,10 +41,13 @@ public class CitationContextExtractorAE extends org.apache.uima.fit.component.JC
 
             if (ring.size() > MIDDLE &&
                 map.containsKey(ring.get(MIDDLE))) {
-                CitationContext context = new CitationContext(jCas);
-                context.setBegin(ring.getFirst().getBegin());
-                context.setEnd(ring.getLast().getEnd());
-                context.addToIndexes();
+                for (Citation citation : map.get(ring.get(MIDDLE))) {
+                    CitationContext context = new CitationContext(jCas);
+                    context.setPMID(citation.getPMID());
+                    context.setBegin(ring.getFirst().getBegin());
+                    context.setEnd(ring.getLast().getEnd());
+                    context.addToIndexes();
+                }
             }
         }
     }
