@@ -5,8 +5,7 @@
  */
 package jgreg.internship.nii.XML;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
+import java.io.Reader;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -44,30 +43,11 @@ public class PubMedXMLParser {
     private int eventType;
 
     /**
-     * Dummy main to test interactively the class
-     *
-     * @param args
-     * @throws XMLStreamException
-     * @throws FileNotFoundException
-     */
-    public static void main(String[] args) throws XMLStreamException, FileNotFoundException {
-        PubMedXMLParser parser = new PubMedXMLParser();
-
-        System.out.println(parser.getFilename() + ": " + parser.getPMID());
-        System.out.println(parser.getText());
-        System.out.println(parser.getCitations());
-    }
-
-    /**
      * Initialize a parser
      *
-     * @param filename to parse
-     * @throws FileNotFoundException
+     * @param reader
      */
-    public PubMedXMLParser(String filename) throws FileNotFoundException {
-        logger.info("Parsing `" + filename + "'...");
-
-        this.filename = filename;
+    public PubMedXMLParser(Reader reader) {
         text = new StringBuilder();
         PMID = "";
         citations = new HashMap<>();
@@ -79,22 +59,11 @@ public class PubMedXMLParser {
         /* Initialization */
         xmlif = XMLInputFactory.newInstance();
         try {
-            xmlr = xmlif.createXMLStreamReader(filename,
-                    new FileInputStream(filename));
+            xmlr = xmlif.createXMLStreamReader(reader);
         } catch (XMLStreamException ex) {
             logger.fatal(null, ex);
         }
         parse();
-    }
-
-    /**
-     * Dummy constructor to test the class on a file
-     *
-     * @throws XMLStreamException
-     * @throws FileNotFoundException
-     */
-    public PubMedXMLParser() throws XMLStreamException, FileNotFoundException {
-        this("/home/daimrod/corpus/pubmed/AAPS_J/AAPS_J_2008_Apr_2_10(1)_193-199.nxml");
     }
 
     /**

@@ -1,6 +1,7 @@
 package jgreg.internship.nii.WF;
 
 import jgreg.internship.nii.AE.PubMedXMIWriter;
+import jgreg.internship.nii.CR.PubMedParserAE;
 import jgreg.internship.nii.CR.PubMedReaderCR;
 import jgreg.internship.nii.types.Paragraph;
 import jgreg.internship.nii.types.Section;
@@ -11,6 +12,7 @@ import opennlp.uima.sentdetect.SentenceModelResourceImpl;
 import opennlp.uima.tokenize.Tokenizer;
 import opennlp.uima.tokenize.TokenizerModelResourceImpl;
 import org.apache.uima.analysis_engine.AnalysisEngineDescription;
+import org.apache.uima.cas.CAS;
 import org.apache.uima.collection.CollectionReaderDescription;
 import org.apache.uima.fit.factory.AggregateBuilder;
 import org.apache.uima.fit.factory.AnalysisEngineFactory;
@@ -30,6 +32,12 @@ public class Pipeline {
                 = CollectionReaderFactory.createReaderDescription(
                         PubMedReaderCR.class,
                         PubMedReaderCR.INPUT_DIRECTORY, "/home/daimrod/corpus/pubmed/cpa_dump/PLoS_Med/");
+        
+        AnalysisEngineDescription xmlParser
+                = AnalysisEngineFactory.createEngineDescription(
+                        PubMedParserAE.class
+                );
+              
 
         ExternalResourceDescription sentenceModel
                 = ExternalResourceFactory.createExternalResourceDescription(
@@ -66,7 +74,9 @@ public class Pipeline {
 
         AnalysisEngineDescription XMIWriter
                 = AnalysisEngineFactory.createEngineDescription(
-                        PubMedXMIWriter.class);
+                        PubMedXMIWriter.class
+                        , PubMedXMIWriter.OUTPUT_DIRECTORY
+                        , "/tmp/xmi/");
 
         /* The type priority is important especially to retrieve tokens. The
          rest of the order is not accurate but it does not matter.*/
@@ -80,9 +90,16 @@ public class Pipeline {
                                 Title.class),
                         null);
         
-        builder.add(sentenceDetector);
-        builder.add(tokenizer);
-        builder.add(XMIWriter);
+        builder.add(xmlParser);
+        builder.add(sentenceDetector
+                , CAS.NAME_DEFAULT_SOFA
+                , "parsed");
+        builder.add(tokenizer
+                , CAS.NAME_DEFAULT_SOFA
+                , "parsed");
+        builder.add(XMIWriter
+                , CAS.NAME_DEFAULT_SOFA
+                , "parsed");
         SimplePipeline.runPipeline(reader,
                 builder.createAggregateDescription());
     }

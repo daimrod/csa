@@ -9,17 +9,9 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Iterator;
-import java.util.List;
-import java.util.Map.Entry;
-import jgreg.internship.nii.XML.PubMedXMLParser;
-import jgreg.internship.nii.types.Citation;
-import jgreg.internship.nii.types.ID;
-import jgreg.internship.nii.types.Paragraph;
-import jgreg.internship.nii.types.Section;
-import jgreg.internship.nii.types.Title;
+import jgreg.internship.nii.types.Filename;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.FileFilterUtils;
-import org.apache.commons.lang3.tuple.Pair;
 import org.apache.log4j.Logger;
 import org.apache.uima.UimaContext;
 import org.apache.uima.collection.CollectionException;
@@ -72,45 +64,11 @@ public class PubMedReaderCR extends JCasCollectionReader_ImplBase {
     @Override
     public void getNext(JCas jCas) throws IOException, CollectionException, FileNotFoundException {
         File file = files.next();
-        PubMedXMLParser parser;
-        parser = new PubMedXMLParser(file.getPath());
-        
-        jCas.setDocumentText(parser.getText());
-        ID docId = new ID(jCas);
-        docId.setPMID(parser.getPMID());
-        docId.addToIndexes();
+        jCas.setDocumentText(FileUtils.readFileToString(file));
+        Filename filename = new Filename(jCas);
+        filename.setFilename(file.getAbsolutePath());
+        filename.addToIndexes();
 
-        // Add Citation annotations
-        for (Entry<String, List<Pair<Integer, Integer>>> entry : parser.getCitations().entrySet()) {
-            for (Pair<Integer, Integer> citationIdx : entry.getValue()) {
-                Citation citation = new Citation(jCas);
-                citation.setBegin(citationIdx.getLeft());
-                citation.setEnd(citationIdx.getRight());
-                citation.setPMID(entry.getKey());
-                citation.addToIndexes();
-            }
-        }
-
-        for (Pair<Integer, Integer> section : parser.getSections()) {
-            Section annotation = new Section(jCas);
-            annotation.setBegin(section.getLeft());
-            annotation.setEnd(section.getRight());
-            annotation.addToIndexes();
-        }
-
-        for (Pair<Integer, Integer> title : parser.getTitles()) {
-            Title annotation = new Title(jCas);
-            annotation.setBegin(title.getLeft());
-            annotation.setEnd(title.getRight());
-            annotation.addToIndexes();
-        }
-
-        for (Pair<Integer, Integer> paragraph : parser.getParagraphs()) {
-            Paragraph annotation = new Paragraph(jCas);
-            annotation.setBegin(paragraph.getLeft());
-            annotation.setEnd(paragraph.getRight());
-            annotation.addToIndexes();
-        }
         docIndex++;
     }
 
