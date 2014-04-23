@@ -1,5 +1,6 @@
 package jgreg.internship.nii.WF;
 
+import jgreg.internship.nii.AE.CitationContextExtractorAE;
 import jgreg.internship.nii.AE.PubMedXMIWriter;
 import jgreg.internship.nii.CR.PubMedParserAE;
 import jgreg.internship.nii.CR.PubMedReaderCR;
@@ -11,6 +12,7 @@ import opennlp.uima.sentdetect.SentenceDetector;
 import opennlp.uima.sentdetect.SentenceModelResourceImpl;
 import opennlp.uima.tokenize.Tokenizer;
 import opennlp.uima.tokenize.TokenizerModelResourceImpl;
+import org.apache.log4j.Logger;
 import org.apache.uima.analysis_engine.AnalysisEngineDescription;
 import org.apache.uima.cas.CAS;
 import org.apache.uima.collection.CollectionReaderDescription;
@@ -21,7 +23,6 @@ import org.apache.uima.fit.factory.ExternalResourceFactory;
 import org.apache.uima.fit.factory.TypePrioritiesFactory;
 import org.apache.uima.fit.pipeline.SimplePipeline;
 import org.apache.uima.resource.ExternalResourceDescription;
-import org.apache.log4j.Logger;
 
 /**
  * This my full Pipeline
@@ -73,6 +74,12 @@ public class Pipeline {
                         , "jgreg.internship.nii.types.Sentence"
                         , "opennlp.uima.TokenType"
                         , "jgreg.internship.nii.types.Token");
+        
+        AnalysisEngineDescription contextExtractor
+                = AnalysisEngineFactory.createEngineDescription(
+                        CitationContextExtractorAE.class,
+                        CitationContextExtractorAE.PARAM_WINDOW_SIZE
+                        , 5);
 
         AnalysisEngineDescription XMIWriter
                 = AnalysisEngineFactory.createEngineDescription(
@@ -97,6 +104,9 @@ public class Pipeline {
                 , CAS.NAME_DEFAULT_SOFA
                 , "parsed");
         builder.add(tokenizer
+                , CAS.NAME_DEFAULT_SOFA
+                , "parsed");
+        builder.add(contextExtractor
                 , CAS.NAME_DEFAULT_SOFA
                 , "parsed");
         builder.add(XMIWriter
