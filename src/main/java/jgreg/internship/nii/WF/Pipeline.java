@@ -79,7 +79,7 @@ public class Pipeline {
                 = AnalysisEngineFactory.createEngineDescription(
                         CitationContextExtractorAE.class,
                         CitationContextExtractorAE.PARAM_WINDOW_SIZE
-                        , 4);
+                        , 0);
 
         AnalysisEngineDescription XMIWriter
                 = AnalysisEngineFactory.createEngineDescription(
