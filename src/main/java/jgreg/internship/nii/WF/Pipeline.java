@@ -21,11 +21,13 @@ import org.apache.uima.fit.factory.ExternalResourceFactory;
 import org.apache.uima.fit.factory.TypePrioritiesFactory;
 import org.apache.uima.fit.pipeline.SimplePipeline;
 import org.apache.uima.resource.ExternalResourceDescription;
+import org.apache.log4j.Logger;
 
 /**
  * This my full Pipeline
  */
 public class Pipeline {
+    private static final Logger logger = Logger.getLogger(Pipeline.class.getCanonicalName());
 
     public static void main(String[] args) throws Exception {
         CollectionReaderDescription reader
@@ -102,5 +104,7 @@ public class Pipeline {
                 , "parsed");
         SimplePipeline.runPipeline(reader,
                 builder.createAggregateDescription());
+
+        logger.info("done!");
     }
 }
