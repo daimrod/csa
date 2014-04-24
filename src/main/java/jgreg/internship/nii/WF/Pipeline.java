@@ -130,12 +130,10 @@ public class Pipeline {
 
     static private void parseArguments(String[] args) {
         Options options = new Options();
-        options.addOption("h", "help", false, "print this message");
         options.addOption(OptionBuilder
                           .isRequired(false)
                           .withLongOpt("window-size")
                           .hasArg()
-                          .withArgName("ws")
                           .withDescription("The size of the window for citation context.")
                           .create("windowSize"));
 
@@ -151,10 +149,10 @@ public class Pipeline {
             System.exit(1);
         }
 
-        try {
+        if (cmd.hasOption("window-size")) {
             WINDOW_SIZE = new Integer(cmd.getOptionValue("window-size"));
-        } catch (NumberFormatException ex) {
-            WINDOW_SIZE = 4;
+        } else {
+            WINDOW_SIZE = 0;
         }
     }
 }
