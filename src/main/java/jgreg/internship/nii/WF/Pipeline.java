@@ -151,6 +151,10 @@ public class Pipeline {
             System.exit(1);
         }
 
-        WINDOW_SIZE = new Integer(cmd.getOptionValue("window-size"));
+        try {
+            WINDOW_SIZE = new Integer(cmd.getOptionValue("window-size"));
+        } catch (NumberFormatException ex) {
+            WINDOW_SIZE = 4;
+        }
     }
 }
