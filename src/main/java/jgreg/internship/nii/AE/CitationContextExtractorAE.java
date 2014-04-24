@@ -27,7 +27,6 @@ public class CitationContextExtractorAE extends org.apache.uima.fit.component.JC
             CitationContext context = new CitationContext(jCas);
             context.setPMID(citation.getPMID());
 
-            
             // Before
             List<Sentence> precedings = JCasUtil.selectPreceding(Sentence.class, citation, windowSize);
             if (precedings.size() > 0) {
@@ -38,7 +37,7 @@ public class CitationContextExtractorAE extends org.apache.uima.fit.component.JC
             }
 
             // After
-            List<Sentence> followings = JCasUtil.selectPreceding(Sentence.class, citation, windowSize);
+            List<Sentence> followings = JCasUtil.selectFollowing(Sentence.class, citation, windowSize);
             if (followings.size() > 0) {
                 context.setEnd(followings.get(followings.size() - 1).getEnd());
             } else {
