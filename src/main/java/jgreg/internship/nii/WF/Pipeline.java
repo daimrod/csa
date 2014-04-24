@@ -12,6 +12,12 @@ import opennlp.uima.sentdetect.SentenceDetector;
 import opennlp.uima.sentdetect.SentenceModelResourceImpl;
 import opennlp.uima.tokenize.Tokenizer;
 import opennlp.uima.tokenize.TokenizerModelResourceImpl;
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.CommandLineParser;
+import org.apache.commons.cli.OptionBuilder;
+import org.apache.commons.cli.Options;
+import org.apache.commons.cli.ParseException;
+import org.apache.commons.cli.PosixParser;
 import org.apache.log4j.Logger;
 import org.apache.uima.analysis_engine.AnalysisEngineDescription;
 import org.apache.uima.cas.CAS;
@@ -30,7 +36,11 @@ import org.apache.uima.resource.ExternalResourceDescription;
 public class Pipeline {
     private static final Logger logger = Logger.getLogger(Pipeline.class.getCanonicalName());
 
+    private static Integer WINDOW_SIZE = null;
+    
     public static void main(String[] args) throws Exception {
+        parseArguments(args);
+        
         CollectionReaderDescription reader
                 = CollectionReaderFactory.createReaderDescription(
                         PubMedReaderCR.class,
@@ -79,7 +89,7 @@ public class Pipeline {
                 = AnalysisEngineFactory.createEngineDescription(
                         CitationContextExtractorAE.class,
                         CitationContextExtractorAE.PARAM_WINDOW_SIZE
-                        , 0);
+                        , WINDOW_SIZE);
 
         AnalysisEngineDescription XMIWriter
                 = AnalysisEngineFactory.createEngineDescription(
@@ -116,5 +126,31 @@ public class Pipeline {
                 builder.createAggregateDescription());
 
         logger.info("done!");
+    }
+
+    static private void parseArguments(String[] args) {
+        Options options = new Options();
+        options.addOption("h", "help", false, "print this message");
+        options.addOption(OptionBuilder
+                          .isRequired(false)
+                          .withLongOpt("window-size")
+                          .hasArg()
+                          .withArgName("ws")
+                          .withDescription("The size of the window for citation context.")
+                          .create("windowSize"));
+
+        CommandLineParser parser = new PosixParser();
+        @SuppressWarnings("UnusedAssignment")
+            CommandLine cmd = null;
+        try {
+            cmd = parser.parse(options, args);
+        } catch (ParseException ex) {
+            System.err.println("The CLI args could not be parsed.");
+            System.err.println("The error message was:");
+            System.err.println(" " + ex.getMessage());
+            System.exit(1);
+        }
+
+        WINDOW_SIZE = new Integer(cmd.getOptionValue("window-size"));
     }
 }
