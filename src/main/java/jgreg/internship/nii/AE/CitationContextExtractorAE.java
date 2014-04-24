@@ -1,7 +1,7 @@
 package jgreg.internship.nii.AE;
 
 import java.util.Collection;
-import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import jgreg.internship.nii.types.Citation;
 import jgreg.internship.nii.types.CitationContext;
@@ -21,34 +21,32 @@ public class CitationContextExtractorAE extends org.apache.uima.fit.component.JC
 
     @Override
     public void process(JCas jCas) throws AnalysisEngineProcessException {
-        // Let WINDOW_SIZE = 2
-        //  /-----\  /-----\ 2 windows (before & after) of WINDOW_SIZE
-        // [ s1 s2 s3 s4 s5]
-        //   ^^^^^           context before the citation
-        //         ^^        the sentence in which the citation occurs
-        //            ^^^^^  context after the citation
+        Map<Citation, Collection<Sentence>> map = JCasUtil.indexCovering(jCas, Citation.class, Sentence.class);
 
-        LinkedList<Sentence> ring = new LinkedList<>();
-        Map<Sentence, Collection<Citation>> map = JCasUtil.indexCovered(jCas, Sentence.class, Citation.class);
-        int MIDDLE = windowSize;
-        int SIZE_MAX = windowSize * 2 + 1;
-        for (Sentence sentence : JCasUtil.select(jCas, Sentence.class)) {
-            if (ring.size() == SIZE_MAX) {
-                ring.removeFirst();
+        for (Citation citation : JCasUtil.select(jCas, Citation.class)) {
+            CitationContext context = new CitationContext(jCas);
+            context.setPMID(citation.getPMID());
+
+            
+            // Before
+            List<Sentence> precedings = JCasUtil.selectPreceding(Sentence.class, citation, windowSize);
+            if (precedings.size() > 0) {
+                context.setBegin(precedings.get(0).getBegin());
+            } else {
+                Sentence sent = map.get(citation).iterator().next();
+                context.setBegin(sent.getBegin());
             }
 
-            ring.add(sentence); // add at the end of the List
-
-            if (ring.size() > MIDDLE &&
-                map.containsKey(ring.get(MIDDLE))) {
-                for (Citation citation : map.get(ring.get(MIDDLE))) {
-                    CitationContext context = new CitationContext(jCas);
-                    context.setPMID(citation.getPMID());
-                    context.setBegin(ring.getFirst().getBegin());
-                    context.setEnd(ring.getLast().getEnd());
-                    context.addToIndexes();
-                }
+            // After
+            List<Sentence> followings = JCasUtil.selectPreceding(Sentence.class, citation, windowSize);
+            if (followings.size() > 0) {
+                context.setEnd(followings.get(followings.size() - 1).getEnd());
+            } else {
+                Sentence sent = map.get(citation).iterator().next();
+                context.setEnd(sent.getEnd());
             }
+            
+            context.addToIndexes();
         }
     }
 }
