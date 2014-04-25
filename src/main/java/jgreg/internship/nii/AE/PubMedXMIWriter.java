@@ -22,7 +22,7 @@ public class PubMedXMIWriter
 
     public static final String OUTPUT_DIRECTORY = "outputDirectory";
     @ConfigurationParameter(name = OUTPUT_DIRECTORY, mandatory = true)
-    File outputDir;
+    private File outputDir;
 
     private boolean ts_dumped = false;
 
