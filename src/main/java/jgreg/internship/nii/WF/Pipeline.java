@@ -51,7 +51,6 @@ public class Pipeline {
                         PubMedParserAE.class
                 );
               
-
         ExternalResourceDescription sentenceModel
                 = ExternalResourceFactory.createExternalResourceDescription(
                         SentenceModelResourceImpl.class,
