@@ -1,17 +1,19 @@
 package jgreg.internship.nii.WF;
 
 import jgreg.internship.nii.AE.CitationContextExtractorAE;
-import jgreg.internship.nii.AE.PubMedXMIWriter;
 import jgreg.internship.nii.AE.PubMedParserAE;
+import jgreg.internship.nii.AE.PubMedXMIWriter;
 import jgreg.internship.nii.CR.PubMedReaderCR;
 import jgreg.internship.nii.types.Paragraph;
 import jgreg.internship.nii.types.Section;
 import jgreg.internship.nii.types.Sentence;
 import jgreg.internship.nii.types.Title;
+
 import opennlp.uima.sentdetect.SentenceDetector;
 import opennlp.uima.sentdetect.SentenceModelResourceImpl;
 import opennlp.uima.tokenize.Tokenizer;
 import opennlp.uima.tokenize.TokenizerModelResourceImpl;
+
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.OptionBuilder;
