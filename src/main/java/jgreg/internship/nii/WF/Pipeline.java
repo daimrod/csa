@@ -2,7 +2,7 @@ package jgreg.internship.nii.WF;
 
 import jgreg.internship.nii.AE.CitationContextExtractorAE;
 import jgreg.internship.nii.AE.PubMedXMIWriter;
-import jgreg.internship.nii.CR.PubMedParserAE;
+import jgreg.internship.nii.AE.PubMedParserAE;
 import jgreg.internship.nii.CR.PubMedReaderCR;
 import jgreg.internship.nii.types.Paragraph;
 import jgreg.internship.nii.types.Section;
@@ -40,7 +40,7 @@ public class Pipeline {
     
     public static void main(String[] args) throws Exception {
         parseArguments(args);
-        
+
         CollectionReaderDescription reader
                 = CollectionReaderFactory.createReaderDescription(
                         PubMedReaderCR.class,
@@ -68,7 +68,7 @@ public class Pipeline {
                         , "opennlp.uima.IsRemoveExistingAnnotations"
                         , false
                         );
-        
+
         ExternalResourceDescription tokenModel
                 = ExternalResourceFactory.createExternalResourceDescription(
                         TokenizerModelResourceImpl.class
@@ -83,7 +83,7 @@ public class Pipeline {
                         , "jgreg.internship.nii.types.Sentence"
                         , "opennlp.uima.TokenType"
                         , "jgreg.internship.nii.types.Token");
-        
+
         AnalysisEngineDescription contextExtractor
                 = AnalysisEngineFactory.createEngineDescription(
                         CitationContextExtractorAE.class,
@@ -107,7 +107,7 @@ public class Pipeline {
                                 Sentence.class,
                                 Title.class),
                         null);
-        
+
         builder.add(xmlParser);
         builder.add(sentenceDetector
                 , CAS.NAME_DEFAULT_SOFA
@@ -125,10 +125,12 @@ public class Pipeline {
                 builder.createAggregateDescription());
 
         logger.info("done!");
+
     }
 
     static private void parseArguments(String[] args) {
         Options options = new Options();
+
         options.addOption(OptionBuilder
                           .isRequired(false)
                           .withLongOpt("window-size")
