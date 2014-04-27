@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package jgreg.internship.nii.CR;
+package jgreg.internship.nii.AE;
 
 import java.io.Reader;
 import java.io.StringReader;

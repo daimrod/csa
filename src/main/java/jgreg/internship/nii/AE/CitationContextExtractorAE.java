@@ -3,9 +3,11 @@ package jgreg.internship.nii.AE;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+
 import jgreg.internship.nii.types.Citation;
 import jgreg.internship.nii.types.CitationContext;
 import jgreg.internship.nii.types.Sentence;
+
 import org.apache.log4j.Logger;
 import org.apache.uima.analysis_engine.AnalysisEngineProcessException;
 import org.apache.uima.fit.descriptor.ConfigurationParameter;
