@@ -13,9 +13,9 @@ public class TestWF04 {
     private static final Logger logger = Logger.getLogger(TestWF04.class.getCanonicalName());
     
     public static void main(String[] args) throws Exception {
-        ExternalResourceDescription extDesc =
-            createExternalResourceDescription(MatcherRES.class
-                                              , new File("the pretenders.mp3"));
+        ExternalResourceDescription matcherRES =
+            createExternalResourceDescription(MatcherRES.class, "");
+        
         logger.info("done!");
     }
 }
