@@ -1,5 +1,5 @@
 
-/* First created by JCasGen Mon Apr 28 17:31:59 JST 2014 */
+/* First created by JCasGen Mon Apr 28 19:15:44 JST 2014 */
 package jgreg.internship.nii.types;
 
 import org.apache.uima.jcas.JCas;
@@ -12,7 +12,7 @@ import org.apache.uima.cas.Type;
 import org.apache.uima.jcas.tcas.Annotation_Type;
 
 /** Mark a Section
- * Updated by JCasGen Mon Apr 28 17:31:59 JST 2014
+ * Updated by JCasGen Mon Apr 28 19:15:44 JST 2014
  * @generated */
 public class Section_Type extends Annotation_Type {
   /** @generated 

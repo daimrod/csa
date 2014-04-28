@@ -1,6 +1,6 @@
 
 
-/* First created by JCasGen Mon Apr 28 17:31:59 JST 2014 */
+/* First created by JCasGen Mon Apr 28 19:15:44 JST 2014 */
 package jgreg.internship.nii.types;
 
 import org.apache.uima.jcas.JCas; 
@@ -11,7 +11,7 @@ import org.apache.uima.jcas.tcas.Annotation;
 
 
 /** Mark a Citation Context
- * Updated by JCasGen Mon Apr 28 17:31:59 JST 2014
+ * Updated by JCasGen Mon Apr 28 19:15:44 JST 2014
  * XML source: src/main/resources/jgreg/internship/nii/types/CitationSentimentAnalysisTS.xml
  * @generated */
 public class CitationContext extends Annotation {
@@ -74,28 +74,6 @@ public class CitationContext extends Annotation {
    */
   private void readObject() {/*default - does nothing empty block */}
      
- 
-    
-  //*--------------*
-  //* Feature: PMID
-
-  /** getter for PMID - gets 
-   * @generated
-   * @return value of the feature 
-   */
-  public String getPMID() {
-    if (CitationContext_Type.featOkTst && ((CitationContext_Type)jcasType).casFeat_PMID == null)
-      jcasType.jcas.throwFeatMissing("PMID", "jgreg.internship.nii.types.CitationContext");
-    return jcasType.ll_cas.ll_getStringValue(addr, ((CitationContext_Type)jcasType).casFeatCode_PMID);}
-    
-  /** setter for PMID - sets  
-   * @generated
-   * @param v value to set into the feature 
-   */
-  public void setPMID(String v) {
-    if (CitationContext_Type.featOkTst && ((CitationContext_Type)jcasType).casFeat_PMID == null)
-      jcasType.jcas.throwFeatMissing("PMID", "jgreg.internship.nii.types.CitationContext");
-    jcasType.ll_cas.ll_setStringValue(addr, ((CitationContext_Type)jcasType).casFeatCode_PMID, v);}    
-  }
+}
 
     

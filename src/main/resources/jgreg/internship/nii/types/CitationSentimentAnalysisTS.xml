@@ -72,13 +72,6 @@
       <name>jgreg.internship.nii.types.CitationContext</name>
       <description>Mark a Citation Context</description>
       <supertypeName>uima.tcas.Annotation</supertypeName>
-      <features>
-        <featureDescription>
-          <name>PMID</name>
-          <description/>
-          <rangeTypeName>uima.cas.String</rangeTypeName>
-        </featureDescription>
-      </features>
     </typeDescription>
 
     <typeDescription>
