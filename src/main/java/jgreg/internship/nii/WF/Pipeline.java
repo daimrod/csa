@@ -88,21 +88,21 @@ public class Pipeline {
 		AnalysisEngineDescription positiveMatcher = AnalysisEngineFactory
 				.createEngineDescription(
 						SentimentMatcherAE.class,
-						SentimentMatcherAE.PARAM_INPUT_MATCH,
+						SentimentMatcherAE.PARAM_PATTERN_FILE,
 						"/home/daimrod/src/java/nii-internship/csa/src/main/resources/jgreg/internship/nii/patterns/positive",
 						SentimentMatcherAE.PARAM_SENTIMENT_CLASS_NAME, "jgreg.internship.nii.types.Positive");
 
         AnalysisEngineDescription neutralMatcher = AnalysisEngineFactory
 				.createEngineDescription(
 						SentimentMatcherAE.class,
-						SentimentMatcherAE.PARAM_INPUT_MATCH,
+						SentimentMatcherAE.PARAM_PATTERN_FILE,
 						"/home/daimrod/src/java/nii-internship/csa/src/main/resources/jgreg/internship/nii/patterns/neutral",
 						SentimentMatcherAE.PARAM_SENTIMENT_CLASS_NAME, "jgreg.internship.nii.types.Neutral");
 
         AnalysisEngineDescription negativeMatcher = AnalysisEngineFactory
 				.createEngineDescription(
 						SentimentMatcherAE.class,
-						SentimentMatcherAE.PARAM_INPUT_MATCH,
+						SentimentMatcherAE.PARAM_PATTERN_FILE,
 						"/home/daimrod/src/java/nii-internship/csa/src/main/resources/jgreg/internship/nii/patterns/negative",
 						SentimentMatcherAE.PARAM_SENTIMENT_CLASS_NAME, "jgreg.internship.nii.types.Negative");
 

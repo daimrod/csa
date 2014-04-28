@@ -21,6 +21,12 @@ import org.apache.uima.fit.util.JCasUtil;
 import org.apache.uima.jcas.JCas;
 import org.apache.uima.resource.ResourceInitializationException;
 
+/**
+ * Find matches recognized by the patterns in PARAM_PATTERN_FILE and
+ * add the Sentiment annotation denoted by PARAM_SENTIMENT_CLASS_NAME.
+ *
+ * @author Grégoire Jadi
+ */
 public class SentimentMatcherAE extends
 		org.apache.uima.fit.component.JCasAnnotator_ImplBase {
 	private static final Logger logger = Logger
@@ -34,9 +40,10 @@ public class SentimentMatcherAE extends
 	/**
 	 * The name of the file in which we will look for patterns.
 	 */
-	public final static String PARAM_INPUT_MATCH = "input";
-	@ConfigurationParameter(name = PARAM_INPUT_MATCH, mandatory = true)
-	private File inputFile;
+	public final static String PARAM_PATTERN_FILE = "patternFileName";
+	@ConfigurationParameter(name = PARAM_PATTERN_FILE, mandatory = true)
+    private String patternFileName;
+	private File patternFile;
 
 	/**
 	 * The name of the class of sentiment that we are matching. .
@@ -54,6 +61,22 @@ public class SentimentMatcherAE extends
 	private Type sentimentT = null;
     private Feature sentimentScoreF = null;
 
+	/**
+	 * This is a double hack.
+	 * 
+	 * Firstly, it uses UIMA introspection to find the type of annotation
+	 * to use and the score feature from it because we can only pass
+	 * "basic" type to Analysis Engine with
+	 * the @ConfigurationParameter thing.
+	 *
+	 * Secondly, we use a flag to run this only once because we need a
+	 * JCas to access the TypeSystem, but we don't need to do it for
+	 * each JCas.
+	 *
+	 * @param jCas
+	 *
+	 * @throws AnalysisEngineProcessException
+	 */
 	public void typeSystemInit(JCas jCas) throws AnalysisEngineProcessException {
 		typeSystemInitialized = true;
 		TypeSystem aTypeSystem = jCas.getTypeSystem();
@@ -64,24 +87,23 @@ public class SentimentMatcherAE extends
 	@Override
 	public void initialize(UimaContext context)
 			throws ResourceInitializationException {
+        super.initialize(context);
+        
 		// Retrieve the parameters from the context
-		inputFile = new File(
-				(String) context.getConfigParameterValue(PARAM_INPUT_MATCH));
-		sentimentClassName = (String) context
-				.getConfigParameterValue(PARAM_SENTIMENT_CLASS_NAME);
+		patternFile = new File(patternFileName);
 
 		// Be sure the patterns file exists
-		if (!inputFile.exists()) {
-			logger.fatal("input file `" + inputFile.getAbsolutePath()
+		if (!patternFile.exists()) {
+			logger.fatal("input file `" + patternFile.getAbsolutePath()
 					+ "' does not exist");
 			throw new ResourceInitializationException();
 		}
 
 		// Read the patterns...
 		try {
-			pattern = Utils.PatternFactory(FileUtils.readLines(inputFile));
+			pattern = Utils.PatternFactory(FileUtils.readLines(patternFile));
 		} catch (IOException ex) {
-			logger.fatal("Error when reading `" + inputFile.getAbsolutePath()
+			logger.fatal("Error when reading `" + patternFile.getAbsolutePath()
 					+ "'", ex);
 			throw new ResourceInitializationException(ex);
 		}
