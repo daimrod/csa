@@ -7,15 +7,15 @@ import java.util.regex.Pattern;
 
 import jgreg.internship.nii.Utils.Utils;
 import jgreg.internship.nii.types.CitationContext;
-import jgreg.internship.nii.types.Sentiment;
-import jgreg.internship.nii.types.Positive;
-import jgreg.internship.nii.types.Neutral;
-import jgreg.internship.nii.types.Negative;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.apache.uima.UimaContext;
 import org.apache.uima.analysis_engine.AnalysisEngineProcessException;
+import org.apache.uima.cas.Feature;
+import org.apache.uima.cas.Type;
+import org.apache.uima.cas.TypeSystem;
+import org.apache.uima.cas.text.AnnotationFS;
 import org.apache.uima.fit.descriptor.ConfigurationParameter;
 import org.apache.uima.fit.util.JCasUtil;
 import org.apache.uima.jcas.JCas;
@@ -41,14 +41,25 @@ public class SentimentMatcherAE extends
 	/**
 	 * The name of the class of sentiment that we are matching. .
 	 */
-	public final static String PARAM_MATCHER_NAME = "name";
-	@ConfigurationParameter(name = PARAM_MATCHER_NAME, mandatory = true)
-	String name;
+	public final static String PARAM_SENTIMENT_CLASS_NAME = "sentimentClassName";
+	@ConfigurationParameter(name = PARAM_SENTIMENT_CLASS_NAME, mandatory = true)
+	String sentimentClassName;
 
 	/**
 	 * The pattern to match in the method process(JCas).
 	 */
 	private Pattern pattern;
+
+	private boolean typeSystemInitialized = false;
+	private Type sentimentT = null;
+    private Feature sentimentScoreF = null;
+
+	public void typeSystemInit(JCas jCas) throws AnalysisEngineProcessException {
+		typeSystemInitialized = true;
+		TypeSystem aTypeSystem = jCas.getTypeSystem();
+		sentimentT = aTypeSystem.getType(sentimentClassName);
+        sentimentScoreF = sentimentT.getFeatureByBaseName("score");
+	}
 
 	@Override
 	public void initialize(UimaContext context)
@@ -56,7 +67,8 @@ public class SentimentMatcherAE extends
 		// Retrieve the parameters from the context
 		inputFile = new File(
 				(String) context.getConfigParameterValue(PARAM_INPUT_MATCH));
-		name = (String) context.getConfigParameterValue(PARAM_MATCHER_NAME);
+		sentimentClassName = (String) context
+				.getConfigParameterValue(PARAM_SENTIMENT_CLASS_NAME);
 
 		// Be sure the patterns file exists
 		if (!inputFile.exists()) {
@@ -76,28 +88,6 @@ public class SentimentMatcherAE extends
 		}
 	}
 
-	/** FIXME
-	 * An ugly hack to convert PARAM_MATCHER_NAME to the equivalent
-	 * Sentiment subclass.
-	 *
-	 * @param jCas
-	 * @return
-	 *
-	 * @throws Exception
-	 */
-	private Sentiment makeSentiment(JCas jCas) throws Exception {
-		switch (name) {
-		case "positive":
-			return new Positive(jCas);
-		case "neutral":
-			return new Neutral(jCas);
-		case "negative":
-			return new Negative(jCas);
-		}
-		throw new Exception("Could not find Sentiment type named `" + name
-				+ "'");
-	}
-
 	/**
 	 * Find all matching patterns in all CitationContext.
 	 *
@@ -107,16 +97,21 @@ public class SentimentMatcherAE extends
 	 */
 	@Override
 	public void process(JCas jCas) throws AnalysisEngineProcessException {
+		if (!typeSystemInitialized) {
+			typeSystemInit(jCas);
+		}
+
 		for (CitationContext context : JCasUtil.select(jCas,
 				CitationContext.class)) {
 			Matcher match = pattern.matcher(context.getCoveredText());
 			while (match.find()) {
 				try {
-					Sentiment sentiment = makeSentiment(jCas);
-					sentiment.setScore(DEFAULT_SCORE);
-					sentiment.setBegin(context.getBegin() + match.start());
-					sentiment.setEnd(context.getBegin() + match.end());
-					sentiment.addToIndexes();
+					AnnotationFS sentiment = jCas.getCas().createAnnotation(
+							sentimentT,
+							context.getBegin() + match.start(),
+							context.getBegin() + match.end());
+                    sentiment.setLongValue(sentimentScoreF, DEFAULT_SCORE);
+                    jCas.addFsToIndexes(sentiment);
 				} catch (Exception ex) {
 					throw new AnalysisEngineProcessException(ex);
 				}

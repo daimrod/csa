@@ -90,7 +90,7 @@ public class Pipeline {
 						SentimentMatcherAE.class,
 						SentimentMatcherAE.PARAM_INPUT_MATCH,
 						"/home/daimrod/src/java/nii-internship/csa/src/main/resources/jgreg/internship/nii/patterns/positive",
-						SentimentMatcherAE.PARAM_MATCHER_NAME, "positive");
+						SentimentMatcherAE.PARAM_SENTIMENT_CLASS_NAME, "jgreg.internship.nii.types.Positive");
 
 		AnalysisEngineDescription XMIWriter = AnalysisEngineFactory
 				.createEngineDescription(PubMedXMIWriter.class,
