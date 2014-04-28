@@ -36,126 +36,104 @@ import org.apache.uima.resource.ExternalResourceDescription;
  * This my full Pipeline
  */
 public class Pipeline {
-    private static final Logger logger = Logger.getLogger(Pipeline.class.getCanonicalName());
+	private static final Logger logger = Logger.getLogger(Pipeline.class
+			.getCanonicalName());
 
-    private static Integer WINDOW_SIZE = null;
-    
-    public static void main(String[] args) throws Exception {
-        parseArguments(args);
+	private static Integer WINDOW_SIZE = null;
 
-        CollectionReaderDescription reader
-                = CollectionReaderFactory.createReaderDescription(
-                        PubMedReaderCR.class,
-                        PubMedReaderCR.INPUT_DIRECTORY, "/home/daimrod/corpus/pubmed/cpa_dump/PLoS_Med/");
-        
-        AnalysisEngineDescription xmlParser
-                = AnalysisEngineFactory.createEngineDescription(
-                        PubMedParserAE.class
-                );
-              
-        ExternalResourceDescription sentenceModel
-                = ExternalResourceFactory.createExternalResourceDescription(
-                        SentenceModelResourceImpl.class,
-                        "file:org/apache/ctakes/core/sentdetect/sd-med-model.zip");
+	public static void main(String[] args) throws Exception {
+		parseArguments(args);
 
-        AnalysisEngineDescription sentenceDetector
-                = AnalysisEngineFactory.createEngineDescription(
-                        SentenceDetector.class
-                        , "opennlp.uima.ModelName"
-                        , sentenceModel
-                        , "opennlp.uima.SentenceType"
-                        , "jgreg.internship.nii.types.Sentence"
-                        , "opennlp.uima.ContainerType"
-                        , "jgreg.internship.nii.types.Paragraph"
-                        , "opennlp.uima.IsRemoveExistingAnnotations"
-                        , false
-                        );
+		CollectionReaderDescription reader = CollectionReaderFactory
+				.createReaderDescription(PubMedReaderCR.class,
+						PubMedReaderCR.INPUT_DIRECTORY,
+						"/home/daimrod/corpus/pubmed/cpa_dump/PLoS_Med/");
 
-        ExternalResourceDescription tokenModel
-                = ExternalResourceFactory.createExternalResourceDescription(
-                        TokenizerModelResourceImpl.class
-                        , "file:opennlp/uima/models/en-token.bin");
+		AnalysisEngineDescription xmlParser = AnalysisEngineFactory
+				.createEngineDescription(PubMedParserAE.class);
 
-        AnalysisEngineDescription tokenizer
-                = AnalysisEngineFactory.createEngineDescription(
-                        Tokenizer.class
-                        , "opennlp.uima.ModelName"
-                        , tokenModel
-                        , "opennlp.uima.SentenceType"
-                        , "jgreg.internship.nii.types.Sentence"
-                        , "opennlp.uima.TokenType"
-                        , "jgreg.internship.nii.types.Token");
+		ExternalResourceDescription sentenceModel = ExternalResourceFactory
+				.createExternalResourceDescription(
+						SentenceModelResourceImpl.class,
+						"file:org/apache/ctakes/core/sentdetect/sd-med-model.zip");
 
-        AnalysisEngineDescription contextExtractor
-                = AnalysisEngineFactory.createEngineDescription(
-                        CitationContextExtractorAE.class,
-                        CitationContextExtractorAE.PARAM_WINDOW_SIZE
-                        , WINDOW_SIZE);
+		AnalysisEngineDescription sentenceDetector = AnalysisEngineFactory
+				.createEngineDescription(SentenceDetector.class,
+						"opennlp.uima.ModelName", sentenceModel,
+						"opennlp.uima.SentenceType",
+						"jgreg.internship.nii.types.Sentence",
+						"opennlp.uima.ContainerType",
+						"jgreg.internship.nii.types.Paragraph",
+						"opennlp.uima.IsRemoveExistingAnnotations", false);
 
-        AnalysisEngineDescription XMIWriter
-                = AnalysisEngineFactory.createEngineDescription(
-                        PubMedXMIWriter.class
-                        , PubMedXMIWriter.OUTPUT_DIRECTORY
-                        , "/tmp/xmi/");
+		AnalysisEngineDescription contextExtractor = AnalysisEngineFactory
+				.createEngineDescription(CitationContextExtractorAE.class,
+						CitationContextExtractorAE.PARAM_WINDOW_SIZE,
+						WINDOW_SIZE);
 
-        /* The type priority is important especially to retrieve tokens. The
-         rest of the order is not accurate but it does not matter.*/
-        AggregateBuilder builder
-                = new AggregateBuilder(
-                        null,
-                        TypePrioritiesFactory.createTypePriorities(
-                                Section.class,
-                                Paragraph.class,
-                                Sentence.class,
-                                Title.class),
-                        null);
+		ExternalResourceDescription tokenModel = ExternalResourceFactory
+				.createExternalResourceDescription(
+						TokenizerModelResourceImpl.class,
+						"file:opennlp/uima/models/en-token.bin");
 
-        builder.add(xmlParser);
-        builder.add(sentenceDetector
-                , CAS.NAME_DEFAULT_SOFA
-                , "parsed");
-        builder.add(tokenizer
-                , CAS.NAME_DEFAULT_SOFA
-                , "parsed");
-        builder.add(contextExtractor
-                , CAS.NAME_DEFAULT_SOFA
-                , "parsed");
-        builder.add(XMIWriter
-                , CAS.NAME_DEFAULT_SOFA
-                , "parsed");
-        SimplePipeline.runPipeline(reader,
-                builder.createAggregateDescription());
+		AnalysisEngineDescription tokenizer = AnalysisEngineFactory
+				.createEngineDescription(Tokenizer.class,
+						"opennlp.uima.ModelName", tokenModel,
+						"opennlp.uima.SentenceType",
+						"jgreg.internship.nii.types.Sentence",
+						"opennlp.uima.TokenType",
+						"jgreg.internship.nii.types.Token");
 
-        logger.info("done!");
+		AnalysisEngineDescription XMIWriter = AnalysisEngineFactory
+				.createEngineDescription(PubMedXMIWriter.class,
+						PubMedXMIWriter.OUTPUT_DIRECTORY, "/tmp/xmi/");
 
-    }
+		/*
+		 * The type priority is important especially to retrieve tokens. The
+		 * rest of the order is not accurate but it does not matter.
+		 */
+		AggregateBuilder builder = new AggregateBuilder(null,
+				TypePrioritiesFactory.createTypePriorities(Section.class,
+						Paragraph.class, Sentence.class, Title.class), null);
 
-    static private void parseArguments(String[] args) {
-        Options options = new Options();
+		builder.add(xmlParser);
+		builder.add(sentenceDetector, CAS.NAME_DEFAULT_SOFA, "parsed");
+		builder.add(tokenizer, CAS.NAME_DEFAULT_SOFA, "parsed");
+		builder.add(contextExtractor, CAS.NAME_DEFAULT_SOFA, "parsed");
+		builder.add(XMIWriter, CAS.NAME_DEFAULT_SOFA, "parsed");
+		SimplePipeline
+				.runPipeline(reader, builder.createAggregateDescription());
 
-        options.addOption(OptionBuilder
-                          .isRequired(false)
-                          .withLongOpt("window-size")
-                          .hasArg()
-                          .withDescription("The size of the window for citation context.")
-                          .create("windowSize"));
+		logger.info("done!");
 
-        CommandLineParser parser = new PosixParser();
-        @SuppressWarnings("UnusedAssignment")
-            CommandLine cmd = null;
-        try {
-            cmd = parser.parse(options, args);
-        } catch (ParseException ex) {
-            System.err.println("The CLI args could not be parsed.");
-            System.err.println("The error message was:");
-            System.err.println(" " + ex.getMessage());
-            System.exit(1);
-        }
+	}
 
-        if (cmd.hasOption("window-size")) {
-            WINDOW_SIZE = new Integer(cmd.getOptionValue("window-size"));
-        } else {
-            WINDOW_SIZE = 0;
-        }
-    }
+	static private void parseArguments(String[] args) {
+		Options options = new Options();
+
+		options.addOption(OptionBuilder
+				.isRequired(false)
+				.withLongOpt("window-size")
+				.hasArg()
+				.withDescription("The size of the window for citation context.")
+				.create("windowSize"));
+
+		CommandLineParser parser = new PosixParser();
+		@SuppressWarnings("UnusedAssignment")
+		CommandLine cmd = null;
+		try {
+			cmd = parser.parse(options, args);
+		} catch (ParseException ex) {
+			System.err.println("The CLI args could not be parsed.");
+			System.err.println("The error message was:");
+			System.err.println(" " + ex.getMessage());
+			System.exit(1);
+		}
+
+		if (cmd.hasOption("window-size")) {
+			WINDOW_SIZE = new Integer(cmd.getOptionValue("window-size"));
+		} else {
+			WINDOW_SIZE = 0;
+		}
+	}
 }
