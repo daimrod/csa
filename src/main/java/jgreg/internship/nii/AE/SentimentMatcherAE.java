@@ -80,7 +80,6 @@ public class SentimentMatcherAE extends
 		// Read the patterns...
 		try {
 			pattern = Utils.PatternFactory(FileUtils.readLines(inputFile));
-			logger.info("Pattern is `" + pattern.toString() + "'");
 		} catch (IOException ex) {
 			logger.fatal("Error when reading `" + inputFile.getAbsolutePath()
 					+ "'", ex);
