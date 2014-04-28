@@ -2,23 +2,18 @@ package jgreg.internship.nii.AE;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Collection;
-import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import jgreg.internship.nii.RES.MatcherRES;
-import jgreg.internship.nii.RES.SentimentAttr;
 import jgreg.internship.nii.Utils.Utils;
 import jgreg.internship.nii.types.CitationContext;
-import jgreg.internship.nii.types.Sentence;
+import jgreg.internship.nii.types.Sentiment;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.apache.uima.UimaContext;
 import org.apache.uima.analysis_engine.AnalysisEngineProcessException;
 import org.apache.uima.fit.descriptor.ConfigurationParameter;
-import org.apache.uima.fit.descriptor.ExternalResource;
 import org.apache.uima.fit.util.JCasUtil;
 import org.apache.uima.jcas.JCas;
 import org.apache.uima.resource.ResourceInitializationException;
@@ -27,12 +22,10 @@ public class SentimentMatcherAE extends org.apache.uima.fit.component.JCasAnnota
     private static final Logger logger = Logger.getLogger(SentimentMatcherAE.class.getCanonicalName());
 
 	/**
-	 * The resource that contains the sentiment scores.
+	 * Default score for sentiment annotation
 	 */
-	final static String MATCHER_KEY = "matcher";
-    @ExternalResource(key = MATCHER_KEY)
-    private MatcherRES<SentimentAttr> matcherRES;
-
+    private Integer DEFAULT_SCORE = 1;
+    
 	/**
 	 * The name of the file in which we will look for patterns.
 	 */
@@ -56,7 +49,6 @@ public class SentimentMatcherAE extends org.apache.uima.fit.component.JCasAnnota
     @Override
     public void initialize(UimaContext context) throws ResourceInitializationException {
         // Retrieve the parameters from the context
-        matcherRES = (MatcherRES<SentimentAttr>) context.getConfigParameterValue(MATCHER_KEY);
         inputFile = new File((String) context.getConfigParameterValue(PARAM_INPUT_MATCH));
         name = (String) context.getConfigParameterValue(PARAM_MATCHER_NAME);
 
@@ -87,7 +79,11 @@ public class SentimentMatcherAE extends org.apache.uima.fit.component.JCasAnnota
         for (CitationContext context : JCasUtil.select(jCas, CitationContext.class)) {
             Matcher match = pattern.matcher(context.getCoveredText());
             while (match.find()) {
-                matcherRES.add(context.getPMID(), new SentimentAttr(name, SentimentAttr.DEFAULT_SCORE, match.group()));
+                Sentiment sentiment = new Sentiment(jCas);
+                sentiment.setScore(DEFAULT_SCORE);
+                sentiment.setBegin(match.start());
+                sentiment.setEnd(match.end());
+                sentiment.addToIndexes();
             }
         }
     }
