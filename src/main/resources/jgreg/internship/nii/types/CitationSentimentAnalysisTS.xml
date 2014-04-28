@@ -17,17 +17,17 @@
     </typeDescription>
 
     <typeDescription>
-      <name>jgreg.internship.nii.types.Positif</name>
+      <name>jgreg.internship.nii.types.Positive</name>
       <supertypeName>jgreg.internship.nii.types.Sentiment</supertypeName>
     </typeDescription>
 
     <typeDescription>
-      <name>jgreg.internship.nii.types.Neutre</name>
+      <name>jgreg.internship.nii.types.Neutral</name>
       <supertypeName>jgreg.internship.nii.types.Sentiment</supertypeName>
     </typeDescription>
 
     <typeDescription>
-      <name>jgreg.internship.nii.types.Negatif</name>
+      <name>jgreg.internship.nii.types.Negative</name>
       <supertypeName>jgreg.internship.nii.types.Sentiment</supertypeName>
     </typeDescription>
 

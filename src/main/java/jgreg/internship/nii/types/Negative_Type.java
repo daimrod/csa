@@ -1,5 +1,5 @@
 
-/* First created by JCasGen Mon Apr 28 19:15:44 JST 2014 */
+/* First created by JCasGen Mon Apr 28 19:24:55 JST 2014 */
 package jgreg.internship.nii.types;
 
 import org.apache.uima.jcas.JCas;
@@ -11,9 +11,9 @@ import org.apache.uima.cas.impl.TypeImpl;
 import org.apache.uima.cas.Type;
 
 /** 
- * Updated by JCasGen Mon Apr 28 19:15:44 JST 2014
+ * Updated by JCasGen Mon Apr 28 19:24:55 JST 2014
  * @generated */
-public class Neutre_Type extends Sentiment_Type {
+public class Negative_Type extends Sentiment_Type {
   /** @generated 
    * @return the generator for this type
    */
@@ -23,25 +23,25 @@ public class Neutre_Type extends Sentiment_Type {
   private final FSGenerator fsGenerator = 
     new FSGenerator() {
       public FeatureStructure createFS(int addr, CASImpl cas) {
-  			 if (Neutre_Type.this.useExistingInstance) {
+  			 if (Negative_Type.this.useExistingInstance) {
   			   // Return eq fs instance if already created
-  		     FeatureStructure fs = Neutre_Type.this.jcas.getJfsFromCaddr(addr);
+  		     FeatureStructure fs = Negative_Type.this.jcas.getJfsFromCaddr(addr);
   		     if (null == fs) {
-  		       fs = new Neutre(addr, Neutre_Type.this);
-  			   Neutre_Type.this.jcas.putJfsFromCaddr(addr, fs);
+  		       fs = new Negative(addr, Negative_Type.this);
+  			   Negative_Type.this.jcas.putJfsFromCaddr(addr, fs);
   			   return fs;
   		     }
   		     return fs;
-        } else return new Neutre(addr, Neutre_Type.this);
+        } else return new Negative(addr, Negative_Type.this);
   	  }
     };
   /** @generated */
   @SuppressWarnings ("hiding")
-  public final static int typeIndexID = Neutre.typeIndexID;
+  public final static int typeIndexID = Negative.typeIndexID;
   /** @generated 
      @modifiable */
   @SuppressWarnings ("hiding")
-  public final static boolean featOkTst = JCasRegistry.getFeatOkTst("jgreg.internship.nii.types.Neutre");
+  public final static boolean featOkTst = JCasRegistry.getFeatOkTst("jgreg.internship.nii.types.Negative");
 
 
 
@@ -50,7 +50,7 @@ public class Neutre_Type extends Sentiment_Type {
 	 * @param jcas JCas
 	 * @param casType Type 
 	 */
-  public Neutre_Type(JCas jcas, Type casType) {
+  public Negative_Type(JCas jcas, Type casType) {
     super(jcas, casType);
     casImpl.getFSClassRegistry().addGeneratorForType((TypeImpl)this.casType, getFSGenerator());
 

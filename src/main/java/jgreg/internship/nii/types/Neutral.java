@@ -1,6 +1,6 @@
 
 
-/* First created by JCasGen Mon Apr 28 19:15:44 JST 2014 */
+/* First created by JCasGen Mon Apr 28 19:24:55 JST 2014 */
 package jgreg.internship.nii.types;
 
 import org.apache.uima.jcas.JCas; 
@@ -10,15 +10,15 @@ import org.apache.uima.jcas.cas.TOP_Type;
 
 
 /** 
- * Updated by JCasGen Mon Apr 28 19:15:44 JST 2014
+ * Updated by JCasGen Mon Apr 28 19:24:55 JST 2014
  * XML source: src/main/resources/jgreg/internship/nii/types/CitationSentimentAnalysisTS.xml
  * @generated */
-public class Neutre extends Sentiment {
+public class Neutral extends Sentiment {
   /** @generated
    * @ordered 
    */
   @SuppressWarnings ("hiding")
-  public final static int typeIndexID = JCasRegistry.register(Neutre.class);
+  public final static int typeIndexID = JCasRegistry.register(Neutral.class);
   /** @generated
    * @ordered 
    */
@@ -32,14 +32,14 @@ public class Neutre extends Sentiment {
  
   /** Never called.  Disable default constructor
    * @generated */
-  protected Neutre() {/* intentionally empty block */}
+  protected Neutral() {/* intentionally empty block */}
     
   /** Internal - constructor used by generator 
    * @generated
    * @param addr low level Feature Structure reference
    * @param type the type of this Feature Structure 
    */
-  public Neutre(int addr, TOP_Type type) {
+  public Neutral(int addr, TOP_Type type) {
     super(addr, type);
     readObject();
   }
@@ -47,7 +47,7 @@ public class Neutre extends Sentiment {
   /** @generated
    * @param jcas JCas to which this Feature Structure belongs 
    */
-  public Neutre(JCas jcas) {
+  public Neutral(JCas jcas) {
     super(jcas);
     readObject();   
   } 
@@ -57,7 +57,7 @@ public class Neutre extends Sentiment {
    * @param begin offset to the begin spot in the SofA
    * @param end offset to the end spot in the SofA 
   */  
-  public Neutre(JCas jcas, int begin, int end) {
+  public Neutral(JCas jcas, int begin, int end) {
     super(jcas);
     setBegin(begin);
     setEnd(end);
