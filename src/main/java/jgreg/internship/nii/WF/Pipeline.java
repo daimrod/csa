@@ -48,7 +48,7 @@ public class Pipeline {
 		CollectionReaderDescription reader = CollectionReaderFactory
 				.createReaderDescription(PubMedReaderCR.class,
 						PubMedReaderCR.INPUT_DIRECTORY,
-						"/media/sdb1/corpus/pubmed/cpa_dump/PLoS_Med/");
+						"/home/daimrod/corpus/pubmed/cpa_dump/PLoS_Med/");
 
 		AnalysisEngineDescription xmlParser = AnalysisEngineFactory
 				.createEngineDescription(PubMedParserAE.class);
