@@ -47,7 +47,7 @@ public class Pipeline {
 		CollectionReaderDescription reader = CollectionReaderFactory
 				.createReaderDescription(PubMedReaderCR.class,
 						PubMedReaderCR.INPUT_DIRECTORY,
-						"/home/daimrod/corpus/pubmed/cpa_dump/PLoS_Med/");
+						"/media/sdb1/corpus/pubmed/cpa_dump/PLoS_Med/");
 
 		AnalysisEngineDescription xmlParser = AnalysisEngineFactory
 				.createEngineDescription(PubMedParserAE.class);
@@ -98,8 +98,8 @@ public class Pipeline {
 
 		builder.add(xmlParser);
 		builder.add(sentenceDetector, CAS.NAME_DEFAULT_SOFA, "parsed");
-		builder.add(tokenizer, CAS.NAME_DEFAULT_SOFA, "parsed");
 		builder.add(contextExtractor, CAS.NAME_DEFAULT_SOFA, "parsed");
+		builder.add(tokenizer, CAS.NAME_DEFAULT_SOFA, "parsed");
 		builder.add(XMIWriter, CAS.NAME_DEFAULT_SOFA, "parsed");
 		SimplePipeline
 				.runPipeline(reader, builder.createAggregateDescription());
@@ -119,7 +119,6 @@ public class Pipeline {
 				.create("windowSize"));
 
 		CommandLineParser parser = new PosixParser();
-		@SuppressWarnings("UnusedAssignment")
 		CommandLine cmd = null;
 		try {
 			cmd = parser.parse(options, args);
