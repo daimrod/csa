@@ -75,14 +75,19 @@ public class SentimentMatcherAE extends org.apache.uima.fit.component.JCasAnnota
         }
     }
     
+	/**
+	 * Find all matching patterns in all CitationContext.
+	 * 
+	 * @param jCas
+	 *
+	 * @throws AnalysisEngineProcessException
+	 */
     @Override
     public void process(JCas jCas) throws AnalysisEngineProcessException {
         for (CitationContext context : JCasUtil.select(jCas, CitationContext.class)) {
-            for (Sentence sent : map.get(context)) {
-                Matcher match = pattern.matcher(sent.getCoveredText());
-                while (match.find()) {
-                    matcherRES.add(context.getPMID(), new SentimentAttr(name, SentimentAttr.DEFAULT_SCORE, match.group()));
-                }
+            Matcher match = pattern.matcher(context.getCoveredText());
+            while (match.find()) {
+                matcherRES.add(context.getPMID(), new SentimentAttr(name, SentimentAttr.DEFAULT_SCORE, match.group()));
             }
         }
     }
