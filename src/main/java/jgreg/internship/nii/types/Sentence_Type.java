@@ -1,5 +1,5 @@
 
-/* First created by JCasGen Wed Apr 23 17:36:01 JST 2014 */
+/* First created by JCasGen Mon Apr 28 17:31:59 JST 2014 */
 package jgreg.internship.nii.types;
 
 import org.apache.uima.jcas.JCas;
@@ -12,7 +12,7 @@ import org.apache.uima.cas.Type;
 import org.apache.uima.jcas.tcas.Annotation_Type;
 
 /** Mark a Sentence
- * Updated by JCasGen Wed Apr 23 17:36:01 JST 2014
+ * Updated by JCasGen Mon Apr 28 17:31:59 JST 2014
  * @generated */
 public class Sentence_Type extends Annotation_Type {
   /** @generated 

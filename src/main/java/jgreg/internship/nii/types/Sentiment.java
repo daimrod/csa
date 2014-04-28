@@ -10,16 +10,16 @@ import org.apache.uima.jcas.cas.TOP_Type;
 import org.apache.uima.jcas.tcas.Annotation;
 
 
-/** Mark a Section
+/** 
  * Updated by JCasGen Mon Apr 28 17:31:59 JST 2014
  * XML source: src/main/resources/jgreg/internship/nii/types/CitationSentimentAnalysisTS.xml
  * @generated */
-public class Section extends Annotation {
+public class Sentiment extends Annotation {
   /** @generated
    * @ordered 
    */
   @SuppressWarnings ("hiding")
-  public final static int typeIndexID = JCasRegistry.register(Section.class);
+  public final static int typeIndexID = JCasRegistry.register(Sentiment.class);
   /** @generated
    * @ordered 
    */
@@ -33,14 +33,14 @@ public class Section extends Annotation {
  
   /** Never called.  Disable default constructor
    * @generated */
-  protected Section() {/* intentionally empty block */}
+  protected Sentiment() {/* intentionally empty block */}
     
   /** Internal - constructor used by generator 
    * @generated
    * @param addr low level Feature Structure reference
    * @param type the type of this Feature Structure 
    */
-  public Section(int addr, TOP_Type type) {
+  public Sentiment(int addr, TOP_Type type) {
     super(addr, type);
     readObject();
   }
@@ -48,7 +48,7 @@ public class Section extends Annotation {
   /** @generated
    * @param jcas JCas to which this Feature Structure belongs 
    */
-  public Section(JCas jcas) {
+  public Sentiment(JCas jcas) {
     super(jcas);
     readObject();   
   } 
@@ -58,7 +58,7 @@ public class Section extends Annotation {
    * @param begin offset to the begin spot in the SofA
    * @param end offset to the end spot in the SofA 
   */  
-  public Section(JCas jcas, int begin, int end) {
+  public Sentiment(JCas jcas, int begin, int end) {
     super(jcas);
     setBegin(begin);
     setEnd(end);
@@ -74,6 +74,28 @@ public class Section extends Annotation {
    */
   private void readObject() {/*default - does nothing empty block */}
      
-}
+ 
+    
+  //*--------------*
+  //* Feature: score
+
+  /** getter for score - gets 
+   * @generated
+   * @return value of the feature 
+   */
+  public long getScore() {
+    if (Sentiment_Type.featOkTst && ((Sentiment_Type)jcasType).casFeat_score == null)
+      jcasType.jcas.throwFeatMissing("score", "jgreg.internship.nii.types.Sentiment");
+    return jcasType.ll_cas.ll_getLongValue(addr, ((Sentiment_Type)jcasType).casFeatCode_score);}
+    
+  /** setter for score - sets  
+   * @generated
+   * @param v value to set into the feature 
+   */
+  public void setScore(long v) {
+    if (Sentiment_Type.featOkTst && ((Sentiment_Type)jcasType).casFeat_score == null)
+      jcasType.jcas.throwFeatMissing("score", "jgreg.internship.nii.types.Sentiment");
+    jcasType.ll_cas.ll_setLongValue(addr, ((Sentiment_Type)jcasType).casFeatCode_score, v);}    
+  }
 
     

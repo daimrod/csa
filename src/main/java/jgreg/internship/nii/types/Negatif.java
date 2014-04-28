@@ -7,19 +7,18 @@ import org.apache.uima.jcas.JCas;
 import org.apache.uima.jcas.JCasRegistry;
 import org.apache.uima.jcas.cas.TOP_Type;
 
-import org.apache.uima.jcas.tcas.Annotation;
 
 
-/** Mark a Section
+/** 
  * Updated by JCasGen Mon Apr 28 17:31:59 JST 2014
  * XML source: src/main/resources/jgreg/internship/nii/types/CitationSentimentAnalysisTS.xml
  * @generated */
-public class Section extends Annotation {
+public class Negatif extends Sentiment {
   /** @generated
    * @ordered 
    */
   @SuppressWarnings ("hiding")
-  public final static int typeIndexID = JCasRegistry.register(Section.class);
+  public final static int typeIndexID = JCasRegistry.register(Negatif.class);
   /** @generated
    * @ordered 
    */
@@ -33,14 +32,14 @@ public class Section extends Annotation {
  
   /** Never called.  Disable default constructor
    * @generated */
-  protected Section() {/* intentionally empty block */}
+  protected Negatif() {/* intentionally empty block */}
     
   /** Internal - constructor used by generator 
    * @generated
    * @param addr low level Feature Structure reference
    * @param type the type of this Feature Structure 
    */
-  public Section(int addr, TOP_Type type) {
+  public Negatif(int addr, TOP_Type type) {
     super(addr, type);
     readObject();
   }
@@ -48,7 +47,7 @@ public class Section extends Annotation {
   /** @generated
    * @param jcas JCas to which this Feature Structure belongs 
    */
-  public Section(JCas jcas) {
+  public Negatif(JCas jcas) {
     super(jcas);
     readObject();   
   } 
@@ -58,7 +57,7 @@ public class Section extends Annotation {
    * @param begin offset to the begin spot in the SofA
    * @param end offset to the end spot in the SofA 
   */  
-  public Section(JCas jcas, int begin, int end) {
+  public Negatif(JCas jcas, int begin, int end) {
     super(jcas);
     setBegin(begin);
     setEnd(end);

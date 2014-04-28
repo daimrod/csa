@@ -13,10 +13,10 @@ import org.apache.uima.cas.impl.FeatureImpl;
 import org.apache.uima.cas.Feature;
 import org.apache.uima.jcas.tcas.Annotation_Type;
 
-/** ID(s) of the document.
+/** 
  * Updated by JCasGen Mon Apr 28 17:31:59 JST 2014
  * @generated */
-public class ID_Type extends Annotation_Type {
+public class Sentiment_Type extends Annotation_Type {
   /** @generated 
    * @return the generator for this type
    */
@@ -26,47 +26,47 @@ public class ID_Type extends Annotation_Type {
   private final FSGenerator fsGenerator = 
     new FSGenerator() {
       public FeatureStructure createFS(int addr, CASImpl cas) {
-  			 if (ID_Type.this.useExistingInstance) {
+  			 if (Sentiment_Type.this.useExistingInstance) {
   			   // Return eq fs instance if already created
-  		     FeatureStructure fs = ID_Type.this.jcas.getJfsFromCaddr(addr);
+  		     FeatureStructure fs = Sentiment_Type.this.jcas.getJfsFromCaddr(addr);
   		     if (null == fs) {
-  		       fs = new ID(addr, ID_Type.this);
-  			   ID_Type.this.jcas.putJfsFromCaddr(addr, fs);
+  		       fs = new Sentiment(addr, Sentiment_Type.this);
+  			   Sentiment_Type.this.jcas.putJfsFromCaddr(addr, fs);
   			   return fs;
   		     }
   		     return fs;
-        } else return new ID(addr, ID_Type.this);
+        } else return new Sentiment(addr, Sentiment_Type.this);
   	  }
     };
   /** @generated */
   @SuppressWarnings ("hiding")
-  public final static int typeIndexID = ID.typeIndexID;
+  public final static int typeIndexID = Sentiment.typeIndexID;
   /** @generated 
      @modifiable */
   @SuppressWarnings ("hiding")
-  public final static boolean featOkTst = JCasRegistry.getFeatOkTst("jgreg.internship.nii.types.ID");
+  public final static boolean featOkTst = JCasRegistry.getFeatOkTst("jgreg.internship.nii.types.Sentiment");
  
   /** @generated */
-  final Feature casFeat_PMID;
+  final Feature casFeat_score;
   /** @generated */
-  final int     casFeatCode_PMID;
+  final int     casFeatCode_score;
   /** @generated
    * @param addr low level Feature Structure reference
    * @return the feature value 
    */ 
-  public String getPMID(int addr) {
-        if (featOkTst && casFeat_PMID == null)
-      jcas.throwFeatMissing("PMID", "jgreg.internship.nii.types.ID");
-    return ll_cas.ll_getStringValue(addr, casFeatCode_PMID);
+  public long getScore(int addr) {
+        if (featOkTst && casFeat_score == null)
+      jcas.throwFeatMissing("score", "jgreg.internship.nii.types.Sentiment");
+    return ll_cas.ll_getLongValue(addr, casFeatCode_score);
   }
   /** @generated
    * @param addr low level Feature Structure reference
    * @param v value to set 
    */    
-  public void setPMID(int addr, String v) {
-        if (featOkTst && casFeat_PMID == null)
-      jcas.throwFeatMissing("PMID", "jgreg.internship.nii.types.ID");
-    ll_cas.ll_setStringValue(addr, casFeatCode_PMID, v);}
+  public void setScore(int addr, long v) {
+        if (featOkTst && casFeat_score == null)
+      jcas.throwFeatMissing("score", "jgreg.internship.nii.types.Sentiment");
+    ll_cas.ll_setLongValue(addr, casFeatCode_score, v);}
     
   
 
@@ -77,13 +77,13 @@ public class ID_Type extends Annotation_Type {
 	 * @param jcas JCas
 	 * @param casType Type 
 	 */
-  public ID_Type(JCas jcas, Type casType) {
+  public Sentiment_Type(JCas jcas, Type casType) {
     super(jcas, casType);
     casImpl.getFSClassRegistry().addGeneratorForType((TypeImpl)this.casType, getFSGenerator());
 
  
-    casFeat_PMID = jcas.getRequiredFeatureDE(casType, "PMID", "uima.cas.String", featOkTst);
-    casFeatCode_PMID  = (null == casFeat_PMID) ? JCas.INVALID_FEATURE_CODE : ((FeatureImpl)casFeat_PMID).getCode();
+    casFeat_score = jcas.getRequiredFeatureDE(casType, "score", "uima.cas.Long", featOkTst);
+    casFeatCode_score  = (null == casFeat_score) ? JCas.INVALID_FEATURE_CODE : ((FeatureImpl)casFeat_score).getCode();
 
   }
 }

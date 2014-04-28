@@ -6,6 +6,32 @@
   <vendor/>
   <types>
     <typeDescription>
+      <name>jgreg.internship.nii.types.Sentiment</name>
+      <supertypeName>uima.tcas.Annotation</supertypeName>
+      <features>
+        <featureDescription>
+          <name>score</name>
+          <rangeTypeName>uima.cas.Long</rangeTypeName>
+        </featureDescription>
+      </features>
+    </typeDescription>
+
+    <typeDescription>
+      <name>jgreg.internship.nii.types.Positif</name>
+      <supertypeName>jgreg.internship.nii.types.Sentiment</supertypeName>
+    </typeDescription>
+
+    <typeDescription>
+      <name>jgreg.internship.nii.types.Neutre</name>
+      <supertypeName>jgreg.internship.nii.types.Sentiment</supertypeName>
+    </typeDescription>
+
+    <typeDescription>
+      <name>jgreg.internship.nii.types.Negatif</name>
+      <supertypeName>jgreg.internship.nii.types.Sentiment</supertypeName>
+    </typeDescription>
+
+    <typeDescription>
       <name>jgreg.internship.nii.types.Token</name>
       <description/>
       <supertypeName>uima.tcas.Annotation</supertypeName>

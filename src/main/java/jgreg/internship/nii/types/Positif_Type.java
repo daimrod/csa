@@ -9,12 +9,11 @@ import org.apache.uima.cas.impl.FSGenerator;
 import org.apache.uima.cas.FeatureStructure;
 import org.apache.uima.cas.impl.TypeImpl;
 import org.apache.uima.cas.Type;
-import org.apache.uima.jcas.tcas.Annotation_Type;
 
-/** Mark a Paragraph
+/** 
  * Updated by JCasGen Mon Apr 28 17:31:59 JST 2014
  * @generated */
-public class Paragraph_Type extends Annotation_Type {
+public class Positif_Type extends Sentiment_Type {
   /** @generated 
    * @return the generator for this type
    */
@@ -24,25 +23,25 @@ public class Paragraph_Type extends Annotation_Type {
   private final FSGenerator fsGenerator = 
     new FSGenerator() {
       public FeatureStructure createFS(int addr, CASImpl cas) {
-  			 if (Paragraph_Type.this.useExistingInstance) {
+  			 if (Positif_Type.this.useExistingInstance) {
   			   // Return eq fs instance if already created
-  		     FeatureStructure fs = Paragraph_Type.this.jcas.getJfsFromCaddr(addr);
+  		     FeatureStructure fs = Positif_Type.this.jcas.getJfsFromCaddr(addr);
   		     if (null == fs) {
-  		       fs = new Paragraph(addr, Paragraph_Type.this);
-  			   Paragraph_Type.this.jcas.putJfsFromCaddr(addr, fs);
+  		       fs = new Positif(addr, Positif_Type.this);
+  			   Positif_Type.this.jcas.putJfsFromCaddr(addr, fs);
   			   return fs;
   		     }
   		     return fs;
-        } else return new Paragraph(addr, Paragraph_Type.this);
+        } else return new Positif(addr, Positif_Type.this);
   	  }
     };
   /** @generated */
   @SuppressWarnings ("hiding")
-  public final static int typeIndexID = Paragraph.typeIndexID;
+  public final static int typeIndexID = Positif.typeIndexID;
   /** @generated 
      @modifiable */
   @SuppressWarnings ("hiding")
-  public final static boolean featOkTst = JCasRegistry.getFeatOkTst("jgreg.internship.nii.types.Paragraph");
+  public final static boolean featOkTst = JCasRegistry.getFeatOkTst("jgreg.internship.nii.types.Positif");
 
 
 
@@ -51,7 +50,7 @@ public class Paragraph_Type extends Annotation_Type {
 	 * @param jcas JCas
 	 * @param casType Type 
 	 */
-  public Paragraph_Type(JCas jcas, Type casType) {
+  public Positif_Type(JCas jcas, Type casType) {
     super(jcas, casType);
     casImpl.getFSClassRegistry().addGeneratorForType((TypeImpl)this.casType, getFSGenerator());
 
