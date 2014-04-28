@@ -89,21 +89,21 @@ public class Pipeline {
 				.createEngineDescription(
 						SentimentMatcherAE.class,
 						SentimentMatcherAE.PARAM_PATTERN_FILE,
-						"/home/daimrod/src/java/nii-internship/csa/src/main/resources/jgreg/internship/nii/patterns/positive",
+						"/home/daimrod/src/java/nii-internship/csa/src/main/resources/jgreg/internship/nii/patterns/positive.pat",
 						SentimentMatcherAE.PARAM_SENTIMENT_CLASS_NAME, "jgreg.internship.nii.types.Positive");
 
         AnalysisEngineDescription neutralMatcher = AnalysisEngineFactory
 				.createEngineDescription(
 						SentimentMatcherAE.class,
 						SentimentMatcherAE.PARAM_PATTERN_FILE,
-						"/home/daimrod/src/java/nii-internship/csa/src/main/resources/jgreg/internship/nii/patterns/neutral",
+						"/home/daimrod/src/java/nii-internship/csa/src/main/resources/jgreg/internship/nii/patterns/neutral.pat",
 						SentimentMatcherAE.PARAM_SENTIMENT_CLASS_NAME, "jgreg.internship.nii.types.Neutral");
 
         AnalysisEngineDescription negativeMatcher = AnalysisEngineFactory
 				.createEngineDescription(
 						SentimentMatcherAE.class,
 						SentimentMatcherAE.PARAM_PATTERN_FILE,
-						"/home/daimrod/src/java/nii-internship/csa/src/main/resources/jgreg/internship/nii/patterns/negative",
+						"/home/daimrod/src/java/nii-internship/csa/src/main/resources/jgreg/internship/nii/patterns/negative.pat",
 						SentimentMatcherAE.PARAM_SENTIMENT_CLASS_NAME, "jgreg.internship.nii.types.Negative");
 
 		AnalysisEngineDescription XMIWriter = AnalysisEngineFactory
