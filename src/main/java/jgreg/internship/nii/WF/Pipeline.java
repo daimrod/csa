@@ -85,12 +85,26 @@ public class Pipeline {
 						"opennlp.uima.TokenType",
 						"jgreg.internship.nii.types.Token");
 
-		AnalysisEngineDescription sentimentMatcher = AnalysisEngineFactory
+		AnalysisEngineDescription positiveMatcher = AnalysisEngineFactory
 				.createEngineDescription(
 						SentimentMatcherAE.class,
 						SentimentMatcherAE.PARAM_INPUT_MATCH,
 						"/home/daimrod/src/java/nii-internship/csa/src/main/resources/jgreg/internship/nii/patterns/positive",
 						SentimentMatcherAE.PARAM_SENTIMENT_CLASS_NAME, "jgreg.internship.nii.types.Positive");
+
+        AnalysisEngineDescription neutralMatcher = AnalysisEngineFactory
+				.createEngineDescription(
+						SentimentMatcherAE.class,
+						SentimentMatcherAE.PARAM_INPUT_MATCH,
+						"/home/daimrod/src/java/nii-internship/csa/src/main/resources/jgreg/internship/nii/patterns/neutral",
+						SentimentMatcherAE.PARAM_SENTIMENT_CLASS_NAME, "jgreg.internship.nii.types.Neutral");
+
+        AnalysisEngineDescription negativeMatcher = AnalysisEngineFactory
+				.createEngineDescription(
+						SentimentMatcherAE.class,
+						SentimentMatcherAE.PARAM_INPUT_MATCH,
+						"/home/daimrod/src/java/nii-internship/csa/src/main/resources/jgreg/internship/nii/patterns/negative",
+						SentimentMatcherAE.PARAM_SENTIMENT_CLASS_NAME, "jgreg.internship.nii.types.Negative");
 
 		AnalysisEngineDescription XMIWriter = AnalysisEngineFactory
 				.createEngineDescription(PubMedXMIWriter.class,
@@ -108,13 +122,14 @@ public class Pipeline {
 		builder.add(sentenceDetector, CAS.NAME_DEFAULT_SOFA, "parsed");
 		builder.add(contextExtractor, CAS.NAME_DEFAULT_SOFA, "parsed");
 		builder.add(tokenizer,        CAS.NAME_DEFAULT_SOFA, "parsed");
-		builder.add(sentimentMatcher, CAS.NAME_DEFAULT_SOFA, "parsed");
+		builder.add(positiveMatcher,  CAS.NAME_DEFAULT_SOFA, "parsed");
+        builder.add(neutralMatcher,   CAS.NAME_DEFAULT_SOFA, "parsed");
+        builder.add(negativeMatcher,  CAS.NAME_DEFAULT_SOFA, "parsed");
 		builder.add(XMIWriter,        CAS.NAME_DEFAULT_SOFA, "parsed");
 		SimplePipeline
 				.runPipeline(reader, builder.createAggregateDescription());
 
 		logger.info("done!");
-
 	}
 
 	static private void parseArguments(String[] args) {
