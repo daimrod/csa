@@ -8,6 +8,9 @@ import java.util.regex.Pattern;
 import jgreg.internship.nii.Utils.Utils;
 import jgreg.internship.nii.types.CitationContext;
 import jgreg.internship.nii.types.Sentiment;
+import jgreg.internship.nii.types.Positive;
+import jgreg.internship.nii.types.Neutral;
+import jgreg.internship.nii.types.Negative;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
@@ -18,73 +21,106 @@ import org.apache.uima.fit.util.JCasUtil;
 import org.apache.uima.jcas.JCas;
 import org.apache.uima.resource.ResourceInitializationException;
 
-public class SentimentMatcherAE extends org.apache.uima.fit.component.JCasAnnotator_ImplBase {
-    private static final Logger logger = Logger.getLogger(SentimentMatcherAE.class.getCanonicalName());
+public class SentimentMatcherAE extends
+		org.apache.uima.fit.component.JCasAnnotator_ImplBase {
+	private static final Logger logger = Logger
+			.getLogger(SentimentMatcherAE.class.getCanonicalName());
 
 	/**
 	 * Default score for sentiment annotation
 	 */
-    private Integer DEFAULT_SCORE = 1;
-    
+	private Integer DEFAULT_SCORE = 1;
+
 	/**
 	 * The name of the file in which we will look for patterns.
 	 */
-    final static String PARAM_INPUT_MATCH = "input";
-    @ConfigurationParameter(name = PARAM_INPUT_MATCH, mandatory = true)
-    private File inputFile;
+	public final static String PARAM_INPUT_MATCH = "input";
+	@ConfigurationParameter(name = PARAM_INPUT_MATCH, mandatory = true)
+	private File inputFile;
 
 	/**
-	 * The name of the class of sentiment that we are matching.
-.	 */
-    final static String PARAM_MATCHER_NAME = "name";
-    @ConfigurationParameter(name = PARAM_MATCHER_NAME, mandatory = true)
-    String name;
-    
-	/**
-	 * FIXME The pattern that will be used to determine whether the
-	 * given context should be recorded.
+	 * The name of the class of sentiment that we are matching. .
 	 */
-    private Pattern pattern;
-    
-    @Override
-    public void initialize(UimaContext context) throws ResourceInitializationException {
-        // Retrieve the parameters from the context
-        inputFile = new File((String) context.getConfigParameterValue(PARAM_INPUT_MATCH));
-        name = (String) context.getConfigParameterValue(PARAM_MATCHER_NAME);
+	public final static String PARAM_MATCHER_NAME = "name";
+	@ConfigurationParameter(name = PARAM_MATCHER_NAME, mandatory = true)
+	String name;
 
-        // Be sure the patterns file exists
-        if (!inputFile.exists()) {
-            logger.fatal("input file `" + inputFile.getAbsolutePath() + "' does not exist");
-            throw new ResourceInitializationException();
-        }
+	/**
+	 * The pattern to match in the method process(JCas).
+	 */
+	private Pattern pattern;
 
-        // Read the patterns...
-        try {
-            pattern = Utils.PatternFactory(FileUtils.readLines(inputFile));
-        } catch (IOException ex) {
-            logger.fatal("Error when reading `" + inputFile.getAbsolutePath() + "'", ex);
-            throw new ResourceInitializationException(ex);
-        }
-    }
-    
+	@Override
+	public void initialize(UimaContext context)
+			throws ResourceInitializationException {
+		// Retrieve the parameters from the context
+		inputFile = new File(
+				(String) context.getConfigParameterValue(PARAM_INPUT_MATCH));
+		name = (String) context.getConfigParameterValue(PARAM_MATCHER_NAME);
+
+		// Be sure the patterns file exists
+		if (!inputFile.exists()) {
+			logger.fatal("input file `" + inputFile.getAbsolutePath()
+					+ "' does not exist");
+			throw new ResourceInitializationException();
+		}
+
+		// Read the patterns...
+		try {
+			pattern = Utils.PatternFactory(FileUtils.readLines(inputFile));
+			logger.info("Pattern is `" + pattern.toString() + "'");
+		} catch (IOException ex) {
+			logger.fatal("Error when reading `" + inputFile.getAbsolutePath()
+					+ "'", ex);
+			throw new ResourceInitializationException(ex);
+		}
+	}
+
+	/** FIXME
+	 * An ugly hack to convert PARAM_MATCHER_NAME to the equivalent
+	 * Sentiment subclass.
+	 *
+	 * @param jCas
+	 * @return
+	 *
+	 * @throws Exception
+	 */
+	private Sentiment makeSentiment(JCas jCas) throws Exception {
+		switch (name) {
+		case "positive":
+			return new Positive(jCas);
+		case "neutral":
+			return new Neutral(jCas);
+		case "negative":
+			return new Negative(jCas);
+		}
+		throw new Exception("Could not find Sentiment type named `" + name
+				+ "'");
+	}
+
 	/**
 	 * Find all matching patterns in all CitationContext.
-	 * 
+	 *
 	 * @param jCas
 	 *
 	 * @throws AnalysisEngineProcessException
 	 */
-    @Override
-    public void process(JCas jCas) throws AnalysisEngineProcessException {
-        for (CitationContext context : JCasUtil.select(jCas, CitationContext.class)) {
-            Matcher match = pattern.matcher(context.getCoveredText());
-            while (match.find()) {
-                Sentiment sentiment = new Sentiment(jCas);
-                sentiment.setScore(DEFAULT_SCORE);
-                sentiment.setBegin(match.start());
-                sentiment.setEnd(match.end());
-                sentiment.addToIndexes();
-            }
-        }
-    }
+	@Override
+	public void process(JCas jCas) throws AnalysisEngineProcessException {
+		for (CitationContext context : JCasUtil.select(jCas,
+				CitationContext.class)) {
+			Matcher match = pattern.matcher(context.getCoveredText());
+			while (match.find()) {
+				try {
+					Sentiment sentiment = makeSentiment(jCas);
+					sentiment.setScore(DEFAULT_SCORE);
+					sentiment.setBegin(context.getBegin() + match.start());
+					sentiment.setEnd(context.getBegin() + match.end());
+					sentiment.addToIndexes();
+				} catch (Exception ex) {
+					throw new AnalysisEngineProcessException(ex);
+				}
+			}
+		}
+	}
 }

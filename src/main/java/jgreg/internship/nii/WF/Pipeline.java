@@ -3,6 +3,7 @@ package jgreg.internship.nii.WF;
 import jgreg.internship.nii.AE.CitationContextExtractorAE;
 import jgreg.internship.nii.AE.PubMedParserAE;
 import jgreg.internship.nii.AE.PubMedXMIWriter;
+import jgreg.internship.nii.AE.SentimentMatcherAE;
 import jgreg.internship.nii.CR.PubMedReaderCR;
 import jgreg.internship.nii.types.Paragraph;
 import jgreg.internship.nii.types.Section;
@@ -84,6 +85,13 @@ public class Pipeline {
 						"opennlp.uima.TokenType",
 						"jgreg.internship.nii.types.Token");
 
+		AnalysisEngineDescription sentimentMatcher = AnalysisEngineFactory
+				.createEngineDescription(
+						SentimentMatcherAE.class,
+						SentimentMatcherAE.PARAM_INPUT_MATCH,
+						"/home/daimrod/src/java/nii-internship/csa/src/main/resources/jgreg/internship/nii/patterns/positive",
+						SentimentMatcherAE.PARAM_MATCHER_NAME, "positive");
+
 		AnalysisEngineDescription XMIWriter = AnalysisEngineFactory
 				.createEngineDescription(PubMedXMIWriter.class,
 						PubMedXMIWriter.OUTPUT_DIRECTORY, "/tmp/xmi/");
@@ -99,8 +107,9 @@ public class Pipeline {
 		builder.add(xmlParser);
 		builder.add(sentenceDetector, CAS.NAME_DEFAULT_SOFA, "parsed");
 		builder.add(contextExtractor, CAS.NAME_DEFAULT_SOFA, "parsed");
-		builder.add(tokenizer, CAS.NAME_DEFAULT_SOFA, "parsed");
-		builder.add(XMIWriter, CAS.NAME_DEFAULT_SOFA, "parsed");
+		builder.add(tokenizer,        CAS.NAME_DEFAULT_SOFA, "parsed");
+		builder.add(sentimentMatcher, CAS.NAME_DEFAULT_SOFA, "parsed");
+		builder.add(XMIWriter,        CAS.NAME_DEFAULT_SOFA, "parsed");
 		SimplePipeline
 				.runPipeline(reader, builder.createAggregateDescription());
 
