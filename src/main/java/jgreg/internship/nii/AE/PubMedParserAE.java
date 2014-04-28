@@ -24,11 +24,18 @@ import org.apache.uima.fit.util.JCasUtil;
 import org.apache.uima.jcas.JCas;
 
 /**
+ * This analysis parses PubMed's articles and add the following annotations:
+ * - Citation
+ * - Section
+ * - Title (the section's title)
+ * - Paragraph
+ * - ID (article's PMID)
  *
- * @author daimrod
+ * All of this is done is a newly created View named "parsed".
+ *
+ * @author Grégoire Jadi
  */
 public class PubMedParserAE extends org.apache.uima.fit.component.JCasAnnotator_ImplBase {
-
     private static final Logger logger = Logger.getLogger(PubMedParserAE.class.getCanonicalName());
 
     @Override
@@ -48,7 +55,7 @@ public class PubMedParserAE extends org.apache.uima.fit.component.JCasAnnotator_
         docId.setPMID(parser.getPMID());
         docId.addToIndexes();
 
-        // Add Citation annotations
+        // Citation annotation
         for (Entry<String, List<Pair<Integer, Integer>>> entry : parser.getCitations().entrySet()) {
             for (Pair<Integer, Integer> citationIdx : entry.getValue()) {
                 Citation citation = new Citation(parsedView);
@@ -59,6 +66,7 @@ public class PubMedParserAE extends org.apache.uima.fit.component.JCasAnnotator_
             }
         }
 
+        // Section annotation
         for (Pair<Integer, Integer> section : parser.getSections()) {
             Section annotation = new Section(parsedView);
             annotation.setBegin(section.getLeft());
@@ -66,6 +74,7 @@ public class PubMedParserAE extends org.apache.uima.fit.component.JCasAnnotator_
             annotation.addToIndexes();
         }
 
+        // Section's Title annotation
         for (Pair<Integer, Integer> title : parser.getTitles()) {
             Title annotation = new Title(parsedView);
             annotation.setBegin(title.getLeft());
@@ -73,6 +82,7 @@ public class PubMedParserAE extends org.apache.uima.fit.component.JCasAnnotator_
             annotation.addToIndexes();
         }
 
+        // Paragraph annotation
         for (Pair<Integer, Integer> paragraph : parser.getParagraphs()) {
             Paragraph annotation = new Paragraph(parsedView);
             annotation.setBegin(paragraph.getLeft());
