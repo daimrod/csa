@@ -10,6 +10,8 @@ import jgreg.internship.nii.types.Section;
 import jgreg.internship.nii.types.Sentence;
 import jgreg.internship.nii.types.Title;
 
+import opennlp.uima.postag.POSModelResourceImpl;
+import opennlp.uima.postag.POSTagger;
 import opennlp.uima.sentdetect.SentenceDetector;
 import opennlp.uima.sentdetect.SentenceModelResourceImpl;
 import opennlp.uima.tokenize.Tokenizer;
@@ -64,8 +66,7 @@ public class Pipeline {
 						"opennlp.uima.SentenceType",
 						"jgreg.internship.nii.types.Sentence",
 						"opennlp.uima.ContainerType",
-						"jgreg.internship.nii.types.Paragraph",
-						"opennlp.uima.IsRemoveExistingAnnotations", false);
+						"jgreg.internship.nii.types.Paragraph");
 
 		AnalysisEngineDescription contextExtractor = AnalysisEngineFactory
 				.createEngineDescription(CitationContextExtractorAE.class,
@@ -85,26 +86,42 @@ public class Pipeline {
 						"opennlp.uima.TokenType",
 						"jgreg.internship.nii.types.Token");
 
+		ExternalResourceDescription POSModel = ExternalResourceFactory
+				.createExternalResourceDescription(POSModelResourceImpl.class,
+						"file:opennlp/uima/models/en-pos-perceptron.bin");
+
+		AnalysisEngineDescription POSTagger = AnalysisEngineFactory
+				.createEngineDescription(POSTagger.class,
+						"opennlp.uima.ModelName", POSModel,
+						"opennlp.uima.SentenceType",
+						"jgreg.internship.nii.types.Sentence",
+						"opennlp.uima.TokenType",
+						"jgreg.internship.nii.types.Token",
+						"opennlp.uima.POSFeature", "POS");
+
 		AnalysisEngineDescription positiveMatcher = AnalysisEngineFactory
 				.createEngineDescription(
 						SentimentMatcherAE.class,
 						SentimentMatcherAE.PARAM_PATTERN_FILE,
 						"/home/daimrod/src/java/nii-internship/csa/src/main/resources/jgreg/internship/nii/patterns/positive.pat",
-						SentimentMatcherAE.PARAM_SENTIMENT_CLASS_NAME, "jgreg.internship.nii.types.Positive");
+						SentimentMatcherAE.PARAM_SENTIMENT_CLASS_NAME,
+						"jgreg.internship.nii.types.Positive");
 
-        AnalysisEngineDescription neutralMatcher = AnalysisEngineFactory
+		AnalysisEngineDescription neutralMatcher = AnalysisEngineFactory
 				.createEngineDescription(
 						SentimentMatcherAE.class,
 						SentimentMatcherAE.PARAM_PATTERN_FILE,
 						"/home/daimrod/src/java/nii-internship/csa/src/main/resources/jgreg/internship/nii/patterns/neutral.pat",
-						SentimentMatcherAE.PARAM_SENTIMENT_CLASS_NAME, "jgreg.internship.nii.types.Neutral");
+						SentimentMatcherAE.PARAM_SENTIMENT_CLASS_NAME,
+						"jgreg.internship.nii.types.Neutral");
 
-        AnalysisEngineDescription negativeMatcher = AnalysisEngineFactory
+		AnalysisEngineDescription negativeMatcher = AnalysisEngineFactory
 				.createEngineDescription(
 						SentimentMatcherAE.class,
 						SentimentMatcherAE.PARAM_PATTERN_FILE,
 						"/home/daimrod/src/java/nii-internship/csa/src/main/resources/jgreg/internship/nii/patterns/negative.pat",
-						SentimentMatcherAE.PARAM_SENTIMENT_CLASS_NAME, "jgreg.internship.nii.types.Negative");
+						SentimentMatcherAE.PARAM_SENTIMENT_CLASS_NAME,
+						"jgreg.internship.nii.types.Negative");
 
 		AnalysisEngineDescription XMIWriter = AnalysisEngineFactory
 				.createEngineDescription(PubMedXMIWriter.class,
@@ -121,11 +138,12 @@ public class Pipeline {
 		builder.add(xmlParser);
 		builder.add(sentenceDetector, CAS.NAME_DEFAULT_SOFA, "parsed");
 		builder.add(contextExtractor, CAS.NAME_DEFAULT_SOFA, "parsed");
-		builder.add(tokenizer,        CAS.NAME_DEFAULT_SOFA, "parsed");
-		builder.add(positiveMatcher,  CAS.NAME_DEFAULT_SOFA, "parsed");
-        builder.add(neutralMatcher,   CAS.NAME_DEFAULT_SOFA, "parsed");
-        builder.add(negativeMatcher,  CAS.NAME_DEFAULT_SOFA, "parsed");
-		builder.add(XMIWriter,        CAS.NAME_DEFAULT_SOFA, "parsed");
+		builder.add(tokenizer, CAS.NAME_DEFAULT_SOFA, "parsed");
+		builder.add(POSTagger, CAS.NAME_DEFAULT_SOFA, "parsed");
+		builder.add(positiveMatcher, CAS.NAME_DEFAULT_SOFA, "parsed");
+		builder.add(neutralMatcher, CAS.NAME_DEFAULT_SOFA, "parsed");
+		builder.add(negativeMatcher, CAS.NAME_DEFAULT_SOFA, "parsed");
+		builder.add(XMIWriter, CAS.NAME_DEFAULT_SOFA, "parsed");
 		SimplePipeline
 				.runPipeline(reader, builder.createAggregateDescription());
 
