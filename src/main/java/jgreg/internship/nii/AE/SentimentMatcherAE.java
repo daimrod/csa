@@ -9,7 +9,6 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import jgreg.internship.nii.Utils.Utils;
 import jgreg.internship.nii.types.CitationContext;
 import jgreg.internship.nii.types.Token;
 
@@ -131,8 +130,8 @@ public class SentimentMatcherAE extends
 		for (CitationContext context : JCasUtil.select(jCas,
 				CitationContext.class)) {
 
-			// String toMatch = buildString(new ArrayList<>(map.get(context)));
-			String toMatch = context.getCoveredText();
+			String toMatch = buildString(new ArrayList<>(map.get(context)));
+			// String toMatch = context.getCoveredText();
 
 			Matcher match = pattern.matcher(toMatch);
 			while (match.find()) {
@@ -172,12 +171,17 @@ public class SentimentMatcherAE extends
 		return acc.toString();
 	}
 
+	private static final String patternFrom = "_";
+	private static final String patternTo = "[^ /]*";
+
 	public static Pattern buildPattern(List<String> list) {
 		StringBuilder acc = new StringBuilder();
 		if (list.size() > 0) {
 			String last = list.remove(list.size() - 1);
+			last = last.replace(patternFrom, patternTo);
 
 			for (String s : list) {
+				s = s.replace(patternFrom, patternTo);
 				acc.append(s).append('|');
 			}
 			acc.append(last);
