@@ -132,8 +132,8 @@ public class SentimentMatcherAE extends
 				CitationContext.class)) {
 
 			// String toMatch = buildString(new ArrayList<>(map.get(context)));
-            String toMatch = context.getCoveredText();
-            
+			String toMatch = context.getCoveredText();
+
 			Matcher match = pattern.matcher(toMatch);
 			while (match.find()) {
 				try {
@@ -169,7 +169,6 @@ public class SentimentMatcherAE extends
 			}
 			acc.append(last.getCoveredText()).append('/').append(last.getPOS());
 		}
-
 		return acc.toString();
 	}
 
@@ -177,16 +176,12 @@ public class SentimentMatcherAE extends
 		StringBuilder acc = new StringBuilder();
 		if (list.size() > 0) {
 			String last = list.remove(list.size() - 1);
-			// last = last.replace("_", "[^ ]*");
 
 			for (String s : list) {
-				// s = s.replace("_", "[^ ]*");
 				acc.append(s).append('|');
 			}
-
 			acc.append(last);
 		}
-
 		return Pattern.compile(acc.toString());
 	}
 }
