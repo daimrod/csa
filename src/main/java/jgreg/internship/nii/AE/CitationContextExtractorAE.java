@@ -10,13 +10,11 @@ import jgreg.internship.nii.types.Citation;
 import jgreg.internship.nii.types.CitationContext;
 import jgreg.internship.nii.types.Sentence;
 
-import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.log4j.Logger;
 import org.apache.uima.analysis_engine.AnalysisEngineProcessException;
 import org.apache.uima.fit.descriptor.ConfigurationParameter;
 import org.apache.uima.fit.util.JCasUtil;
 import org.apache.uima.jcas.JCas;
-import org.apache.uima.jcas.cas.StringList;
 
 /**
  * Add CitationContext annotation around all Citation. The size of the
