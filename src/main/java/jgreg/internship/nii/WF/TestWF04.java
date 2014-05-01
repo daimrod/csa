@@ -1,5 +1,6 @@
 package jgreg.internship.nii.WF;
 
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -10,6 +11,7 @@ import org.apache.log4j.Logger;
 import org.apache.uima.fit.factory.JCasFactory;
 import org.apache.uima.jcas.JCas;
 
+import edu.stanford.nlp.ling.tokensregex.MultiPatternMatcher;
 import edu.stanford.nlp.ling.tokensregex.TokenSequenceMatcher;
 import edu.stanford.nlp.ling.tokensregex.TokenSequencePattern;
 
@@ -31,8 +33,9 @@ public class TestWF04 {
         tokens.add(token);
         logger.info("'" + token.getCoveredText() + "'");
 
-        TokenSequencePattern p = TokenSequencePattern.compile("som | [ tag:\"NNP\" ]");
-        TokenSequenceMatcher m = p.getMatcher(Utils.convertUIMA2STANFORD(tokens));
+        TokenSequencePattern p1 = TokenSequencePattern.compile("some");
+        TokenSequencePattern p2 = TokenSequencePattern.compile("[ tag:\"NNP\" ]?");
+        TokenSequenceMatcher m = p1.getMatcher(Utils.convertUIMA2STANFORD(tokens));
 
         while (m.find()) {
             logger.info("match found!");
