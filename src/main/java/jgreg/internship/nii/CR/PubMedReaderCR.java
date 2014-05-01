@@ -9,13 +9,16 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Iterator;
+
 import jgreg.internship.nii.types.Filename;
+
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.FileFilterUtils;
 import org.apache.log4j.Logger;
 import org.apache.uima.UimaContext;
 import org.apache.uima.collection.CollectionException;
 import org.apache.uima.fit.component.JCasCollectionReader_ImplBase;
+import org.apache.uima.fit.component.ViewCreatorAnnotator;
 import org.apache.uima.fit.descriptor.ConfigurationParameter;
 import org.apache.uima.jcas.JCas;
 import org.apache.uima.resource.ResourceInitializationException;
@@ -64,10 +67,15 @@ public class PubMedReaderCR extends JCasCollectionReader_ImplBase {
     @Override
     public void getNext(JCas jCas) throws IOException, CollectionException, FileNotFoundException {
         File file = files.next();
-        jCas.setDocumentText(FileUtils.readFileToString(file));
-        Filename filename = new Filename(jCas);
-        filename.setFilename(file.getAbsolutePath());
-        filename.addToIndexes();
+        try {
+            JCas originalText = ViewCreatorAnnotator.createViewSafely(jCas, "originalText");
+            originalText.setDocumentText(FileUtils.readFileToString(file));
+            Filename filename = new Filename(originalText);
+            filename.setFilename(file.getAbsolutePath());
+            filename.addToIndexes();
+        } catch (Exception ex) {
+            throw new CollectionException(ex);
+        }
 
         docIndex++;
     }

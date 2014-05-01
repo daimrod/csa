@@ -5,10 +5,18 @@ import jgreg.internship.nii.AE.PubMedParserAE;
 import jgreg.internship.nii.AE.PubMedXMIWriter;
 import jgreg.internship.nii.AE.SentimentMatcherAE;
 import jgreg.internship.nii.CR.PubMedReaderCR;
+import jgreg.internship.nii.types.Citation;
+import jgreg.internship.nii.types.CitationContext;
+import jgreg.internship.nii.types.ID;
+import jgreg.internship.nii.types.Negative;
+import jgreg.internship.nii.types.Neutral;
 import jgreg.internship.nii.types.Paragraph;
+import jgreg.internship.nii.types.Positive;
 import jgreg.internship.nii.types.Section;
 import jgreg.internship.nii.types.Sentence;
+import jgreg.internship.nii.types.Sentiment;
 import jgreg.internship.nii.types.Title;
+import jgreg.internship.nii.types.Token;
 
 import opennlp.uima.postag.POSModelResourceImpl;
 import opennlp.uima.postag.POSTagger;
@@ -25,7 +33,6 @@ import org.apache.commons.cli.ParseException;
 import org.apache.commons.cli.PosixParser;
 import org.apache.log4j.Logger;
 import org.apache.uima.analysis_engine.AnalysisEngineDescription;
-import org.apache.uima.cas.CAS;
 import org.apache.uima.collection.CollectionReaderDescription;
 import org.apache.uima.fit.factory.AggregateBuilder;
 import org.apache.uima.fit.factory.AnalysisEngineFactory;
@@ -132,24 +139,32 @@ public class Pipeline {
 		 * rest of the order is not accurate but it does not matter.
 		 */
 		AggregateBuilder builder = new AggregateBuilder(null,
-				TypePrioritiesFactory.createTypePriorities(Section.class,
-						Paragraph.class, Sentence.class, Title.class), null);
+				TypePrioritiesFactory.createTypePriorities(ID.class,
+						Title.class, Section.class, Paragraph.class,
+						CitationContext.class, Sentence.class, Citation.class,
+						Token.class, Sentiment.class, Negative.class,
+						Neutral.class, Positive.class), null);
 
 		builder.add(xmlParser);
-		builder.add(sentenceDetector, CAS.NAME_DEFAULT_SOFA, "parsed");
-		builder.add(contextExtractor, CAS.NAME_DEFAULT_SOFA, "parsed");
-		builder.add(tokenizer, CAS.NAME_DEFAULT_SOFA, "parsed");
-		builder.add(POSTagger, CAS.NAME_DEFAULT_SOFA, "parsed");
-		builder.add(positiveMatcher, CAS.NAME_DEFAULT_SOFA, "parsed");
-		builder.add(neutralMatcher, CAS.NAME_DEFAULT_SOFA, "parsed");
-		builder.add(negativeMatcher, CAS.NAME_DEFAULT_SOFA, "parsed");
-		builder.add(XMIWriter, CAS.NAME_DEFAULT_SOFA, "parsed");
+		builder.add(sentenceDetector);
+		builder.add(contextExtractor);
+		builder.add(tokenizer);
+		builder.add(POSTagger);
+		builder.add(positiveMatcher);
+		builder.add(neutralMatcher);
+		builder.add(negativeMatcher);
+		builder.add(XMIWriter);
 		SimplePipeline
 				.runPipeline(reader, builder.createAggregateDescription());
 
 		logger.info("done!");
 	}
 
+	/**
+	 * FIXME Parse the command line
+	 *
+	 * @param args
+	 */
 	static private void parseArguments(String[] args) {
 		Options options = new Options();
 
