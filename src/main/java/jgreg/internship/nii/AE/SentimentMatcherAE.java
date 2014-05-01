@@ -2,13 +2,13 @@ package jgreg.internship.nii.AE;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Collection;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
+import jgreg.internship.nii.Utils.Utils;
 import jgreg.internship.nii.types.CitationContext;
 import jgreg.internship.nii.types.Token;
 
@@ -24,6 +24,10 @@ import org.apache.uima.fit.descriptor.ConfigurationParameter;
 import org.apache.uima.fit.util.JCasUtil;
 import org.apache.uima.jcas.JCas;
 import org.apache.uima.resource.ResourceInitializationException;
+
+import edu.stanford.nlp.ling.CoreLabel;
+import edu.stanford.nlp.ling.tokensregex.TokenSequenceMatcher;
+import edu.stanford.nlp.ling.tokensregex.TokenSequencePattern;
 
 /**
  * Find matches recognized by the patterns in PARAM_PATTERN_FILE and add the
@@ -59,7 +63,7 @@ public class SentimentMatcherAE extends
 	/**
 	 * The pattern to match in the method process(JCas).
 	 */
-	private Pattern pattern;
+	private List<TokenSequencePattern> patterns;
 
 	private boolean typeSystemInitialized = false;
 	private Type sentimentT = null;
@@ -103,7 +107,10 @@ public class SentimentMatcherAE extends
 
 		// Read the patterns...
 		try {
-			pattern = buildPattern(FileUtils.readLines(patternFile));
+			patterns = FileUtils.readLines(patternFile).stream()
+					.filter(string -> !string.trim().isEmpty())
+					.map(line -> TokenSequencePattern.compile(line))
+					.collect(Collectors.toList());
 		} catch (IOException ex) {
 			logger.fatal("Error when reading `" + patternFile.getAbsolutePath()
 					+ "'", ex);
@@ -124,68 +131,41 @@ public class SentimentMatcherAE extends
 			typeSystemInit(jCas);
 		}
 
+		// This map is used to find the Token covered by a given CitationContext
 		Map<CitationContext, Collection<Token>> map = JCasUtil.indexCovered(
 				jCas, CitationContext.class, Token.class);
 
+		// For all CitationContext
 		for (CitationContext context : JCasUtil.select(jCas,
 				CitationContext.class)) {
 
-			String toMatch = buildString(new ArrayList<>(map.get(context)));
-			// String toMatch = context.getCoveredText();
+			// get the tokens
+			List<Token> tokens = new LinkedList(map.get(context));
+			// and the equivalent annotations in StanfordNLP
+			List<CoreLabel> labels = Utils.convertUIMA2STANFORD(tokens);
 
-			Matcher match = pattern.matcher(toMatch);
-			while (match.find()) {
-				try {
-					AnnotationFS sentiment = jCas.getCas().createAnnotation(
-							sentimentT, context.getBegin() + match.start(),
-							context.getBegin() + match.end());
-					sentiment.setLongValue(sentimentScoreF, DEFAULT_SCORE);
-					jCas.addFsToIndexes(sentiment);
-				} catch (Exception ex) {
-					throw new AnalysisEngineProcessException(ex);
+			// Then, for all patterns
+			for (TokenSequencePattern pattern : patterns) {
+				TokenSequenceMatcher matcher = pattern.getMatcher(labels);
+				// Let's try to match
+				while (matcher.find()) {
+					try {
+						// matcher.start is the index of the first element that
+						// matches
+						int begin = tokens.get(matcher.start()).getBegin();
+						// matcher.end is the index of the first next element
+						// that doesn't match
+						int end = tokens.get(matcher.end() - 1).getEnd();
+
+						AnnotationFS sentiment = jCas.getCas()
+								.createAnnotation(sentimentT, begin, end);
+						sentiment.setLongValue(sentimentScoreF, DEFAULT_SCORE);
+						jCas.addFsToIndexes(sentiment);
+					} catch (Exception ex) {
+						throw new AnalysisEngineProcessException(ex);
+					}
 				}
 			}
 		}
-	}
-
-	/**
-	 * Build a String combining the text and the POS tags.
-	 *
-	 * word1/tag1 word2/tag2 ...
-	 *
-	 * @param jCas
-	 * @param tokens
-	 * @return
-	 */
-	private String buildString(List<Token> tokens) {
-		StringBuilder acc = new StringBuilder();
-
-		if (tokens.size() > 0) {
-			Token last = tokens.remove(tokens.size() - 1);
-			for (Token token : tokens) {
-				acc.append(token.getCoveredText()).append('/')
-						.append(token.getPOS()).append(' ');
-			}
-			acc.append(last.getCoveredText()).append('/').append(last.getPOS());
-		}
-		return acc.toString();
-	}
-
-	private static final String patternFrom = "_";
-	private static final String patternTo = "[^ /]*";
-
-	public static Pattern buildPattern(List<String> list) {
-		StringBuilder acc = new StringBuilder();
-		if (list.size() > 0) {
-			String last = list.remove(list.size() - 1);
-			last = last.replace(patternFrom, patternTo);
-
-			for (String s : list) {
-				s = s.replace(patternFrom, patternTo);
-				acc.append(s).append('|');
-			}
-			acc.append(last);
-		}
-		return Pattern.compile(acc.toString());
 	}
 }
