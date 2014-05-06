@@ -3,8 +3,10 @@ package jgreg.internship.nii.WF;
 import jgreg.internship.nii.AE.CitationContextExtractorAE;
 import jgreg.internship.nii.AE.PubMedParserAE;
 import jgreg.internship.nii.AE.PubMedXMIWriter;
+import jgreg.internship.nii.AE.SentimentAnnotator;
 import jgreg.internship.nii.AE.SentimentMatcherAE;
 import jgreg.internship.nii.CR.PubMedReaderCR;
+import jgreg.internship.nii.RES.ArticlesDB;
 import jgreg.internship.nii.types.Citation;
 import jgreg.internship.nii.types.CitationContext;
 import jgreg.internship.nii.types.ID;
@@ -54,13 +56,17 @@ public class Pipeline {
 	public static void main(String[] args) throws Exception {
 		parseArguments(args);
 
+		ExternalResourceDescription articlesDB = ExternalResourceFactory
+				.createExternalResourceDescription(ArticlesDB.class, "");
+
 		CollectionReaderDescription reader = CollectionReaderFactory
 				.createReaderDescription(PubMedReaderCR.class,
 						PubMedReaderCR.INPUT_DIRECTORY,
 						"/home/daimrod/corpus/pubmed/cpa_dump/PLoS_Med/");
 
 		AnalysisEngineDescription xmlParser = AnalysisEngineFactory
-				.createEngineDescription(PubMedParserAE.class);
+				.createEngineDescription(PubMedParserAE.class,
+						PubMedParserAE.PARAM_DB, articlesDB);
 
 		ExternalResourceDescription sentenceModel = ExternalResourceFactory
 				.createExternalResourceDescription(
@@ -134,6 +140,10 @@ public class Pipeline {
 				.createEngineDescription(PubMedXMIWriter.class,
 						PubMedXMIWriter.OUTPUT_DIRECTORY, "/tmp/xmi/");
 
+		AnalysisEngineDescription sentimentAnnotator = AnalysisEngineFactory
+				.createEngineDescription(SentimentAnnotator.class,
+						SentimentAnnotator.PARAM_DB, articlesDB);
+
 		/*
 		 * The type priority is important especially to retrieve tokens. The
 		 * rest of the order is not accurate but it does not matter.
@@ -153,6 +163,7 @@ public class Pipeline {
 		builder.add(positiveMatcher);
 		builder.add(neutralMatcher);
 		builder.add(negativeMatcher);
+		builder.add(sentimentAnnotator);
 		builder.add(XMIWriter);
 		SimplePipeline
 				.runPipeline(reader, builder.createAggregateDescription());
