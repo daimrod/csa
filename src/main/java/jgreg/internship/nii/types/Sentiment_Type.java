@@ -1,5 +1,5 @@
 
-/* First created by JCasGen Tue May 06 15:49:21 JST 2014 */
+/* First created by JCasGen Tue May 06 16:07:26 JST 2014 */
 package jgreg.internship.nii.types;
 
 import org.apache.uima.jcas.JCas;
@@ -14,7 +14,7 @@ import org.apache.uima.cas.Feature;
 import org.apache.uima.jcas.tcas.Annotation_Type;
 
 /** 
- * Updated by JCasGen Tue May 06 15:49:21 JST 2014
+ * Updated by JCasGen Tue May 06 16:07:26 JST 2014
  * @generated */
 public class Sentiment_Type extends Annotation_Type {
   /** @generated 
@@ -69,6 +69,30 @@ public class Sentiment_Type extends Annotation_Type {
     ll_cas.ll_setLongValue(addr, casFeatCode_score, v);}
     
   
+ 
+  /** @generated */
+  final Feature casFeat_context;
+  /** @generated */
+  final int     casFeatCode_context;
+  /** @generated
+   * @param addr low level Feature Structure reference
+   * @return the feature value 
+   */ 
+  public int getContext(int addr) {
+        if (featOkTst && casFeat_context == null)
+      jcas.throwFeatMissing("context", "jgreg.internship.nii.types.Sentiment");
+    return ll_cas.ll_getRefValue(addr, casFeatCode_context);
+  }
+  /** @generated
+   * @param addr low level Feature Structure reference
+   * @param v value to set 
+   */    
+  public void setContext(int addr, int v) {
+        if (featOkTst && casFeat_context == null)
+      jcas.throwFeatMissing("context", "jgreg.internship.nii.types.Sentiment");
+    ll_cas.ll_setRefValue(addr, casFeatCode_context, v);}
+    
+  
 
 
 
@@ -84,6 +108,10 @@ public class Sentiment_Type extends Annotation_Type {
  
     casFeat_score = jcas.getRequiredFeatureDE(casType, "score", "uima.cas.Long", featOkTst);
     casFeatCode_score  = (null == casFeat_score) ? JCas.INVALID_FEATURE_CODE : ((FeatureImpl)casFeat_score).getCode();
+
+ 
+    casFeat_context = jcas.getRequiredFeatureDE(casType, "context", "jgreg.internship.nii.types.CitationContext", featOkTst);
+    casFeatCode_context  = (null == casFeat_context) ? JCas.INVALID_FEATURE_CODE : ((FeatureImpl)casFeat_context).getCode();
 
   }
 }

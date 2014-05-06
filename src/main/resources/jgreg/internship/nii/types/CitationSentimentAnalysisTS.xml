@@ -13,6 +13,10 @@
           <name>score</name>
           <rangeTypeName>uima.cas.Long</rangeTypeName>
         </featureDescription>
+        <featureDescription>
+          <name>context</name>
+          <rangeTypeName>jgreg.internship.nii.types.CitationContext</rangeTypeName>
+        </featureDescription>
       </features>
     </typeDescription>
 

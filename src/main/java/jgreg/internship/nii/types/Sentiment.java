@@ -1,6 +1,6 @@
 
 
-/* First created by JCasGen Tue May 06 15:49:21 JST 2014 */
+/* First created by JCasGen Tue May 06 16:07:26 JST 2014 */
 package jgreg.internship.nii.types;
 
 import org.apache.uima.jcas.JCas; 
@@ -11,7 +11,7 @@ import org.apache.uima.jcas.tcas.Annotation;
 
 
 /** 
- * Updated by JCasGen Tue May 06 15:49:21 JST 2014
+ * Updated by JCasGen Tue May 06 16:07:26 JST 2014
  * XML source: src/main/resources/jgreg/internship/nii/types/CitationSentimentAnalysisTS.xml
  * @generated */
 public class Sentiment extends Annotation {
@@ -96,6 +96,28 @@ public class Sentiment extends Annotation {
     if (Sentiment_Type.featOkTst && ((Sentiment_Type)jcasType).casFeat_score == null)
       jcasType.jcas.throwFeatMissing("score", "jgreg.internship.nii.types.Sentiment");
     jcasType.ll_cas.ll_setLongValue(addr, ((Sentiment_Type)jcasType).casFeatCode_score, v);}    
+   
+    
+  //*--------------*
+  //* Feature: context
+
+  /** getter for context - gets 
+   * @generated
+   * @return value of the feature 
+   */
+  public CitationContext getContext() {
+    if (Sentiment_Type.featOkTst && ((Sentiment_Type)jcasType).casFeat_context == null)
+      jcasType.jcas.throwFeatMissing("context", "jgreg.internship.nii.types.Sentiment");
+    return (CitationContext)(jcasType.ll_cas.ll_getFSForRef(jcasType.ll_cas.ll_getRefValue(addr, ((Sentiment_Type)jcasType).casFeatCode_context)));}
+    
+  /** setter for context - sets  
+   * @generated
+   * @param v value to set into the feature 
+   */
+  public void setContext(CitationContext v) {
+    if (Sentiment_Type.featOkTst && ((Sentiment_Type)jcasType).casFeat_context == null)
+      jcasType.jcas.throwFeatMissing("context", "jgreg.internship.nii.types.Sentiment");
+    jcasType.ll_cas.ll_setRefValue(addr, ((Sentiment_Type)jcasType).casFeatCode_context, jcasType.ll_cas.ll_getFSRef(v));}    
   }
 
     
