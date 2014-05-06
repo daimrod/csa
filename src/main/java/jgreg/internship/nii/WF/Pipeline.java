@@ -81,7 +81,7 @@ public class Pipeline {
 						"opennlp.uima.ContainerType",
 						"jgreg.internship.nii.types.Paragraph");
 
-		AnalysisEngineDescription contextExtractor = AnalysisEngineFactory
+		AnalysisEngineDescription citationContextExtractor = AnalysisEngineFactory
 				.createEngineDescription(CitationContextExtractorAE.class,
 						CitationContextExtractorAE.PARAM_WINDOW_SIZE,
 						WINDOW_SIZE);
@@ -157,7 +157,7 @@ public class Pipeline {
 
 		builder.add(xmlParser);
 		builder.add(sentenceDetector);
-		builder.add(contextExtractor);
+		builder.add(citationContextExtractor);
 		builder.add(tokenizer);
 		builder.add(POSTagger);
 		builder.add(positiveMatcher);

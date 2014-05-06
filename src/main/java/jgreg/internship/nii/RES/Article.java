@@ -1,7 +1,7 @@
 package jgreg.internship.nii.RES;
 
 import java.time.LocalDate;
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -28,9 +28,9 @@ public class Article {
         setPMID(PMID);
         setFilename(filename);
         setDate(date);
-        positives = new LinkedList<>();
-        neutrals = new LinkedList<>();
-        negatives = new LinkedList<>();
+        positives = new ArrayList<>();
+        neutrals = new ArrayList<>();
+        negatives = new ArrayList<>();
 	}
 
 	/**
@@ -94,8 +94,8 @@ public class Article {
 	/**
 	 * @param positives the positives to set
 	 */
-	public void setPositives(List<String> positives) {
-		this.positives = positives;
+	public void addPositive(String PMID) {
+		positives.add(PMID);
 	}
 
 	/**
@@ -108,8 +108,8 @@ public class Article {
 	/**
 	 * @param neutrals the neutrals to set
 	 */
-	public void setNeutrals(List<String> neutrals) {
-		this.neutrals = neutrals;
+	public void addNeutral(String PMID) {
+		neutrals.add(PMID);
 	}
 
 	/**
@@ -122,8 +122,8 @@ public class Article {
 	/**
 	 * @param negatives the negatives to set
 	 */
-	public void setNegatives(List<String> negatives) {
-		this.negatives = negatives;
+	public void addNegative(String PMID) {
+		negatives.add(PMID);
 	}
 
 	@Override

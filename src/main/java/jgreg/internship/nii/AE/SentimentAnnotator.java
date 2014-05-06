@@ -1,8 +1,5 @@
 package jgreg.internship.nii.AE;
 
-import java.util.Collection;
-import java.util.Map;
-
 import jgreg.internship.nii.RES.Article;
 import jgreg.internship.nii.RES.ArticlesDB;
 import jgreg.internship.nii.types.Citation;
@@ -29,19 +26,52 @@ public class SentimentAnnotator extends
 
 	@Override
 	public void process(JCas jCas) throws AnalysisEngineProcessException {
-		Map<Citation, Collection<Positive>> positives = JCasUtil.indexCovered(
-				jCas, Citation.class, Positive.class);
-		Map<Citation, Collection<Neutral>> neutrals = JCasUtil.indexCovered(
-				jCas, Citation.class, Neutral.class);
-		Map<Citation, Collection<Negative>> negatives = JCasUtil.indexCovered(
-				jCas, Citation.class, Negative.class);
+        ID currentId = JCasUtil.selectSingle(jCas, ID.class);
+        Article current = articlesDB.get(currentId.getPMID());
 
-		Article currentArticle = articlesDB.get(JCasUtil.selectSingle(jCas,
-				ID.class).getPMID());
-		for (Citation citation : JCasUtil.select(jCas, Citation.class)) {
-			for (Positive pos : positives.get(citation)) {
-                
-			}
-		}
+        for (Positive pos : JCasUtil.select(jCas, Positive.class)) {
+            CitationContext context = pos.getContext();
+            for (int i = 0; i < context.getPMIDS().size(); i++) {
+                Citation citation = context.getPMIDS(i);
+                Article article = articlesDB.get(citation.getPMID());
+                if (article == null) {
+                    // Too bad, this article isn't in our corpus,
+                    // let's add it anyway...
+                    article = new Article(citation.getPMID());
+                    articlesDB.add(article);
+                }
+                article.addPositive(current.getPMID());
+            }
+        }
+        
+        for (Neutral pos : JCasUtil.select(jCas, Neutral.class)) {
+            CitationContext context = pos.getContext();
+            for (int i = 0; i < context.getPMIDS().size(); i++) {
+                Citation citation = context.getPMIDS(i);
+                Article article = articlesDB.get(citation.getPMID());
+                if (article == null) {
+                    // Too bad, this article isn't in our corpus,
+                    // let's add it anyway...
+                    article = new Article(citation.getPMID());
+                    articlesDB.add(article);
+                }
+                article.addNeutral(current.getPMID());
+            }
+        }
+        
+        for (Negative pos : JCasUtil.select(jCas, Negative.class)) {
+            CitationContext context = pos.getContext();
+            for (int i = 0; i < context.getPMIDS().size(); i++) {
+                Citation citation = context.getPMIDS(i);
+                Article article = articlesDB.get(citation.getPMID());
+                if (article == null) {
+                    // Too bad, this article isn't in our corpus,
+                    // let's add it anyway...
+                    article = new Article(citation.getPMID());
+                    articlesDB.add(article);
+                }
+                article.addNegative(current.getPMID());
+            }
+        }
 	}
 }
