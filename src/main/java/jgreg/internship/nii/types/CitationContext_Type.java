@@ -1,5 +1,5 @@
 
-/* First created by JCasGen Mon Apr 28 19:24:55 JST 2014 */
+/* First created by JCasGen Tue May 06 15:49:21 JST 2014 */
 package jgreg.internship.nii.types;
 
 import org.apache.uima.jcas.JCas;
@@ -9,10 +9,12 @@ import org.apache.uima.cas.impl.FSGenerator;
 import org.apache.uima.cas.FeatureStructure;
 import org.apache.uima.cas.impl.TypeImpl;
 import org.apache.uima.cas.Type;
+import org.apache.uima.cas.impl.FeatureImpl;
+import org.apache.uima.cas.Feature;
 import org.apache.uima.jcas.tcas.Annotation_Type;
 
 /** Mark a Citation Context
- * Updated by JCasGen Mon Apr 28 19:24:55 JST 2014
+ * Updated by JCasGen Tue May 06 15:49:21 JST 2014
  * @generated */
 public class CitationContext_Type extends Annotation_Type {
   /** @generated 
@@ -43,6 +45,57 @@ public class CitationContext_Type extends Annotation_Type {
      @modifiable */
   @SuppressWarnings ("hiding")
   public final static boolean featOkTst = JCasRegistry.getFeatOkTst("jgreg.internship.nii.types.CitationContext");
+ 
+  /** @generated */
+  final Feature casFeat_PMIDS;
+  /** @generated */
+  final int     casFeatCode_PMIDS;
+  /** @generated
+   * @param addr low level Feature Structure reference
+   * @return the feature value 
+   */ 
+  public int getPMIDS(int addr) {
+        if (featOkTst && casFeat_PMIDS == null)
+      jcas.throwFeatMissing("PMIDS", "jgreg.internship.nii.types.CitationContext");
+    return ll_cas.ll_getRefValue(addr, casFeatCode_PMIDS);
+  }
+  /** @generated
+   * @param addr low level Feature Structure reference
+   * @param v value to set 
+   */    
+  public void setPMIDS(int addr, int v) {
+        if (featOkTst && casFeat_PMIDS == null)
+      jcas.throwFeatMissing("PMIDS", "jgreg.internship.nii.types.CitationContext");
+    ll_cas.ll_setRefValue(addr, casFeatCode_PMIDS, v);}
+    
+   /** @generated
+   * @param addr low level Feature Structure reference
+   * @param i index of item in the array
+   * @return value at index i in the array 
+   */
+  public int getPMIDS(int addr, int i) {
+        if (featOkTst && casFeat_PMIDS == null)
+      jcas.throwFeatMissing("PMIDS", "jgreg.internship.nii.types.CitationContext");
+    if (lowLevelTypeChecks)
+      return ll_cas.ll_getRefArrayValue(ll_cas.ll_getRefValue(addr, casFeatCode_PMIDS), i, true);
+    jcas.checkArrayBounds(ll_cas.ll_getRefValue(addr, casFeatCode_PMIDS), i);
+	return ll_cas.ll_getRefArrayValue(ll_cas.ll_getRefValue(addr, casFeatCode_PMIDS), i);
+  }
+   
+  /** @generated
+   * @param addr low level Feature Structure reference
+   * @param i index of item in the array
+   * @param v value to set
+   */ 
+  public void setPMIDS(int addr, int i, int v) {
+        if (featOkTst && casFeat_PMIDS == null)
+      jcas.throwFeatMissing("PMIDS", "jgreg.internship.nii.types.CitationContext");
+    if (lowLevelTypeChecks)
+      ll_cas.ll_setRefArrayValue(ll_cas.ll_getRefValue(addr, casFeatCode_PMIDS), i, v, true);
+    jcas.checkArrayBounds(ll_cas.ll_getRefValue(addr, casFeatCode_PMIDS), i);
+    ll_cas.ll_setRefArrayValue(ll_cas.ll_getRefValue(addr, casFeatCode_PMIDS), i, v);
+  }
+ 
 
 
 
@@ -54,6 +107,10 @@ public class CitationContext_Type extends Annotation_Type {
   public CitationContext_Type(JCas jcas, Type casType) {
     super(jcas, casType);
     casImpl.getFSClassRegistry().addGeneratorForType((TypeImpl)this.casType, getFSGenerator());
+
+ 
+    casFeat_PMIDS = jcas.getRequiredFeatureDE(casType, "PMIDS", "uima.cas.FSArray", featOkTst);
+    casFeatCode_PMIDS  = (null == casFeat_PMIDS) ? JCas.INVALID_FEATURE_CODE : ((FeatureImpl)casFeat_PMIDS).getCode();
 
   }
 }

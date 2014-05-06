@@ -1,17 +1,18 @@
 
 
-/* First created by JCasGen Mon Apr 28 19:24:55 JST 2014 */
+/* First created by JCasGen Tue May 06 15:49:21 JST 2014 */
 package jgreg.internship.nii.types;
 
 import org.apache.uima.jcas.JCas; 
 import org.apache.uima.jcas.JCasRegistry;
 import org.apache.uima.jcas.cas.TOP_Type;
 
+import org.apache.uima.jcas.cas.FSArray;
 import org.apache.uima.jcas.tcas.Annotation;
 
 
 /** Mark a Citation Context
- * Updated by JCasGen Mon Apr 28 19:24:55 JST 2014
+ * Updated by JCasGen Tue May 06 15:49:21 JST 2014
  * XML source: src/main/resources/jgreg/internship/nii/types/CitationSentimentAnalysisTS.xml
  * @generated */
 public class CitationContext extends Annotation {
@@ -74,6 +75,50 @@ public class CitationContext extends Annotation {
    */
   private void readObject() {/*default - does nothing empty block */}
      
-}
+ 
+    
+  //*--------------*
+  //* Feature: PMIDS
+
+  /** getter for PMIDS - gets The PMIDS covered by the CitationContext
+   * @generated
+   * @return value of the feature 
+   */
+  public FSArray getPMIDS() {
+    if (CitationContext_Type.featOkTst && ((CitationContext_Type)jcasType).casFeat_PMIDS == null)
+      jcasType.jcas.throwFeatMissing("PMIDS", "jgreg.internship.nii.types.CitationContext");
+    return (FSArray)(jcasType.ll_cas.ll_getFSForRef(jcasType.ll_cas.ll_getRefValue(addr, ((CitationContext_Type)jcasType).casFeatCode_PMIDS)));}
+    
+  /** setter for PMIDS - sets The PMIDS covered by the CitationContext 
+   * @generated
+   * @param v value to set into the feature 
+   */
+  public void setPMIDS(FSArray v) {
+    if (CitationContext_Type.featOkTst && ((CitationContext_Type)jcasType).casFeat_PMIDS == null)
+      jcasType.jcas.throwFeatMissing("PMIDS", "jgreg.internship.nii.types.CitationContext");
+    jcasType.ll_cas.ll_setRefValue(addr, ((CitationContext_Type)jcasType).casFeatCode_PMIDS, jcasType.ll_cas.ll_getFSRef(v));}    
+    
+  /** indexed getter for PMIDS - gets an indexed value - The PMIDS covered by the CitationContext
+   * @generated
+   * @param i index in the array to get
+   * @return value of the element at index i 
+   */
+  public Citation getPMIDS(int i) {
+    if (CitationContext_Type.featOkTst && ((CitationContext_Type)jcasType).casFeat_PMIDS == null)
+      jcasType.jcas.throwFeatMissing("PMIDS", "jgreg.internship.nii.types.CitationContext");
+    jcasType.jcas.checkArrayBounds(jcasType.ll_cas.ll_getRefValue(addr, ((CitationContext_Type)jcasType).casFeatCode_PMIDS), i);
+    return (Citation)(jcasType.ll_cas.ll_getFSForRef(jcasType.ll_cas.ll_getRefArrayValue(jcasType.ll_cas.ll_getRefValue(addr, ((CitationContext_Type)jcasType).casFeatCode_PMIDS), i)));}
+
+  /** indexed setter for PMIDS - sets an indexed value - The PMIDS covered by the CitationContext
+   * @generated
+   * @param i index in the array to set
+   * @param v value to set into the array 
+   */
+  public void setPMIDS(int i, Citation v) { 
+    if (CitationContext_Type.featOkTst && ((CitationContext_Type)jcasType).casFeat_PMIDS == null)
+      jcasType.jcas.throwFeatMissing("PMIDS", "jgreg.internship.nii.types.CitationContext");
+    jcasType.jcas.checkArrayBounds(jcasType.ll_cas.ll_getRefValue(addr, ((CitationContext_Type)jcasType).casFeatCode_PMIDS), i);
+    jcasType.ll_cas.ll_setRefArrayValue(jcasType.ll_cas.ll_getRefValue(addr, ((CitationContext_Type)jcasType).casFeatCode_PMIDS), i, jcasType.ll_cas.ll_getFSRef(v));}
+  }
 
     

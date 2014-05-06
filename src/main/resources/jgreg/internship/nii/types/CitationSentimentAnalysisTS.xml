@@ -72,6 +72,14 @@
       <name>jgreg.internship.nii.types.CitationContext</name>
       <description>Mark a Citation Context</description>
       <supertypeName>uima.tcas.Annotation</supertypeName>
+      <features>
+        <featureDescription>
+          <name>PMIDS</name>
+          <description>The PMIDS covered by the CitationContext</description>
+          <rangeTypeName>uima.cas.FSArray</rangeTypeName>
+          <elementType>jgreg.internship.nii.types.Citation</elementType>
+        </featureDescription>
+      </features>          
     </typeDescription>
 
     <typeDescription>
