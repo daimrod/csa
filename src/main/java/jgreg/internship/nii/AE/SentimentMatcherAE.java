@@ -68,12 +68,13 @@ public class SentimentMatcherAE extends
 	private boolean typeSystemInitialized = false;
 	private Type sentimentT = null;
 	private Feature sentimentScoreF = null;
+	private Feature sentimentContextF = null;
 
 	/**
 	 * This is a double hack.
 	 *
 	 * Firstly, it uses UIMA introspection to find the type of annotation to use
-	 * and the score feature from it because we can only pass "basic" type to
+	 * and the features from it because we can only pass "basic" type to
 	 * Analysis Engine with the @ConfigurationParameter thing.
 	 *
 	 * Secondly, we use a flag to run this only once because we need a JCas to
@@ -88,6 +89,7 @@ public class SentimentMatcherAE extends
 		TypeSystem aTypeSystem = jCas.getTypeSystem();
 		sentimentT = aTypeSystem.getType(sentimentClassName);
 		sentimentScoreF = sentimentT.getFeatureByBaseName("score");
+        sentimentContextF = sentimentT.getFeatureByBaseName("context");
 	}
 
 	@Override
@@ -160,6 +162,7 @@ public class SentimentMatcherAE extends
 						AnnotationFS sentiment = jCas.getCas()
 								.createAnnotation(sentimentT, begin, end);
 						sentiment.setLongValue(sentimentScoreF, DEFAULT_SCORE);
+                        sentiment.setFeatureValue(sentimentContextF, context);
 						jCas.addFsToIndexes(sentiment);
 					} catch (Exception ex) {
 						throw new AnalysisEngineProcessException(ex);
