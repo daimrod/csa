@@ -95,31 +95,41 @@ public class PubMedXMLParser {
 					&& (xmlr.getLocalName().equals("p")
 							|| xmlr.getLocalName().equals("title") || xmlr
 							.getLocalName().equals("sec"))) {
-				// Add newline when it's necessary
+				/*
+				 * Add newline when it's necessary
+				 */
 				text.append("\n\n");
 				addEnd(text.length(), xmlr.getLocalName());
 			} else if (xmlr.hasName()
 					&& XMLStreamConstants.START_ELEMENT == eventType
 					&& xmlr.getLocalName().equals("xref")
 					&& xmlr.getAttributeValue(null, "ref-type").equals("bibr")) {
-				// Store references
-				String citationIds = xmlr.getAttributeValue(null, "rid"); // 1 (keep this order)
-				String citation = xmlr.getElementText(); // 2 (keep this order)
-                logger.debug("Found xref `" + citationIds + "'");
-                for (String citationId : citationIds.split(" ")) {
-                    int start = text.length();
-                    int end = start + citation.length();
-                    addCitation(citationId, start, end);
-                    addText(citation);
-                }
+				/*
+				 * Store references
+				 */
+
+				// Keep this order
+				String citationIds = xmlr.getAttributeValue(null, "rid"); // 1
+				String citation = xmlr.getElementText(); // 2
+				logger.debug("Found xref `" + citationIds + "'");
+				for (String citationId : citationIds.split(" ")) {
+					int start = text.length();
+					int end = start + citation.length();
+					addCitation(citationId, start, end);
+					addText(citation);
+				}
 			} else if (xmlr.hasName()
 					&& XMLStreamConstants.START_ELEMENT == eventType
 					&& (xmlr.getLocalName().equals("table-wrap") || xmlr
 							.getLocalName().equals("fig"))) {
-				// Ignore table and figure
+				/*
+				 * Ignore table and figure
+				 */
 				skipSubtree();
 			} else if (xmlr.hasText()) {
-				// append all text
+				/*
+				 * append all text
+				 */
 				addText(xmlr.getText());
 			}
 		}
@@ -151,7 +161,8 @@ public class PubMedXMLParser {
 					List<Pair<Integer, Integer>> tmp = citations.get(localId);
 					citations.remove(localId);
 					citations.put(pmid, tmp);
-                    logger.debug("Found PMID(" + pmid + ") for `" + localId + "'");
+					logger.debug("Found PMID(" + pmid + ") for `" + localId
+							+ "'");
 				} else {
 					citations.remove(localId);
 					logger.debug("Could not find PMID for `" + localId + "'");
@@ -198,6 +209,9 @@ public class PubMedXMLParser {
 			 */
 			(XMLStreamConstants.END_ELEMENT == eventType && xmlr.hasName()
 					&& xmlr.getLocalName().equals("article-meta")) {
+				if (article.getDate() == null) {
+					logger.warn("No date for " + article.getPMID());
+				}
 				break;
 			}
 		}
