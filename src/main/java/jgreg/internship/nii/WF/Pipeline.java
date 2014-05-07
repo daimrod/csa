@@ -141,7 +141,7 @@ public class Pipeline {
 
 		AnalysisEngineDescription XMIWriter = AnalysisEngineFactory
 				.createEngineDescription(PubMedXMIWriter.class,
-						PubMedXMIWriter.OUTPUT_DIRECTORY, "/tmp/xmi/");
+						PubMedXMIWriter.OUTPUT_DIRECTORY, "/home/daimrod/corpus/pubmed/dev/xmi/");
 
 		AnalysisEngineDescription sentimentAnnotator = AnalysisEngineFactory
 				.createEngineDescription(SentimentAnnotator.class,
@@ -149,8 +149,8 @@ public class Pipeline {
 
 		AnalysisEngineDescription gnuplotDumper = AnalysisEngineFactory
 				.createEngineDescription(ArticlesDBDumpAE.class,
-						ArticlesDBDumpAE.OUTPUT_DIRECTORY, "/tmp/gnuplot",
-						ArticlesDBDumpAE.INPUT_FILE, "/tmp/gnuplot/list.txt",
+						ArticlesDBDumpAE.OUTPUT_DIRECTORY, "/home/daimrod/corpus/pubmed/dev/output/",
+						ArticlesDBDumpAE.INPUT_FILE, "/home/daimrod/corpus/pubmed/dev/input/gnuplot.lst",
 						ArticlesDBDumpAE.PARAM_DB, articlesDB);
 
 		/*
@@ -173,8 +173,8 @@ public class Pipeline {
 		builder.add(neutralMatcher);
 		builder.add(negativeMatcher);
 		builder.add(sentimentAnnotator);
-		builder.add(gnuplotDumper);
 		builder.add(XMIWriter);
+		builder.add(gnuplotDumper);
 		SimplePipeline
 				.runPipeline(reader, builder.createAggregateDescription());
 
