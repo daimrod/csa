@@ -48,10 +48,10 @@ public class ArticlesDBDumpAE extends
 			throws ResourceInitializationException {
 		super.initialize(context);
 
-        logger.info(outputDirName);
-        logger.info(inputFileName);
+		logger.info(outputDirName);
+		logger.info(inputFileName);
 		inputFile = new File(inputFileName);
-        
+
 		outputDir = new File(outputDirName);
 		outputDir.mkdirs();
 	}
@@ -63,6 +63,7 @@ public class ArticlesDBDumpAE extends
 	@Override
 	public void collectionProcessComplete()
 			throws AnalysisEngineProcessException {
+        logger.info("Dumping ArticlesDB...");
 		try {
 			for (String pmid : FileUtils.readLines(inputFile)) {
 				Article article = articlesDB.get(pmid);
@@ -70,32 +71,33 @@ public class ArticlesDBDumpAE extends
 				Map<Integer, Integer> neutrals = new HashMap<>();
 				Map<Integer, Integer> negatives = new HashMap<>();
 
-                logger.debug(pmid + " -> " + article);
+				logger.debug(pmid + " -> " + article);
 				// Count Sentiment polarity
 				for (String pos : article.getPositives()) {
-                    // Ignore articles without date
-                    if (articlesDB.get(pos).getDate() == null) continue;
-                    
 					Integer year = articlesDB.get(pos).getDate().getYear();
-					positives
-							.put(year,
-									positives.containsKey(year) ? positives
-											.get(year) + 1 : 1);
+					if (positives.containsKey(year)) {
+						positives.put(year, positives.get(year) + 1);
+					} else {
+						positives.put(year, 1);
+					}
 				}
 
 				for (String pos : article.getNeutrals()) {
 					Integer year = articlesDB.get(pos).getDate().getYear();
-					neutrals.put(year,
-							neutrals.containsKey(year) ? neutrals.get(year) + 1
-									: 1);
+					if (neutrals.containsKey(year)) {
+						neutrals.put(year, neutrals.get(year) + 1);
+					} else {
+						neutrals.put(year, 1);
+					}
 				}
 
 				for (String pos : article.getNegatives()) {
 					Integer year = articlesDB.get(pos).getDate().getYear();
-					negatives
-							.put(year,
-									negatives.containsKey(year) ? negatives
-											.get(year) + 1 : 1);
+					if (negatives.containsKey(year)) {
+						negatives.put(year, negatives.get(year) + 1);
+					} else {
+						negatives.put(year, 1);
+					}
 				}
 
 				// Dump Sentiment polarity
@@ -121,8 +123,9 @@ public class ArticlesDBDumpAE extends
 							.append(negatives.get(year)).append('\n');
 				}
 
-				FileUtils.write(new File(outputDir, pmid + ".dat"),
-						out.toString());
+                File output = new File(outputDir, pmid + ".dat");
+                logger.info("Dumping ArticlesDB in `" + output.getAbsolutePath() + "'...");
+                FileUtils.write(output, out.toString());
 			}
 		} catch (IOException ex) {
 			throw new AnalysisEngineProcessException(ex);
