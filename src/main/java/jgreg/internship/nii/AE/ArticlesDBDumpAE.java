@@ -125,7 +125,7 @@ public class ArticlesDBDumpAE extends
 
                 File output = new File(outputDir, pmid + ".dat");
                 logger.info("Dumping ArticlesDB in `" + output.getAbsolutePath() + "'...");
-                FileUtils.write(output, out.toString());
+                FileUtils.write(output, out.toString().replaceAll("null", "0"));
 			}
 		} catch (IOException ex) {
 			throw new AnalysisEngineProcessException(ex);
