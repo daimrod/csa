@@ -34,6 +34,12 @@ public class SentimentAnnotator extends
             for (int i = 0; i < context.getPMIDS().size(); i++) {
                 Citation citation = context.getPMIDS(i);
                 Article article = articlesDB.get(citation.getPMID());
+
+                // Ignore article without date information
+                if (article.getDate() == null) {
+                    logger.warn("Ignoring " + article.getPMID());
+                    continue;
+                }
                 article.addPositive(current.getPMID());
             }
         }
@@ -43,6 +49,12 @@ public class SentimentAnnotator extends
             for (int i = 0; i < context.getPMIDS().size(); i++) {
                 Citation citation = context.getPMIDS(i);
                 Article article = articlesDB.get(citation.getPMID());
+
+                // Ignore article without date information
+                if (article.getDate() == null) {
+                    logger.warn("Ignoring " + article.getPMID());
+                    continue;
+                }
                 article.addNeutral(current.getPMID());
             }
         }
@@ -52,6 +64,12 @@ public class SentimentAnnotator extends
             for (int i = 0; i < context.getPMIDS().size(); i++) {
                 Citation citation = context.getPMIDS(i);
                 Article article = articlesDB.get(citation.getPMID());
+
+                // Ignore article without date information
+                if (article.getDate() == null) {
+                    logger.warn("Ignoring " + article.getPMID());
+                    continue;
+                }
                 article.addNegative(current.getPMID());
             }
         }
