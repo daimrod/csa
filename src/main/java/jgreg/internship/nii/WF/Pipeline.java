@@ -1,5 +1,6 @@
 package jgreg.internship.nii.WF;
 
+import jgreg.internship.nii.AE.ArticlesDBDumpAE;
 import jgreg.internship.nii.AE.CitationContextExtractorAE;
 import jgreg.internship.nii.AE.PubMedParserAE;
 import jgreg.internship.nii.AE.PubMedXMIWriter;
@@ -62,7 +63,9 @@ public class Pipeline {
 		CollectionReaderDescription reader = CollectionReaderFactory
 				.createReaderDescription(PubMedReaderCR.class,
 						PubMedReaderCR.INPUT_DIRECTORY,
-						"/home/daimrod/corpus/pubmed/cpa_dump/PLoS_Med/");
+						"/home/daimrod/corpus/pubmed/corpus/",
+						PubMedReaderCR.INPUT_LIST,
+						"/home/daimrod/corpus/pubmed/dev/list1.txt");
 
 		AnalysisEngineDescription xmlParser = AnalysisEngineFactory
 				.createEngineDescription(PubMedParserAE.class,
@@ -144,6 +147,12 @@ public class Pipeline {
 				.createEngineDescription(SentimentAnnotator.class,
 						SentimentAnnotator.PARAM_DB, articlesDB);
 
+		AnalysisEngineDescription gnuplotDumper = AnalysisEngineFactory
+				.createEngineDescription(ArticlesDBDumpAE.class,
+						ArticlesDBDumpAE.OUTPUT_DIRECTORY, "/tmp/gnuplot",
+						ArticlesDBDumpAE.INPUT_FILE, "/tmp/gnuplot/list.txt",
+						ArticlesDBDumpAE.PARAM_DB, articlesDB);
+
 		/*
 		 * The type priority is important especially to retrieve tokens. The
 		 * rest of the order is not accurate but it does not matter.
@@ -164,6 +173,7 @@ public class Pipeline {
 		builder.add(neutralMatcher);
 		builder.add(negativeMatcher);
 		builder.add(sentimentAnnotator);
+		builder.add(gnuplotDumper);
 		builder.add(XMIWriter);
 		SimplePipeline
 				.runPipeline(reader, builder.createAggregateDescription());

@@ -9,11 +9,11 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Iterator;
+import java.util.stream.Collectors;
 
 import jgreg.internship.nii.types.Filename;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.filefilter.FileFilterUtils;
 import org.apache.log4j.Logger;
 import org.apache.uima.UimaContext;
 import org.apache.uima.collection.CollectionException;
@@ -35,12 +35,18 @@ public class PubMedReaderCR extends JCasCollectionReader_ImplBase {
     /**
      * Path to the PubMed Corpus
      */
-    public static final String INPUT_DIRECTORY = "inputDirectory";
+    public static final String INPUT_DIRECTORY = "inputDirectoryName";
     @ConfigurationParameter(name = INPUT_DIRECTORY, mandatory = true)
-    private String inputDirectory;
+    private String inputDirectoryName;
+    private File inputDirectory;
+
+
+    public static final String INPUT_LIST = "inputFileNameList";
+    @ConfigurationParameter(name = INPUT_LIST, mandatory = true)
+    private String inputFileNameList;
+    private File inputFileList;
 
     private Iterator<File> files;
-    private File pubmedFile;
     private int docIndex = 0;
 
     /**
@@ -51,22 +57,39 @@ public class PubMedReaderCR extends JCasCollectionReader_ImplBase {
      */
     @Override
     public void initialize(UimaContext context) throws ResourceInitializationException {
-        logger.info("Listing `" + inputDirectory + "'...");
-        pubmedFile = new File(inputDirectory);
+        super.initialize(context);
+        
+        logger.info("Listing `" + inputDirectoryName + "'...");
+        inputDirectory = new File(inputDirectoryName);
 
-        if (!pubmedFile.exists()) {
-            logger.error("could not find the PubMed directory at `" + inputDirectory + "'");
+        if (!inputDirectory.exists()) {
+            logger.error("could not find the PubMed directory at `" + inputDirectoryName + "'");
             throw new ResourceInitializationException();
         }
 
-        files = FileUtils.listFiles(pubmedFile,
-                FileFilterUtils.suffixFileFilter(".nxml"),
-                FileFilterUtils.trueFileFilter()).iterator();
+        inputFileList = new File(inputFileNameList);
+        if (!inputFileList.exists()) {
+            logger.error("could not find the input file at `" + inputFileNameList + "'");
+            throw new ResourceInitializationException();
+        }
+
+        try {
+            files = FileUtils.readLines(inputFileList).stream()
+                .map(filename -> filename.trim())
+                .filter(filename -> !filename.isEmpty()) // ignore empty lines
+                .filter(filename -> !filename.startsWith("#")) // lines starting with a '#' are ignored
+                .map(filename -> new File(inputDirectory, filename))
+                .filter(file -> { if (file.exists()) { return true; } else { logger.warn(file.getAbsolutePath() + " doesn't exist"); return false; }})
+                .collect(Collectors.toList()).iterator();
+        } catch (IOException ex) {
+            throw new ResourceInitializationException(ex);
+        }
     }
 
     @Override
     public void getNext(JCas jCas) throws IOException, CollectionException, FileNotFoundException {
         File file = files.next();
+        logger.info("Reading `" + file.getAbsolutePath() + "'...");
         try {
             JCas originalText = ViewCreatorAnnotator.createViewSafely(jCas, "originalText");
             originalText.setDocumentText(FileUtils.readFileToString(file));
