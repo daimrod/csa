@@ -38,7 +38,8 @@ intriguing
 interesting
 attention
 
-futurehope
+future
+hope
 opportunity
 promise
 future
