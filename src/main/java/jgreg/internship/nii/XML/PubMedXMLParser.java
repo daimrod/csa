@@ -197,11 +197,11 @@ public class PubMedXMLParser {
 			/**
 			 * Extract the YEAR from the document
 			 */
-			(article.getDate() == null
+			(article.getYear() == null
 					&& XMLStreamConstants.START_ELEMENT == eventType
 					&& xmlr.hasName() && xmlr.getLocalName().equals("pub-date")) {
 				if (gotoTag("year")) {
-					article.setDate(LocalDate.parse(xmlr.getElementText()));
+					article.setYear(new Integer(xmlr.getElementText()));
 				}
 			} else if
 			/**
@@ -209,7 +209,7 @@ public class PubMedXMLParser {
 			 */
 			(XMLStreamConstants.END_ELEMENT == eventType && xmlr.hasName()
 					&& xmlr.getLocalName().equals("article-meta")) {
-				if (article.getDate() == null) {
+				if (article.getYear() == null) {
 					logger.warn("No date for " + article.getPMID());
 				}
 				break;

@@ -74,7 +74,7 @@ public class ArticlesDBDumpAE extends
 				logger.debug(pmid + " -> " + article);
 				// Count Sentiment polarity
 				for (String pos : article.getPositives()) {
-					Integer year = articlesDB.get(pos).getDate().getYear();
+					Integer year = articlesDB.get(pos).getYear();
 					if (positives.containsKey(year)) {
 						positives.put(year, positives.get(year) + 1);
 					} else {
@@ -83,7 +83,7 @@ public class ArticlesDBDumpAE extends
 				}
 
 				for (String pos : article.getNeutrals()) {
-					Integer year = articlesDB.get(pos).getDate().getYear();
+					Integer year = articlesDB.get(pos).getYear();
 					if (neutrals.containsKey(year)) {
 						neutrals.put(year, neutrals.get(year) + 1);
 					} else {
@@ -92,7 +92,7 @@ public class ArticlesDBDumpAE extends
 				}
 
 				for (String pos : article.getNegatives()) {
-					Integer year = articlesDB.get(pos).getDate().getYear();
+					Integer year = articlesDB.get(pos).getYear();
 					if (negatives.containsKey(year)) {
 						negatives.put(year, negatives.get(year) + 1);
 					} else {

@@ -1,6 +1,5 @@
 package jgreg.internship.nii.RES;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,7 +10,7 @@ public class Article {
 
     private String PMID;
     private String filename;
-    private LocalDate date;
+    private Integer year;
     private List<String> positives;
     private List<String> neutrals;
     private List<String> negatives;
@@ -24,10 +23,10 @@ public class Article {
 	 * @param neutralScore
 	 * @param negativeScore
 	 */
-	public Article(String PMID, String filename, LocalDate date) {
+	public Article(String PMID, String filename, Integer year) {
         setPMID(PMID);
         setFilename(filename);
-        setDate(date);
+        setYear(year);
         positives = new ArrayList<>();
         neutrals = new ArrayList<>();
         negatives = new ArrayList<>();
@@ -71,17 +70,17 @@ public class Article {
 	}
 
 	/**
-	 * @return the date
+	 * @return the year
 	 */
-	public LocalDate getDate() {
-		return date;
+	public Integer getYear() {
+		return year;
 	}
 
 	/**
-	 * @param date the date to set
+	 * @param year the year to set
 	 */
-	public void setDate(LocalDate date) {
-		this.date = date;
+	public void setYear(Integer year) {
+		this.year = year;
 	}
 
 	/**
