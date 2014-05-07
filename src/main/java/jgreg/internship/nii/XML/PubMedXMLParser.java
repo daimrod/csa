@@ -104,6 +104,7 @@ public class PubMedXMLParser {
 					&& xmlr.getAttributeValue(null, "ref-type").equals("bibr")) {
 				// Store references
 				String citationId = xmlr.getAttributeValue(null, "rid"); // 1 (keep this order)
+                logger.debug("Found xref `" + citationId + "'");
 				String citation = xmlr.getElementText(); // 2 (keep this order)
 				int start = text.length();
 				int end = start + citation.length();
@@ -148,6 +149,7 @@ public class PubMedXMLParser {
 					List<Pair<Integer, Integer>> tmp = citations.get(localId);
 					citations.remove(localId);
 					citations.put(pmid, tmp);
+                    logger.debug("Found PMID(" + pmid + ") for `" + localId + "'");
 				} else {
 					citations.remove(localId);
 					logger.debug("Could not find PMID for `" + localId + "'");
