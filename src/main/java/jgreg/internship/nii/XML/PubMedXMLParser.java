@@ -103,13 +103,15 @@ public class PubMedXMLParser {
 					&& xmlr.getLocalName().equals("xref")
 					&& xmlr.getAttributeValue(null, "ref-type").equals("bibr")) {
 				// Store references
-				String citationId = xmlr.getAttributeValue(null, "rid"); // 1 (keep this order)
-                logger.debug("Found xref `" + citationId + "'");
+				String citationIds = xmlr.getAttributeValue(null, "rid"); // 1 (keep this order)
 				String citation = xmlr.getElementText(); // 2 (keep this order)
-				int start = text.length();
-				int end = start + citation.length();
-				addCitation(citationId, start, end);
-				addText(citation);
+                logger.debug("Found xref `" + citationIds + "'");
+                for (String citationId : citationIds.split(" ")) {
+                    int start = text.length();
+                    int end = start + citation.length();
+                    addCitation(citationId, start, end);
+                    addText(citation);
+                }
 			} else if (xmlr.hasName()
 					&& XMLStreamConstants.START_ELEMENT == eventType
 					&& (xmlr.getLocalName().equals("table-wrap") || xmlr
