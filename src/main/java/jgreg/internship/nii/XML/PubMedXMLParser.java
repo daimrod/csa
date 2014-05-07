@@ -313,7 +313,7 @@ public class PubMedXMLParser {
 	}
 
 	private boolean gotoTag(String tag) throws XMLStreamException {
-		return gotoTag(tag, null);
+		return gotoTag(tag, _ignore -> true);
 	}
 
 	/**
