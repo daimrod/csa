@@ -67,6 +67,10 @@ public class ArticlesDBDumpAE extends
 		try {
 			for (String pmid : FileUtils.readLines(inputFile)) {
 				Article article = articlesDB.get(pmid);
+                if (article == null) {
+                    logger.warn("Skipping " + pmid);
+                    continue;
+                }
 				Map<Integer, Integer> positives = new HashMap<>();
 				Map<Integer, Integer> neutrals = new HashMap<>();
 				Map<Integer, Integer> negatives = new HashMap<>();
