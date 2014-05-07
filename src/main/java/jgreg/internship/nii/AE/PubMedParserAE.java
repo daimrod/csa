@@ -75,14 +75,20 @@ public class PubMedParserAE extends
 		docId.addToIndexes();
 
 		// Citation annotation
+        // and Article from citations
 		for (Entry<String, List<Pair<Integer, Integer>>> entry : parser
 				.getCitations().entrySet()) {
 			for (Pair<Integer, Integer> citationIdx : entry.getValue()) {
+                // create and add a Citation
 				Citation citation = new Citation(jCas);
 				citation.setBegin(citationIdx.getLeft());
 				citation.setEnd(citationIdx.getRight());
 				citation.setPMID(entry.getKey());
 				citation.addToIndexes();
+
+                if (articlesDB.get(entry.getKey()) == null) {
+                    articlesDB.add(new Article(entry.getKey()));
+                }
 			}
 		}
 
