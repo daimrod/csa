@@ -1,9 +1,8 @@
 package jgreg.internship.nii.RES;
 
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
+import java.util.Map.Entry;
 
 import org.apache.log4j.Logger;
 import org.apache.uima.resource.DataResource;
@@ -30,5 +29,15 @@ public final class ArticlesDB implements SharedResourceObject {
 
 	public Article remove(String PMID) {
 		return db.remove(PMID);
+	}
+
+	public String toString() {
+		StringBuilder ret = new StringBuilder();
+		ret.append('[');
+		for (Entry<String, Article> entry : db.entrySet()) {
+			ret.append(entry.getKey()).append(", ").append(entry.getValue()).append(' ');
+		}
+		ret.append(']');
+		return ret.toString();
 	}
 }
