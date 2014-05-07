@@ -103,8 +103,8 @@ public class PubMedXMLParser {
 					&& xmlr.getLocalName().equals("xref")
 					&& xmlr.getAttributeValue(null, "ref-type").equals("bibr")) {
 				// Store references
-				String citationId = xmlr.getAttributeValue(null, "rid"); // 1
-				String citation = xmlr.getElementText(); // 2
+				String citationId = xmlr.getAttributeValue(null, "rid"); // 1 (keep this order)
+				String citation = xmlr.getElementText(); // 2 (keep this order)
 				int start = text.length();
 				int end = start + citation.length();
 				addCitation(citationId, start, end);
