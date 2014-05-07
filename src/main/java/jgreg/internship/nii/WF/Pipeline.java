@@ -150,7 +150,7 @@ public class Pipeline {
 		AnalysisEngineDescription gnuplotDumper = AnalysisEngineFactory
 				.createEngineDescription(ArticlesDBDumpAE.class,
 						ArticlesDBDumpAE.OUTPUT_DIRECTORY, "/home/daimrod/corpus/pubmed/dev/output/",
-						ArticlesDBDumpAE.INPUT_FILE, "/home/daimrod/corpus/pubmed/dev/input/gnuplot.lst",
+						ArticlesDBDumpAE.INPUT_FILE, "/home/daimrod/corpus/pubmed/dev/co-cited.lst",
 						ArticlesDBDumpAE.PARAM_DB, articlesDB);
 
 		/*
@@ -210,7 +210,7 @@ public class Pipeline {
 		if (cmd.hasOption("window-size")) {
 			WINDOW_SIZE = new Integer(cmd.getOptionValue("window-size"));
 		} else {
-			WINDOW_SIZE = 0;
+			WINDOW_SIZE = 4;
 		}
 	}
 }
