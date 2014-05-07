@@ -34,12 +34,6 @@ public class SentimentAnnotator extends
             for (int i = 0; i < context.getPMIDS().size(); i++) {
                 Citation citation = context.getPMIDS(i);
                 Article article = articlesDB.get(citation.getPMID());
-                if (article == null) {
-                    // Too bad, this article isn't in our corpus,
-                    // let's add it anyway...
-                    article = new Article(citation.getPMID());
-                    articlesDB.add(article);
-                }
                 article.addPositive(current.getPMID());
             }
         }
@@ -49,12 +43,6 @@ public class SentimentAnnotator extends
             for (int i = 0; i < context.getPMIDS().size(); i++) {
                 Citation citation = context.getPMIDS(i);
                 Article article = articlesDB.get(citation.getPMID());
-                if (article == null) {
-                    // Too bad, this article isn't in our corpus,
-                    // let's add it anyway...
-                    article = new Article(citation.getPMID());
-                    articlesDB.add(article);
-                }
                 article.addNeutral(current.getPMID());
             }
         }
@@ -64,12 +52,6 @@ public class SentimentAnnotator extends
             for (int i = 0; i < context.getPMIDS().size(); i++) {
                 Citation citation = context.getPMIDS(i);
                 Article article = articlesDB.get(citation.getPMID());
-                if (article == null) {
-                    // Too bad, this article isn't in our corpus,
-                    // let's add it anyway...
-                    article = new Article(citation.getPMID());
-                    articlesDB.add(article);
-                }
                 article.addNegative(current.getPMID());
             }
         }
