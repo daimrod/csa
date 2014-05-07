@@ -369,15 +369,6 @@ public class PubMedXMLParser {
 	 * Getters
 	 * ************************************************************************
 	 */
-	/**
-	 * Return the filename to parse or parsed.
-	 *
-	 * @return the filename to parse or parsed.
-	 */
-	public String getFilename() {
-		return article.getFilename();
-	}
-
 	public String getText() {
 		return text.toString();
 	}
