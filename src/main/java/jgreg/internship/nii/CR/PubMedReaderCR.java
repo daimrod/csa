@@ -9,6 +9,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Iterator;
+import java.util.List;
 import java.util.stream.Collectors;
 
 import jgreg.internship.nii.types.Filename;
@@ -46,7 +47,8 @@ public class PubMedReaderCR extends JCasCollectionReader_ImplBase {
     private String inputFileNameList;
     private File inputFileList;
 
-    private Iterator<File> files;
+    private List<File> files;
+    private Iterator<File> filesIt;
     private int docIndex = 0;
 
     /**
@@ -80,7 +82,8 @@ public class PubMedReaderCR extends JCasCollectionReader_ImplBase {
                 .filter(filename -> !filename.startsWith("#")) // lines starting with a '#' are ignored
                 .map(filename -> new File(inputDirectory, filename))
                 .filter(file -> { if (file.exists()) { return true; } else { logger.warn(file.getAbsolutePath() + " doesn't exist"); return false; }})
-                .collect(Collectors.toList()).iterator();
+                .collect(Collectors.toList());
+            filesIt = files.iterator();
         } catch (IOException ex) {
             throw new ResourceInitializationException(ex);
         }
@@ -88,8 +91,8 @@ public class PubMedReaderCR extends JCasCollectionReader_ImplBase {
 
     @Override
     public void getNext(JCas jCas) throws IOException, CollectionException, FileNotFoundException {
-        File file = files.next();
-        logger.info("Reading `" + file.getAbsolutePath() + "'...");
+        File file = filesIt.next();
+        logger.info("Reading[" + docIndex + "/" + files.size() + " ] `" + file.getAbsolutePath() + "'...");
         try {
             JCas originalText = ViewCreatorAnnotator.createViewSafely(jCas, "originalText");
             originalText.setDocumentText(FileUtils.readFileToString(file));
@@ -105,7 +108,7 @@ public class PubMedReaderCR extends JCasCollectionReader_ImplBase {
 
     @Override
     public boolean hasNext() throws IOException, CollectionException {
-        return files.hasNext();
+        return filesIt.hasNext();
     }
 
     @Override
