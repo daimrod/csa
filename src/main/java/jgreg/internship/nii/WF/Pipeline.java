@@ -1,11 +1,14 @@
 package jgreg.internship.nii.WF;
 
+import java.util.Arrays;
+
 import jgreg.internship.nii.AE.ArticlesDBDumpAE;
 import jgreg.internship.nii.AE.CitationContextExtractorAE;
 import jgreg.internship.nii.AE.PubMedParserAE;
 import jgreg.internship.nii.AE.PubMedXMIWriter;
 import jgreg.internship.nii.AE.SentimentAnnotator;
 import jgreg.internship.nii.AE.SentimentMatcherAE;
+import jgreg.internship.nii.AE.SentimentStatisticsAE;
 import jgreg.internship.nii.CR.PubMedReaderCR;
 import jgreg.internship.nii.RES.ArticlesDB;
 import jgreg.internship.nii.types.Citation;
@@ -141,17 +144,20 @@ public class Pipeline {
 
 		AnalysisEngineDescription XMIWriter = AnalysisEngineFactory
 				.createEngineDescription(PubMedXMIWriter.class,
-						PubMedXMIWriter.OUTPUT_DIRECTORY, "/home/daimrod/corpus/pubmed/dev/xmi/");
+						PubMedXMIWriter.OUTPUT_DIRECTORY,
+						"/home/daimrod/corpus/pubmed/dev/xmi/");
 
 		AnalysisEngineDescription sentimentAnnotator = AnalysisEngineFactory
 				.createEngineDescription(SentimentAnnotator.class,
 						SentimentAnnotator.PARAM_DB, articlesDB);
 
-		AnalysisEngineDescription gnuplotDumper = AnalysisEngineFactory
-				.createEngineDescription(ArticlesDBDumpAE.class,
-						ArticlesDBDumpAE.OUTPUT_DIRECTORY, "/home/daimrod/corpus/pubmed/dev/output/",
-						ArticlesDBDumpAE.INPUT_FILE, "/home/daimrod/corpus/pubmed/dev/co-cited.lst",
-						ArticlesDBDumpAE.PARAM_DB, articlesDB);
+		AnalysisEngineDescription sentimentStatistics = AnalysisEngineFactory
+				.createEngineDescription(SentimentStatisticsAE.class,
+						SentimentStatisticsAE.OUTPUT_FILE,
+						"/home/daimrod/corpus/pubmed/dev/output/data.out",
+						SentimentStatisticsAE.INPUT_FILE,
+						"/home/daimrod/corpus/pubmed/dev/co-cited.lst",
+						SentimentStatisticsAE.PARAM_DB, articlesDB);
 
 		/*
 		 * The type priority is important especially to retrieve tokens. The
@@ -172,9 +178,10 @@ public class Pipeline {
 		builder.add(positiveMatcher);
 		builder.add(neutralMatcher);
 		builder.add(negativeMatcher);
-		builder.add(sentimentAnnotator);
 		builder.add(XMIWriter);
-		builder.add(gnuplotDumper);
+		builder.add(sentimentStatistics);
+		// builder.add(sentimentAnnotator);
+		// builder.add(gnuplotDumper);
 		SimplePipeline
 				.runPipeline(reader, builder.createAggregateDescription());
 
