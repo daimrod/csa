@@ -6,13 +6,13 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import jgreg.internship.nii.Utils.Utils;
 import jgreg.internship.nii.types.CitationContext;
 import jgreg.internship.nii.types.Token;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.uima.UimaContext;
 import org.apache.uima.analysis_engine.AnalysisEngineProcessException;
@@ -63,7 +63,7 @@ public class SentimentMatcherAE extends
 	/**
 	 * The pattern to match in the method process(JCas).
 	 */
-	private List<TokenSequencePattern> patterns;
+	private TokenSequencePattern pattern;
 
 	private boolean typeSystemInitialized = false;
 	private Type sentimentT = null;
@@ -89,7 +89,7 @@ public class SentimentMatcherAE extends
 		TypeSystem aTypeSystem = jCas.getTypeSystem();
 		sentimentT = aTypeSystem.getType(sentimentClassName);
 		sentimentScoreF = sentimentT.getFeatureByBaseName("score");
-        sentimentContextF = sentimentT.getFeatureByBaseName("context");
+		sentimentContextF = sentimentT.getFeatureByBaseName("context");
 	}
 
 	@Override
@@ -109,10 +109,11 @@ public class SentimentMatcherAE extends
 
 		// Read the patterns...
 		try {
-			patterns = FileUtils.readLines(patternFile).stream()
-					.filter(string -> !string.trim().isEmpty())
-					.map(line -> TokenSequencePattern.compile(line))
-					.collect(Collectors.toList());
+			String pat = StringUtils.join(
+					FileUtils.readLines(patternFile).stream()
+							.filter(string -> !string.trim().isEmpty())
+							.map(line -> "(" + line + ")").iterator(), "|");
+			pattern = TokenSequencePattern.compile(pat);
 		} catch (IOException ex) {
 			logger.fatal("Error when reading `" + patternFile.getAbsolutePath()
 					+ "'", ex);
@@ -146,27 +147,24 @@ public class SentimentMatcherAE extends
 			// and the equivalent annotations in StanfordNLP
 			List<CoreLabel> labels = Utils.convertUIMA2STANFORD(tokens);
 
-			// Then, for all patterns
-			for (TokenSequencePattern pattern : patterns) {
-				TokenSequenceMatcher matcher = pattern.getMatcher(labels);
-				// Let's try to match
-				while (matcher.find()) {
-					try {
-						// matcher.start is the index of the first element that
-						// matches
-						int begin = tokens.get(matcher.start()).getBegin();
-						// matcher.end is the index of the first next element
-						// that doesn't match
-						int end = tokens.get(matcher.end() - 1).getEnd();
+			TokenSequenceMatcher matcher = pattern.getMatcher(labels);
+			// Let's try to match
+			while (matcher.find()) {
+				try {
+					// matcher.start is the index of the first element that
+					// matches
+					int begin = tokens.get(matcher.start()).getBegin();
+					// matcher.end is the index of the first next element
+					// that doesn't match
+					int end = tokens.get(matcher.end() - 1).getEnd();
 
-						AnnotationFS sentiment = jCas.getCas()
-								.createAnnotation(sentimentT, begin, end);
-						sentiment.setLongValue(sentimentScoreF, DEFAULT_SCORE);
-                        sentiment.setFeatureValue(sentimentContextF, context);
-						jCas.addFsToIndexes(sentiment);
-					} catch (Exception ex) {
-						throw new AnalysisEngineProcessException(ex);
-					}
+					AnnotationFS sentiment = jCas.getCas().createAnnotation(
+							sentimentT, begin, end);
+					sentiment.setLongValue(sentimentScoreF, DEFAULT_SCORE);
+					sentiment.setFeatureValue(sentimentContextF, context);
+					jCas.addFsToIndexes(sentiment);
+				} catch (Exception ex) {
+					throw new AnalysisEngineProcessException(ex);
 				}
 			}
 		}
