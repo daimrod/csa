@@ -65,7 +65,7 @@ public class Pipeline {
 						PubMedReaderCR.INPUT_DIRECTORY,
 						"/home/daimrod/corpus/pubmed/corpus/",
 						PubMedReaderCR.INPUT_LIST,
-						"/home/daimrod/corpus/pubmed/dev/list1.txt");
+						"/home/daimrod/corpus/pubmed/dev/test1.lst");
 
 		AnalysisEngineDescription xmlParser = AnalysisEngineFactory
 				.createEngineDescription(PubMedParserAE.class,
