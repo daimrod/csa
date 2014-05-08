@@ -8,6 +8,7 @@ import jgreg.internship.nii.types.ID;
 import jgreg.internship.nii.types.Negative;
 import jgreg.internship.nii.types.Neutral;
 import jgreg.internship.nii.types.Positive;
+import jgreg.internship.nii.types.Sentiment;
 
 import org.apache.log4j.Logger;
 import org.apache.uima.analysis_engine.AnalysisEngineProcessException;
@@ -29,33 +30,13 @@ public class SentimentAnnotator extends
         ID currentId = JCasUtil.selectSingle(jCas, ID.class);
         Article current = articlesDB.get(currentId.getPMID());
 
-        for (Positive pos : JCasUtil.select(jCas, Positive.class)) {
-            CitationContext context = pos.getContext();
+        for (Sentiment sent : JCasUtil.select(jCas, Sentiment.class)) {
+            CitationContext context = sent.getContext();
             for (int i = 0; i < context.getPMIDS().size(); i++) {
-                Citation citation = context.getPMIDS(i);
+                Citation citation= context.getPMIDS(i);
                 Article article = articlesDB.get(citation.getPMID());
 
-                article.addPositive(current.getPMID());
-            }
-        }
-        
-        for (Neutral pos : JCasUtil.select(jCas, Neutral.class)) {
-            CitationContext context = pos.getContext();
-            for (int i = 0; i < context.getPMIDS().size(); i++) {
-                Citation citation = context.getPMIDS(i);
-                Article article = articlesDB.get(citation.getPMID());
-
-                article.addNeutral(current.getPMID());
-            }
-        }
-        
-        for (Negative pos : JCasUtil.select(jCas, Negative.class)) {
-            CitationContext context = pos.getContext();
-            for (int i = 0; i < context.getPMIDS().size(); i++) {
-                Citation citation = context.getPMIDS(i);
-                Article article = articlesDB.get(citation.getPMID());
-
-                article.addNegative(current.getPMID());
+                article.add(current.getPMID(), sent);
             }
         }
 	}

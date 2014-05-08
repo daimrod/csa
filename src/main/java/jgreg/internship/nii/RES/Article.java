@@ -3,6 +3,11 @@ package jgreg.internship.nii.RES;
 import java.util.ArrayList;
 import java.util.List;
 
+import jgreg.internship.nii.types.Negative;
+import jgreg.internship.nii.types.Neutral;
+import jgreg.internship.nii.types.Positive;
+import jgreg.internship.nii.types.Sentiment;
+
 import org.apache.log4j.Logger;
 
 public class Article {
@@ -103,6 +108,17 @@ public class Article {
 	public List<String> getNeutrals() {
 		return neutrals;
 	}
+
+    public void add(String PMID, Sentiment sent) {
+        if (sent instanceof Positive)
+            addPositive(PMID);
+        else if (sent instanceof Neutral)
+            addNeutral(PMID);
+        else if (sent instanceof Negative)
+            addNegative(PMID);
+        else
+            throw new UnsupportedOperationException();
+    }
 
 	/**
 	 * @param neutrals the neutrals to set
