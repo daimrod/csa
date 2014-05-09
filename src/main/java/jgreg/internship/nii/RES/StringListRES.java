@@ -7,9 +7,9 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
-import java.util.stream.Collectors;
 
-import org.apache.commons.io.FileUtils;
+import jgreg.internship.nii.Utils.Utils;
+
 import org.apache.log4j.Logger;
 import org.apache.uima.resource.DataResource;
 import org.apache.uima.resource.ResourceInitializationException;
@@ -26,10 +26,7 @@ public final class StringListRES implements SharedResourceObject {
 		File file = new File(filename);
 
 		try {
-			list = new ArrayList(FileUtils.readLines(file).stream()
-					.filter(line -> !line.startsWith("#"))
-					.map(line -> line.trim()).filter(line -> !line.isEmpty())
-					.collect(Collectors.toList()));
+			list = Utils.readLines(file);
 		} catch (IOException ex) {
 			throw new ResourceInitializationException(ex);
 		}
