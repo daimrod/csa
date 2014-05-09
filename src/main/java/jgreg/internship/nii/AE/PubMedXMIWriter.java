@@ -4,7 +4,10 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+
 import jgreg.internship.nii.types.ID;
+
+import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.apache.uima.UimaContext;
 import org.apache.uima.analysis_engine.AnalysisEngineProcessException;
@@ -34,12 +37,25 @@ public class PubMedXMIWriter
     private String outputDirName;
     private File outputDir;
 
+    public static final String CLEAR_DIRECTORY = "clearDirectory";
+    @ConfigurationParameter(name = CLEAR_DIRECTORY, mandatory = false, defaultValue = "false")
+    private boolean clearDirectory;
+
     @Override
     public void initialize(UimaContext context) throws ResourceInitializationException {
         super.initialize(context);
 
         outputDir = new File(outputDirName);
+
+        if (clearDirectory) {
+            try {
+                FileUtils.deleteDirectory(outputDir);
+            } catch (IOException ex) {
+                throw new ResourceInitializationException(ex);
+            }
+        }
         outputDir.mkdirs();
+
     }
 
     @Override
