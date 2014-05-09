@@ -15,7 +15,8 @@ public class App {
 		Pipeline.process("/home/daimrod/corpus/pubmed/corpus/",
 				"/home/daimrod/corpus/pubmed/dev/output/",
 				"/home/daimrod/corpus/pubmed/dev/test1.lst",
-				"/home/daimrod/corpus/pubmed/dev/co-cited.lst", 4);
+				"/home/daimrod/corpus/pubmed/dev/co-cited.lst",
+				"/home/daimrod/corpus/pubmed/dev/mapping.lst", 4);
 
 		logger.info("done!");
 	}

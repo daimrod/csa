@@ -3,19 +3,14 @@ package jgreg.internship.nii.WF;
 import jgreg.internship.nii.AE.CitationContextExtractorAE;
 import jgreg.internship.nii.AE.PubMedParserAE;
 import jgreg.internship.nii.AE.PubMedXMIWriter;
-import jgreg.internship.nii.AE.SentimentAnnotator;
-import jgreg.internship.nii.AE.SentimentMatcherAE;
-import jgreg.internship.nii.AE.SentimentStatisticsAE;
+import jgreg.internship.nii.AE.SentimentFinderAE;
 import jgreg.internship.nii.CR.PubMedReaderCR;
 import jgreg.internship.nii.RES.ArticlesDB;
 import jgreg.internship.nii.RES.StringListRES;
 import jgreg.internship.nii.types.Citation;
 import jgreg.internship.nii.types.CitationContext;
 import jgreg.internship.nii.types.ID;
-import jgreg.internship.nii.types.Negative;
-import jgreg.internship.nii.types.Neutral;
 import jgreg.internship.nii.types.Paragraph;
-import jgreg.internship.nii.types.Positive;
 import jgreg.internship.nii.types.Section;
 import jgreg.internship.nii.types.Sentence;
 import jgreg.internship.nii.types.Sentiment;
@@ -51,7 +46,7 @@ public class Pipeline {
 
 	public static void process(String inputDirectory, String outputDirectory,
 			String listArticlesFilename, String listFocusedArticlesFilename,
-			Integer windowSize) throws Exception {
+			String mappingFilename, Integer windowSize) throws Exception {
 
 		/*
 		 * Resources
@@ -138,6 +133,11 @@ public class Pipeline {
 						"jgreg.internship.nii.types.Token",
 						"opennlp.uima.POSFeature", "POS");
 
+		// Sentiment Finder
+		AnalysisEngineDescription sentimentFinder = AnalysisEngineFactory
+				.createEngineDescription(SentimentFinderAE.class,
+						SentimentFinderAE.MAPPING_FILE, mappingFilename);
+
 		// XMI Writer
 		AnalysisEngineDescription XMIWriter = AnalysisEngineFactory
 				.createEngineDescription(PubMedXMIWriter.class,
@@ -152,14 +152,14 @@ public class Pipeline {
 				TypePrioritiesFactory.createTypePriorities(ID.class,
 						Title.class, Section.class, Paragraph.class,
 						CitationContext.class, Sentence.class, Citation.class,
-						Token.class, Sentiment.class, Negative.class,
-						Neutral.class, Positive.class), null);
+						Token.class, Sentiment.class), null);
 
 		builder.add(xmlParser);
 		builder.add(sentenceDetector);
 		builder.add(citationContextDetector);
 		builder.add(tokenizer);
 		builder.add(POSTagger);
+        builder.add(sentimentFinder);
 		builder.add(XMIWriter);
 		SimplePipeline
 				.runPipeline(reader, builder.createAggregateDescription());
