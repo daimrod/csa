@@ -1,8 +1,7 @@
 package jgreg.internship.nii.WF;
 
-import java.util.Arrays;
+import java.util.List;
 
-import jgreg.internship.nii.AE.ArticlesDBDumpAE;
 import jgreg.internship.nii.AE.CitationContextExtractorAE;
 import jgreg.internship.nii.AE.PubMedParserAE;
 import jgreg.internship.nii.AE.PubMedXMIWriter;
@@ -31,12 +30,6 @@ import opennlp.uima.sentdetect.SentenceModelResourceImpl;
 import opennlp.uima.tokenize.Tokenizer;
 import opennlp.uima.tokenize.TokenizerModelResourceImpl;
 
-import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.CommandLineParser;
-import org.apache.commons.cli.OptionBuilder;
-import org.apache.commons.cli.Options;
-import org.apache.commons.cli.ParseException;
-import org.apache.commons.cli.PosixParser;
 import org.apache.log4j.Logger;
 import org.apache.uima.analysis_engine.AnalysisEngineDescription;
 import org.apache.uima.collection.CollectionReaderDescription;
@@ -57,8 +50,111 @@ public class Pipeline {
 
 	private static Integer WINDOW_SIZE = null;
 
+	public static void process(String inputDirectory, String outputDirectory,
+			List<String> articlesFilename, Integer windowSize,
+			List<String> citedPMIDS) throws Exception {
+
+		/*
+		 * Resources
+		 */
+		// Articles DB
+		ExternalResourceDescription articlesDB = ExternalResourceFactory
+				.createExternalResourceDescription(ArticlesDB.class, "");
+
+		// Sentence Model
+		ExternalResourceDescription sentenceModel = ExternalResourceFactory
+				.createExternalResourceDescription(
+						SentenceModelResourceImpl.class,
+						"file:org/apache/ctakes/core/sentdetect/sd-med-model.zip");
+		// Token Model
+		ExternalResourceDescription tokenModel = ExternalResourceFactory
+				.createExternalResourceDescription(
+						TokenizerModelResourceImpl.class,
+						"file:opennlp/uima/models/en-token.bin");
+
+		// POS tagger Model
+		ExternalResourceDescription POSModel = ExternalResourceFactory
+				.createExternalResourceDescription(POSModelResourceImpl.class,
+						"file:opennlp/uima/models/en-pos-perceptron.bin");
+
+		/*
+		 * Collection Reader
+		 */
+		CollectionReaderDescription reader = CollectionReaderFactory
+				.createReaderDescription(PubMedReaderCR.class,
+						PubMedReaderCR.INPUT_DIRECTORY, inputDirectory,
+						PubMedReaderCR.INPUT_LIST,
+						"/home/daimrod/corpus/pubmed/dev/test2.lst"); // FIXME
+
+		/*
+		 * Analysis Engine
+		 */
+		// Parser XML
+		AnalysisEngineDescription xmlParser = AnalysisEngineFactory
+				.createEngineDescription(PubMedParserAE.class,
+						PubMedParserAE.PARAM_DB, articlesDB);
+
+		// Sentence Detector
+		AnalysisEngineDescription sentenceDetector = AnalysisEngineFactory
+				.createEngineDescription(SentenceDetector.class,
+						"opennlp.uima.ModelName", sentenceModel,
+						"opennlp.uima.SentenceType",
+						"jgreg.internship.nii.types.Sentence",
+						"opennlp.uima.ContainerType",
+						"jgreg.internship.nii.types.Paragraph");
+
+		// Citation Context Detector
+		AnalysisEngineDescription citationContextDetector = AnalysisEngineFactory
+				.createEngineDescription(CitationContextExtractorAE.class,
+						CitationContextExtractorAE.PARAM_WINDOW_SIZE,
+						windowSize);
+
+		// Tokenizer
+		AnalysisEngineDescription tokenizer = AnalysisEngineFactory
+				.createEngineDescription(Tokenizer.class,
+						"opennlp.uima.ModelName", tokenModel,
+						"opennlp.uima.SentenceType",
+						"jgreg.internship.nii.types.Sentence",
+						"opennlp.uima.TokenType",
+						"jgreg.internship.nii.types.Token");
+
+		// POS Tagger
+		AnalysisEngineDescription POSTagger = AnalysisEngineFactory
+				.createEngineDescription(POSTagger.class,
+						"opennlp.uima.ModelName", POSModel,
+						"opennlp.uima.SentenceType",
+						"jgreg.internship.nii.types.Sentence",
+						"opennlp.uima.TokenType",
+						"jgreg.internship.nii.types.Token",
+						"opennlp.uima.POSFeature", "POS");
+
+		// XMI Writer
+		AnalysisEngineDescription XMIWriter = AnalysisEngineFactory
+				.createEngineDescription(PubMedXMIWriter.class,
+						PubMedXMIWriter.OUTPUT_DIRECTORY, outputDirectory);
+
+		/*
+		 * The type priority is important especially to retrieve tokens. The
+		 * rest of the order is not accurate but it does not matter.
+		 */
+		AggregateBuilder builder = new AggregateBuilder(null,
+				TypePrioritiesFactory.createTypePriorities(ID.class,
+						Title.class, Section.class, Paragraph.class,
+						CitationContext.class, Sentence.class, Citation.class,
+						Token.class, Sentiment.class, Negative.class,
+						Neutral.class, Positive.class), null);
+
+		builder.add(xmlParser);
+		builder.add(sentenceDetector);
+		builder.add(citationContextDetector);
+		builder.add(tokenizer);
+		builder.add(POSTagger);
+		builder.add(XMIWriter);
+		SimplePipeline
+				.runPipeline(reader, builder.createAggregateDescription());
+	}
+
 	public static void main(String[] args) throws Exception {
-		parseArguments(args);
 
 		ExternalResourceDescription articlesDB = ExternalResourceFactory
 				.createExternalResourceDescription(ArticlesDB.class, "");
@@ -68,7 +164,7 @@ public class Pipeline {
 						PubMedReaderCR.INPUT_DIRECTORY,
 						"/home/daimrod/corpus/pubmed/corpus/",
 						PubMedReaderCR.INPUT_LIST,
-						"/home/daimrod/corpus/pubmed/dev/test1.lst");
+						"/home/daimrod/corpus/pubmed/dev/test2.lst");
 
 		AnalysisEngineDescription xmlParser = AnalysisEngineFactory
 				.createEngineDescription(PubMedParserAE.class,
@@ -154,7 +250,8 @@ public class Pipeline {
 		AnalysisEngineDescription sentimentStatistics = AnalysisEngineFactory
 				.createEngineDescription(SentimentStatisticsAE.class,
 						SentimentStatisticsAE.OUTPUT_FILE,
-						"/home/daimrod/corpus/pubmed/dev/output/data.out",
+						"/home/daimrod/corpus/pubmed/dev/output/data-all.out",
+						SentimentStatisticsAE.PARAM_STRATEGY, "all",
 						SentimentStatisticsAE.INPUT_FILE,
 						"/home/daimrod/corpus/pubmed/dev/co-cited.lst",
 						SentimentStatisticsAE.PARAM_DB, articlesDB);
@@ -186,38 +283,5 @@ public class Pipeline {
 				.runPipeline(reader, builder.createAggregateDescription());
 
 		logger.info("done!");
-	}
-
-	/**
-	 * FIXME Parse the command line
-	 *
-	 * @param args
-	 */
-	static private void parseArguments(String[] args) {
-		Options options = new Options();
-
-		options.addOption(OptionBuilder
-				.isRequired(false)
-				.withLongOpt("window-size")
-				.hasArg()
-				.withDescription("The size of the window for citation context.")
-				.create("windowSize"));
-
-		CommandLineParser parser = new PosixParser();
-		CommandLine cmd = null;
-		try {
-			cmd = parser.parse(options, args);
-		} catch (ParseException ex) {
-			System.err.println("The CLI args could not be parsed.");
-			System.err.println("The error message was:");
-			System.err.println(" " + ex.getMessage());
-			System.exit(1);
-		}
-
-		if (cmd.hasOption("window-size")) {
-			WINDOW_SIZE = new Integer(cmd.getOptionValue("window-size"));
-		} else {
-			WINDOW_SIZE = 4;
-		}
 	}
 }
