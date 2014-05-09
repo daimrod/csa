@@ -81,7 +81,7 @@ public class Pipeline {
 				.createExternalResourceDescription(StringListRES.class,
 						listArticlesFilename);
 
-        // Focused Articles
+		// Focused Articles
 		ExternalResourceDescription focusedArticles = ExternalResourceFactory
 				.createExternalResourceDescription(StringListRES.class,
 						listFocusedArticlesFilename);
@@ -114,6 +114,8 @@ public class Pipeline {
 		// Citation Context Detector
 		AnalysisEngineDescription citationContextDetector = AnalysisEngineFactory
 				.createEngineDescription(CitationContextExtractorAE.class,
+						CitationContextExtractorAE.FOCUSED_ARTICLES,
+						focusedArticles,
 						CitationContextExtractorAE.PARAM_WINDOW_SIZE,
 						windowSize);
 
@@ -139,7 +141,8 @@ public class Pipeline {
 		// XMI Writer
 		AnalysisEngineDescription XMIWriter = AnalysisEngineFactory
 				.createEngineDescription(PubMedXMIWriter.class,
-						PubMedXMIWriter.OUTPUT_DIRECTORY, outputDirectory);
+						PubMedXMIWriter.OUTPUT_DIRECTORY, outputDirectory,
+						PubMedXMIWriter.CLEAR_DIRECTORY, true);
 
 		/*
 		 * The type priority is important especially to retrieve tokens. The
