@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+import jgreg.internship.nii.RES.StringListRES;
 import jgreg.internship.nii.types.Citation;
 import jgreg.internship.nii.types.CitationContext;
 import jgreg.internship.nii.types.Sentence;
@@ -13,6 +14,7 @@ import org.apache.log4j.Logger;
 import org.apache.uima.analysis_engine.AnalysisEngineProcessException;
 import org.apache.uima.cas.FeatureStructure;
 import org.apache.uima.fit.descriptor.ConfigurationParameter;
+import org.apache.uima.fit.descriptor.ExternalResource;
 import org.apache.uima.fit.util.JCasUtil;
 import org.apache.uima.jcas.JCas;
 import org.apache.uima.jcas.cas.FSArray;
@@ -44,6 +46,10 @@ public class CitationContextExtractorAE extends
 	@ConfigurationParameter(name = PARAM_WINDOW_SIZE, mandatory = true)
 	private Integer windowSize;
 
+    public static final String FOCUSED_ARTICLES = "focusedArticles";
+	@ExternalResource(key = FOCUSED_ARTICLES, mandatory = false)
+	StringListRES focusedArticles;
+
 	@Override
 	public void process(JCas jCas) throws AnalysisEngineProcessException {
 		Map<Sentence, Collection<Citation>> sentence2Citations = JCasUtil
@@ -52,11 +58,28 @@ public class CitationContextExtractorAE extends
 		for (Sentence sentence : JCasUtil.select(jCas, Sentence.class)) {
 			List<FeatureStructure> citations = new ArrayList(
 					sentence2Citations.get(sentence));
-			// Skip sentences with no Citations in it
-			if (citations.size() == 0)
-				continue;
 
-			int begin, end;
+            boolean skip = false;            
+            if (focusedArticles != null) {
+                // Skip sentences with no interesting Citation
+                skip = true;
+                for (Citation cit : sentence2Citations.get(sentence)) {
+                    if (focusedArticles.contains(cit.getPMID())) {
+                        skip = false;
+                        break;
+                    }
+                }
+                
+            } else {
+                // Skip sentences with no Citation
+                if (citations.size() == 0) {
+                    skip = true;
+                }
+            }
+            if (skip) continue;
+
+
+            int begin, end;
 			// Before
 			List<Sentence> precedings = JCasUtil.selectPreceding(
 					Sentence.class, sentence, windowSize);
