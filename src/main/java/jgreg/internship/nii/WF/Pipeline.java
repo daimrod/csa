@@ -51,7 +51,7 @@ public class Pipeline {
 	private static Integer WINDOW_SIZE = null;
 
 	public static void process(String inputDirectory, String outputDirectory,
-			List<String> articlesFilename, List<String> citedPMIDS,
+			String listArticlesFilename, String listFocusedArticlesFilename,
 			Integer windowSize) throws Exception {
 
 		/*
