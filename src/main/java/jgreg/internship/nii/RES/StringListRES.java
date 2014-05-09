@@ -134,4 +134,8 @@ public final class StringListRES implements SharedResourceObject {
 	public void trimToSize() {
 		list.trimToSize();
 	}
+
+    public ArrayList<String> getList() {
+        return list;
+    }
 }
