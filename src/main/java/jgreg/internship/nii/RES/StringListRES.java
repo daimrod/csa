@@ -27,8 +27,8 @@ public final class StringListRES implements SharedResourceObject {
 
 		try {
 			list = new ArrayList(FileUtils.readLines(file).stream()
-					.map(line -> line.trim()).filter(line -> !line.isEmpty())
 					.filter(line -> !line.startsWith("#"))
+					.map(line -> line.trim()).filter(line -> !line.isEmpty())
 					.collect(Collectors.toList()));
 		} catch (IOException ex) {
 			throw new ResourceInitializationException(ex);
@@ -135,7 +135,7 @@ public final class StringListRES implements SharedResourceObject {
 		list.trimToSize();
 	}
 
-    public ArrayList<String> getList() {
-        return list;
-    }
+	public ArrayList<String> getList() {
+		return list;
+	}
 }
