@@ -1,5 +1,5 @@
 
-/* First created by JCasGen Tue May 06 16:49:26 JST 2014 */
+/* First created by JCasGen Fri May 09 23:00:41 JST 2014 */
 package jgreg.internship.nii.types;
 
 import org.apache.uima.jcas.JCas;
@@ -14,7 +14,7 @@ import org.apache.uima.cas.Feature;
 import org.apache.uima.jcas.tcas.Annotation_Type;
 
 /** 
- * Updated by JCasGen Tue May 06 16:49:26 JST 2014
+ * Updated by JCasGen Fri May 09 23:00:41 JST 2014
  * @generated */
 public class Sentiment_Type extends Annotation_Type {
   /** @generated 
@@ -71,6 +71,30 @@ public class Sentiment_Type extends Annotation_Type {
   
  
   /** @generated */
+  final Feature casFeat_name;
+  /** @generated */
+  final int     casFeatCode_name;
+  /** @generated
+   * @param addr low level Feature Structure reference
+   * @return the feature value 
+   */ 
+  public String getName(int addr) {
+        if (featOkTst && casFeat_name == null)
+      jcas.throwFeatMissing("name", "jgreg.internship.nii.types.Sentiment");
+    return ll_cas.ll_getStringValue(addr, casFeatCode_name);
+  }
+  /** @generated
+   * @param addr low level Feature Structure reference
+   * @param v value to set 
+   */    
+  public void setName(int addr, String v) {
+        if (featOkTst && casFeat_name == null)
+      jcas.throwFeatMissing("name", "jgreg.internship.nii.types.Sentiment");
+    ll_cas.ll_setStringValue(addr, casFeatCode_name, v);}
+    
+  
+ 
+  /** @generated */
   final Feature casFeat_context;
   /** @generated */
   final int     casFeatCode_context;
@@ -108,6 +132,10 @@ public class Sentiment_Type extends Annotation_Type {
  
     casFeat_score = jcas.getRequiredFeatureDE(casType, "score", "uima.cas.Long", featOkTst);
     casFeatCode_score  = (null == casFeat_score) ? JCas.INVALID_FEATURE_CODE : ((FeatureImpl)casFeat_score).getCode();
+
+ 
+    casFeat_name = jcas.getRequiredFeatureDE(casType, "name", "uima.cas.String", featOkTst);
+    casFeatCode_name  = (null == casFeat_name) ? JCas.INVALID_FEATURE_CODE : ((FeatureImpl)casFeat_name).getCode();
 
  
     casFeat_context = jcas.getRequiredFeatureDE(casType, "context", "jgreg.internship.nii.types.CitationContext", featOkTst);

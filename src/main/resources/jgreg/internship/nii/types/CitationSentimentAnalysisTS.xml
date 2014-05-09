@@ -14,25 +14,14 @@
           <rangeTypeName>uima.cas.Long</rangeTypeName>
         </featureDescription>
         <featureDescription>
+          <name>name</name>
+          <rangeTypeName>uima.cas.String</rangeTypeName>
+        </featureDescription>
+        <featureDescription>
           <name>context</name>
           <rangeTypeName>jgreg.internship.nii.types.CitationContext</rangeTypeName>
         </featureDescription>
       </features>
-    </typeDescription>
-
-    <typeDescription>
-      <name>jgreg.internship.nii.types.Positive</name>
-      <supertypeName>jgreg.internship.nii.types.Sentiment</supertypeName>
-    </typeDescription>
-
-    <typeDescription>
-      <name>jgreg.internship.nii.types.Neutral</name>
-      <supertypeName>jgreg.internship.nii.types.Sentiment</supertypeName>
-    </typeDescription>
-
-    <typeDescription>
-      <name>jgreg.internship.nii.types.Negative</name>
-      <supertypeName>jgreg.internship.nii.types.Sentiment</supertypeName>
     </typeDescription>
 
     <typeDescription>

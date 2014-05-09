@@ -1,6 +1,6 @@
 
 
-/* First created by JCasGen Tue May 06 16:49:26 JST 2014 */
+/* First created by JCasGen Fri May 09 23:00:41 JST 2014 */
 package jgreg.internship.nii.types;
 
 import org.apache.uima.jcas.JCas; 
@@ -11,7 +11,7 @@ import org.apache.uima.jcas.tcas.Annotation;
 
 
 /** 
- * Updated by JCasGen Tue May 06 16:49:26 JST 2014
+ * Updated by JCasGen Fri May 09 23:00:41 JST 2014
  * XML source: src/main/resources/jgreg/internship/nii/types/CitationSentimentAnalysisTS.xml
  * @generated */
 public class Sentiment extends Annotation {
@@ -96,6 +96,28 @@ public class Sentiment extends Annotation {
     if (Sentiment_Type.featOkTst && ((Sentiment_Type)jcasType).casFeat_score == null)
       jcasType.jcas.throwFeatMissing("score", "jgreg.internship.nii.types.Sentiment");
     jcasType.ll_cas.ll_setLongValue(addr, ((Sentiment_Type)jcasType).casFeatCode_score, v);}    
+   
+    
+  //*--------------*
+  //* Feature: name
+
+  /** getter for name - gets 
+   * @generated
+   * @return value of the feature 
+   */
+  public String getName() {
+    if (Sentiment_Type.featOkTst && ((Sentiment_Type)jcasType).casFeat_name == null)
+      jcasType.jcas.throwFeatMissing("name", "jgreg.internship.nii.types.Sentiment");
+    return jcasType.ll_cas.ll_getStringValue(addr, ((Sentiment_Type)jcasType).casFeatCode_name);}
+    
+  /** setter for name - sets  
+   * @generated
+   * @param v value to set into the feature 
+   */
+  public void setName(String v) {
+    if (Sentiment_Type.featOkTst && ((Sentiment_Type)jcasType).casFeat_name == null)
+      jcasType.jcas.throwFeatMissing("name", "jgreg.internship.nii.types.Sentiment");
+    jcasType.ll_cas.ll_setStringValue(addr, ((Sentiment_Type)jcasType).casFeatCode_name, v);}    
    
     
   //*--------------*
