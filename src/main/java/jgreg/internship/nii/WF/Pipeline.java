@@ -1,7 +1,5 @@
 package jgreg.internship.nii.WF;
 
-import java.util.List;
-
 import jgreg.internship.nii.AE.CitationContextExtractorAE;
 import jgreg.internship.nii.AE.PubMedParserAE;
 import jgreg.internship.nii.AE.PubMedXMIWriter;
@@ -10,6 +8,7 @@ import jgreg.internship.nii.AE.SentimentMatcherAE;
 import jgreg.internship.nii.AE.SentimentStatisticsAE;
 import jgreg.internship.nii.CR.PubMedReaderCR;
 import jgreg.internship.nii.RES.ArticlesDB;
+import jgreg.internship.nii.RES.StringListRES;
 import jgreg.internship.nii.types.Citation;
 import jgreg.internship.nii.types.CitationContext;
 import jgreg.internship.nii.types.ID;
@@ -77,14 +76,23 @@ public class Pipeline {
 				.createExternalResourceDescription(POSModelResourceImpl.class,
 						"file:opennlp/uima/models/en-pos-perceptron.bin");
 
+		// Corpus Articles
+		ExternalResourceDescription corpusArticles = ExternalResourceFactory
+				.createExternalResourceDescription(StringListRES.class,
+						listArticlesFilename);
+
+        // Focused Articles
+		ExternalResourceDescription focusedArticles = ExternalResourceFactory
+				.createExternalResourceDescription(StringListRES.class,
+						listFocusedArticlesFilename);
+
 		/*
 		 * Collection Reader
 		 */
 		CollectionReaderDescription reader = CollectionReaderFactory
 				.createReaderDescription(PubMedReaderCR.class,
 						PubMedReaderCR.INPUT_DIRECTORY, inputDirectory,
-						PubMedReaderCR.INPUT_LIST,
-						"/home/daimrod/corpus/pubmed/dev/test2.lst"); // FIXME
+						PubMedReaderCR.CORPUS_ARTICLES, corpusArticles);
 
 		/*
 		 * Analysis Engine
@@ -152,136 +160,5 @@ public class Pipeline {
 		builder.add(XMIWriter);
 		SimplePipeline
 				.runPipeline(reader, builder.createAggregateDescription());
-	}
-
-	public static void main(String[] args) throws Exception {
-
-		ExternalResourceDescription articlesDB = ExternalResourceFactory
-				.createExternalResourceDescription(ArticlesDB.class, "");
-
-		CollectionReaderDescription reader = CollectionReaderFactory
-				.createReaderDescription(PubMedReaderCR.class,
-						PubMedReaderCR.INPUT_DIRECTORY,
-						"/home/daimrod/corpus/pubmed/corpus/",
-						PubMedReaderCR.INPUT_LIST,
-						"/home/daimrod/corpus/pubmed/dev/test2.lst");
-
-		AnalysisEngineDescription xmlParser = AnalysisEngineFactory
-				.createEngineDescription(PubMedParserAE.class,
-						PubMedParserAE.PARAM_DB, articlesDB);
-
-		ExternalResourceDescription sentenceModel = ExternalResourceFactory
-				.createExternalResourceDescription(
-						SentenceModelResourceImpl.class,
-						"file:org/apache/ctakes/core/sentdetect/sd-med-model.zip");
-
-		AnalysisEngineDescription sentenceDetector = AnalysisEngineFactory
-				.createEngineDescription(SentenceDetector.class,
-						"opennlp.uima.ModelName", sentenceModel,
-						"opennlp.uima.SentenceType",
-						"jgreg.internship.nii.types.Sentence",
-						"opennlp.uima.ContainerType",
-						"jgreg.internship.nii.types.Paragraph");
-
-		AnalysisEngineDescription citationContextExtractor = AnalysisEngineFactory
-				.createEngineDescription(CitationContextExtractorAE.class,
-						CitationContextExtractorAE.PARAM_WINDOW_SIZE,
-						WINDOW_SIZE);
-
-		ExternalResourceDescription tokenModel = ExternalResourceFactory
-				.createExternalResourceDescription(
-						TokenizerModelResourceImpl.class,
-						"file:opennlp/uima/models/en-token.bin");
-
-		AnalysisEngineDescription tokenizer = AnalysisEngineFactory
-				.createEngineDescription(Tokenizer.class,
-						"opennlp.uima.ModelName", tokenModel,
-						"opennlp.uima.SentenceType",
-						"jgreg.internship.nii.types.Sentence",
-						"opennlp.uima.TokenType",
-						"jgreg.internship.nii.types.Token");
-
-		ExternalResourceDescription POSModel = ExternalResourceFactory
-				.createExternalResourceDescription(POSModelResourceImpl.class,
-						"file:opennlp/uima/models/en-pos-perceptron.bin");
-
-		AnalysisEngineDescription POSTagger = AnalysisEngineFactory
-				.createEngineDescription(POSTagger.class,
-						"opennlp.uima.ModelName", POSModel,
-						"opennlp.uima.SentenceType",
-						"jgreg.internship.nii.types.Sentence",
-						"opennlp.uima.TokenType",
-						"jgreg.internship.nii.types.Token",
-						"opennlp.uima.POSFeature", "POS");
-
-		AnalysisEngineDescription positiveMatcher = AnalysisEngineFactory
-				.createEngineDescription(
-						SentimentMatcherAE.class,
-						SentimentMatcherAE.PARAM_PATTERN_FILE,
-						"/home/daimrod/src/java/nii-internship/csa/src/main/resources/jgreg/internship/nii/patterns/positive.pat",
-						SentimentMatcherAE.PARAM_SENTIMENT_CLASS_NAME,
-						"jgreg.internship.nii.types.Positive");
-
-		AnalysisEngineDescription neutralMatcher = AnalysisEngineFactory
-				.createEngineDescription(
-						SentimentMatcherAE.class,
-						SentimentMatcherAE.PARAM_PATTERN_FILE,
-						"/home/daimrod/src/java/nii-internship/csa/src/main/resources/jgreg/internship/nii/patterns/neutral.pat",
-						SentimentMatcherAE.PARAM_SENTIMENT_CLASS_NAME,
-						"jgreg.internship.nii.types.Neutral");
-
-		AnalysisEngineDescription negativeMatcher = AnalysisEngineFactory
-				.createEngineDescription(
-						SentimentMatcherAE.class,
-						SentimentMatcherAE.PARAM_PATTERN_FILE,
-						"/home/daimrod/src/java/nii-internship/csa/src/main/resources/jgreg/internship/nii/patterns/negative.pat",
-						SentimentMatcherAE.PARAM_SENTIMENT_CLASS_NAME,
-						"jgreg.internship.nii.types.Negative");
-
-		AnalysisEngineDescription XMIWriter = AnalysisEngineFactory
-				.createEngineDescription(PubMedXMIWriter.class,
-						PubMedXMIWriter.OUTPUT_DIRECTORY,
-						"/home/daimrod/corpus/pubmed/dev/xmi/");
-
-		AnalysisEngineDescription sentimentAnnotator = AnalysisEngineFactory
-				.createEngineDescription(SentimentAnnotator.class,
-						SentimentAnnotator.PARAM_DB, articlesDB);
-
-		AnalysisEngineDescription sentimentStatistics = AnalysisEngineFactory
-				.createEngineDescription(SentimentStatisticsAE.class,
-						SentimentStatisticsAE.OUTPUT_FILE,
-						"/home/daimrod/corpus/pubmed/dev/output/data-all.out",
-						SentimentStatisticsAE.PARAM_STRATEGY, "all",
-						SentimentStatisticsAE.INPUT_FILE,
-						"/home/daimrod/corpus/pubmed/dev/co-cited.lst",
-						SentimentStatisticsAE.PARAM_DB, articlesDB);
-
-		/*
-		 * The type priority is important especially to retrieve tokens. The
-		 * rest of the order is not accurate but it does not matter.
-		 */
-		AggregateBuilder builder = new AggregateBuilder(null,
-				TypePrioritiesFactory.createTypePriorities(ID.class,
-						Title.class, Section.class, Paragraph.class,
-						CitationContext.class, Sentence.class, Citation.class,
-						Token.class, Sentiment.class, Negative.class,
-						Neutral.class, Positive.class), null);
-
-		builder.add(xmlParser);
-		builder.add(sentenceDetector);
-		builder.add(citationContextExtractor);
-		builder.add(tokenizer);
-		builder.add(POSTagger);
-		builder.add(positiveMatcher);
-		builder.add(neutralMatcher);
-		builder.add(negativeMatcher);
-		builder.add(XMIWriter);
-		builder.add(sentimentStatistics);
-		// builder.add(sentimentAnnotator);
-		// builder.add(gnuplotDumper);
-		SimplePipeline
-				.runPipeline(reader, builder.createAggregateDescription());
-
-		logger.info("done!");
 	}
 }
