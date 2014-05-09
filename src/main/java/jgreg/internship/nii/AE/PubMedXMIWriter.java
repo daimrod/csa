@@ -37,6 +37,9 @@ public class PubMedXMIWriter
     private String outputDirName;
     private File outputDir;
 
+	/**
+	 * Empty the directory before writing to it or not.
+	 */
     public static final String CLEAR_DIRECTORY = "clearDirectory";
     @ConfigurationParameter(name = CLEAR_DIRECTORY, mandatory = false, defaultValue = "false")
     private boolean clearDirectory;
@@ -55,7 +58,6 @@ public class PubMedXMIWriter
             }
         }
         outputDir.mkdirs();
-
     }
 
     @Override
