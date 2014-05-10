@@ -42,8 +42,18 @@ public class Pipeline {
 	private static final Logger logger = Logger.getLogger(Pipeline.class
 			.getCanonicalName());
 
-	private static Integer WINDOW_SIZE = null;
-
+	/**
+	 * Run the Pipeline.
+	 *
+	 * @param inputDirectory contains all articles.
+	 * @param outputDirectory stores all output data (XMI, ...).
+	 * @param listArticlesFilename lists articles of interest.
+	 * @param listFocusedArticlesFilename lists PMIDS of interest.
+	 * @param mappingFilename describes the mapping system.
+	 * @param windowSize is the size of the citation context.
+	 *
+	 * @throws Exception
+	 */
 	public static void process(String inputDirectory, String outputDirectory,
 			String listArticlesFilename, String listFocusedArticlesFilename,
 			String mappingFilename, Integer windowSize) throws Exception {
