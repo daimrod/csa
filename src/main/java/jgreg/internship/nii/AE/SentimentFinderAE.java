@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import jgreg.internship.nii.RES.MappingRES;
 import jgreg.internship.nii.Utils.Utils;
 import jgreg.internship.nii.types.CitationContext;
 import jgreg.internship.nii.types.Sentiment;
@@ -19,7 +20,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.uima.UimaContext;
 import org.apache.uima.analysis_engine.AnalysisEngineProcessException;
-import org.apache.uima.fit.descriptor.ConfigurationParameter;
+import org.apache.uima.fit.descriptor.ExternalResource;
 import org.apache.uima.fit.util.JCasUtil;
 import org.apache.uima.jcas.JCas;
 import org.apache.uima.resource.ResourceInitializationException;
@@ -45,12 +46,11 @@ public class SentimentFinderAE extends
 	private Integer DEFAULT_SCORE = 1;
 
 	/**
-	 * The name of the file in which we will look for patterns.
+	 * The name of the files in which we will look for patterns.
 	 */
-	public final static String MAPPING_FILE = "mappingFileName";
-	@ConfigurationParameter(name = MAPPING_FILE, mandatory = true)
-	private String mappingFileName;
-	private File mappingFile;
+	public final static String MAPPING = "mapping";
+	@ExternalResource(key = MAPPING, mandatory = true)
+	private MappingRES mapping;
 
 	/**
 	 * The patterns to match in the method process(JCas).
@@ -61,35 +61,6 @@ public class SentimentFinderAE extends
 	public void initialize(UimaContext context)
 			throws ResourceInitializationException {
 		super.initialize(context);
-
-		// Retrieve the parameters from the context
-		mappingFile = new File(mappingFileName);
-
-		// Be sure the patterns file exists
-		if (!mappingFile.exists()) {
-			logger.fatal("input file `" + mappingFileName + "' does not exist");
-			throw new ResourceInitializationException();
-		}
-
-		// Read the mapping
-		Map<String, Set<String>> mapping = new HashMap<>();
-		try {
-			for (String line : Utils.readLines(mappingFile)) {
-				// data[0] = class name
-				// data[1] = filename
-				String[] data = line.split(";");
-				if (data.length != 2) {
-					logger.warn("ill-formed line `" + data.toString() + "'");
-					continue;
-				}
-				if (!mapping.containsKey(data[0])) {
-					mapping.put(data[0], new HashSet<>());
-				}
-				mapping.get(data[0]).add(data[1]);
-			}
-		} catch (IOException ex) {
-			throw new ResourceInitializationException(ex);
-		}
 
 		// Initialize the patterns for all classes
 		patterns = new HashMap<>();

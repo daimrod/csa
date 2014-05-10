@@ -6,6 +6,7 @@ import jgreg.internship.nii.AE.PubMedXMIWriter;
 import jgreg.internship.nii.AE.SentimentFinderAE;
 import jgreg.internship.nii.CR.PubMedReaderCR;
 import jgreg.internship.nii.RES.ArticlesDB;
+import jgreg.internship.nii.RES.MappingRES;
 import jgreg.internship.nii.RES.StringListRES;
 import jgreg.internship.nii.types.Citation;
 import jgreg.internship.nii.types.CitationContext;
@@ -91,6 +92,11 @@ public class Pipeline {
 				.createExternalResourceDescription(StringListRES.class,
 						listFocusedArticlesFilename);
 
+        // Mapping
+        ExternalResourceDescription mapping = ExternalResourceFactory
+				.createExternalResourceDescription(MappingRES.class,
+						mappingFilename);
+
 		/*
 		 * Collection Reader
 		 */
@@ -146,7 +152,7 @@ public class Pipeline {
 		// Sentiment Finder
 		AnalysisEngineDescription sentimentFinder = AnalysisEngineFactory
 				.createEngineDescription(SentimentFinderAE.class,
-						SentimentFinderAE.MAPPING_FILE, mappingFilename);
+						SentimentFinderAE.MAPPING, mapping);
 
 		// XMI Writer
 		AnalysisEngineDescription XMIWriter = AnalysisEngineFactory
