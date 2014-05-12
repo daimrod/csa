@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import jgreg.internship.nii.RES.StringListRES;
 import jgreg.internship.nii.types.Citation;
@@ -46,7 +47,10 @@ public class CitationContextExtractorAE extends
 	@ConfigurationParameter(name = PARAM_WINDOW_SIZE, mandatory = true)
 	private Integer windowSize;
 
-    public static final String FOCUSED_ARTICLES = "focusedArticles";
+	/**
+	 * List of PMIDS to focus on (i.e. ignore all the others)
+	 */
+	public static final String FOCUSED_ARTICLES = "focusedArticles";
 	@ExternalResource(key = FOCUSED_ARTICLES, mandatory = false)
 	StringListRES focusedArticles;
 
@@ -56,30 +60,23 @@ public class CitationContextExtractorAE extends
 				.indexCovered(jCas, Sentence.class, Citation.class);
 
 		for (Sentence sentence : JCasUtil.select(jCas, Sentence.class)) {
-			List<FeatureStructure> citations = new ArrayList(
-					sentence2Citations.get(sentence));
+			List<Citation> citations;
+			if (focusedArticles == null) {
+				citations = new ArrayList(sentence2Citations.get(sentence));
+			} else {
+				citations = sentence2Citations.get(sentence).stream()
+						.filter(citation -> focusedArticles.contains(citation.getPMID()))
+						.collect(Collectors.toList());
+			}
 
-            boolean skip = false;            
-            if (focusedArticles != null) {
-                // Skip sentences with no interesting Citation
-                skip = true;
-                for (Citation cit : sentence2Citations.get(sentence)) {
-                    if (focusedArticles.contains(cit.getPMID())) {
-                        skip = false;
-                        break;
-                    }
-                }
-                
-            } else {
-                // Skip sentences with no Citation
-                if (citations.size() == 0) {
-                    skip = true;
-                }
+            // Skip Sentence with no Citations (to focus on) in it.
+            if (citations.isEmpty()) {
+                continue;
             }
-            if (skip) continue;
 
+			List<FeatureStructure> citationsFS = new ArrayList(citations);
 
-            int begin, end;
+			int begin, end;
 			// Before
 			List<Sentence> precedings = JCasUtil.selectPreceding(
 					Sentence.class, sentence, windowSize);
@@ -101,11 +98,11 @@ public class CitationContextExtractorAE extends
 			CitationContext context = new CitationContext(jCas);
 			context.setBegin(begin);
 			context.setEnd(end);
-            
-			FSArray fsArray = new FSArray(jCas, citations.size());
-			fsArray.copyFromArray(
-					citations.toArray(new FeatureStructure[citations.size()]),
-					0, 0, citations.size());
+
+			FSArray fsArray = new FSArray(jCas, citationsFS.size());
+			fsArray.copyFromArray(citationsFS
+					.toArray(new FeatureStructure[citationsFS.size()]), 0, 0,
+					citationsFS.size());
 
 			context.setPMIDS(fsArray);
 			context.addToIndexes(jCas);
