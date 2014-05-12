@@ -60,7 +60,6 @@ public class ExtractAll extends
 		outputFile = new File(outputFileName);
 
 		headers = new ArrayList<String>(Arrays.asList(paramHeaders));
-        logger.info(headers);
 		strAcc = new StringBuilder();
 		strAcc.append("cites").append(separator).append("cited")
 				.append(separator).append(StringUtils.join(headers, separator))
