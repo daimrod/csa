@@ -1,6 +1,6 @@
 package jgreg.internship.nii.WF;
 
-import jgreg.internship.nii.AE.PubMedXMIWriter;
+import jgreg.internship.nii.AE.XMIWriter;
 import jgreg.internship.nii.CR.PubMedReaderCR;
 import org.apache.uima.analysis_engine.AnalysisEngineDescription;
 import org.apache.uima.collection.CollectionReaderDescription;
@@ -21,7 +21,7 @@ public class TestWF01 {
         
         AnalysisEngineDescription writer =
                 AnalysisEngineFactory.createEngineDescription(
-                        PubMedXMIWriter.class);
+                        XMIWriter.class);
 
         SimplePipeline.runPipeline(reader, writer);
     }

@@ -2,8 +2,8 @@ package jgreg.internship.nii.WF;
 
 import jgreg.internship.nii.AE.CitationContextExtractorAE;
 import jgreg.internship.nii.AE.PubMedParserAE;
-import jgreg.internship.nii.AE.PubMedXMIWriter;
 import jgreg.internship.nii.AE.SentimentFinderAE;
+import jgreg.internship.nii.AE.XMIWriter;
 import jgreg.internship.nii.CR.PubMedReaderCR;
 import jgreg.internship.nii.RES.ArticlesDB;
 import jgreg.internship.nii.RES.MappingRES;
@@ -161,10 +161,12 @@ public class AnnotatorWF {
 						SentimentFinderAE.MAPPING, mapping);
 
 		// XMI Writer
-		AnalysisEngineDescription XMIWriter = AnalysisEngineFactory
-				.createEngineDescription(PubMedXMIWriter.class,
-						PubMedXMIWriter.OUTPUT_DIRECTORY, outputDirectory,
-						PubMedXMIWriter.CLEAR_DIRECTORY, true);
+		AnalysisEngineDescription xmiWriter = AnalysisEngineFactory
+				.createEngineDescription(XMIWriter.class,
+						XMIWriter.OUTPUT_DIRECTORY, outputDirectory,
+						XMIWriter.CLEAR_DIRECTORY, true, XMIWriter.NAME_TYPE,
+						"jgreg.internship.nii.types.ID",
+						XMIWriter.NAME_FEATURE, "PMID");
 
 		/*
 		 * The type priority is important especially to retrieve tokens. The
@@ -182,7 +184,7 @@ public class AnnotatorWF {
 		builder.add(tokenizer);
 		builder.add(POSTagger);
 		builder.add(sentimentFinder);
-		builder.add(XMIWriter);
+		builder.add(xmiWriter);
 		SimplePipeline
 				.runPipeline(reader, builder.createAggregateDescription());
 	}

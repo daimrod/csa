@@ -1,6 +1,6 @@
 package jgreg.internship.nii.WF;
 
-import jgreg.internship.nii.AE.PubMedXMIWriter;
+import jgreg.internship.nii.AE.XMIWriter;
 import jgreg.internship.nii.CR.PubMedReaderCR;
 import opennlp.uima.sentdetect.SentenceDetector;
 import opennlp.uima.sentdetect.SentenceModelResourceImpl;
@@ -40,7 +40,7 @@ public class TestWF03 {
 
         AnalysisEngineDescription writer
                 = AnalysisEngineFactory.createEngineDescription(
-                        PubMedXMIWriter.class);
+                        XMIWriter.class);
 
         SimplePipeline.runPipeline(reader,
                 sentenceSplitter,
