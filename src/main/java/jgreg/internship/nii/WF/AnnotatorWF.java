@@ -39,19 +39,25 @@ import org.apache.uima.resource.ExternalResourceDescription;
 /**
  * This my full Pipeline
  */
-public class Pipeline {
-	private static final Logger logger = Logger.getLogger(Pipeline.class
+public class AnnotatorWF {
+	private static final Logger logger = Logger.getLogger(AnnotatorWF.class
 			.getCanonicalName());
 
 	/**
 	 * Run the Pipeline.
 	 *
-	 * @param inputDirectory contains all articles.
-	 * @param outputDirectory stores all output data (XMI, ...).
-	 * @param listArticlesFilename lists articles of interest.
-	 * @param listFocusedArticlesFilename lists PMIDS of interest.
-	 * @param mappingFilename describes the mapping system.
-	 * @param windowSize is the size of the citation context.
+	 * @param inputDirectory
+	 *            contains all articles.
+	 * @param outputDirectory
+	 *            stores all output data (XMI, ...).
+	 * @param listArticlesFilename
+	 *            lists articles of interest.
+	 * @param listFocusedArticlesFilename
+	 *            lists PMIDS of interest.
+	 * @param mappingFilename
+	 *            describes the mapping system.
+	 * @param windowSize
+	 *            is the size of the citation context.
 	 *
 	 * @throws Exception
 	 */
@@ -92,8 +98,8 @@ public class Pipeline {
 				.createExternalResourceDescription(StringListRES.class,
 						listFocusedArticlesFilename);
 
-        // Mapping
-        ExternalResourceDescription mapping = ExternalResourceFactory
+		// Mapping
+		ExternalResourceDescription mapping = ExternalResourceFactory
 				.createExternalResourceDescription(MappingRES.class,
 						mappingFilename);
 
@@ -175,9 +181,19 @@ public class Pipeline {
 		builder.add(citationContextDetector);
 		builder.add(tokenizer);
 		builder.add(POSTagger);
-        builder.add(sentimentFinder);
+		builder.add(sentimentFinder);
 		builder.add(XMIWriter);
 		SimplePipeline
 				.runPipeline(reader, builder.createAggregateDescription());
+	}
+
+	public static void main(String[] args) throws Exception {
+		AnnotatorWF.process("/home/daimrod/corpus/pubmed/corpus/",
+				"/home/daimrod/corpus/pubmed/dev/output/",
+				"/home/daimrod/corpus/pubmed/dev/test1.lst",
+				"/home/daimrod/corpus/pubmed/dev/co-cited.lst",
+				"/home/daimrod/corpus/pubmed/dev/mapping.lst", 4);
+
+		logger.info("done!");
 	}
 }
