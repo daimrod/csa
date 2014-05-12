@@ -85,15 +85,6 @@ public class CoCitationExtractorAE extends org.apache.uima.fit.component.JCasAnn
     @Override
     public void collectionProcessComplete() throws AnalysisEngineProcessException {
         logger.info("Dumping cocitation information to `" + outputFile.getAbsolutePath() + "'...");
-        
-        // StringBuilder str = new StringBuilder();
-        
-        // for (Pair<String, String> pair : getCoCitations()) {
-        //     str.append(pair.getLeft())
-        //             .append(' ')
-        //             .append(pair.getRight())
-        //             .append('\n');
-        // }
 
         try {
             FileUtils.writeLines(outputFile, getCoCitations());
