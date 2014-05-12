@@ -25,9 +25,9 @@ import org.xml.sax.SAXException;
  *
  * @author Grégoire Jadi
  */
-public class PubMedXMIWriter
+public class XMIWriter
         extends org.apache.uima.fit.component.JCasAnnotator_ImplBase {
-    private static final Logger logger = Logger.getLogger(PubMedXMIWriter.class.getCanonicalName());
+    private static final Logger logger = Logger.getLogger(XMIWriter.class.getCanonicalName());
 
     /**
      * The directory in which the XMI and XML are written.
