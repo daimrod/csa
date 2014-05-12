@@ -14,8 +14,8 @@ import org.apache.uima.analysis_engine.AnalysisEngineProcessException;
 import org.apache.uima.cas.Feature;
 import org.apache.uima.cas.Type;
 import org.apache.uima.cas.TypeSystem;
+import org.apache.uima.cas.impl.XmiCasSerializer;
 import org.apache.uima.fit.descriptor.ConfigurationParameter;
-import org.apache.uima.fit.util.CasIOUtil;
 import org.apache.uima.fit.util.JCasUtil;
 import org.apache.uima.jcas.JCas;
 import org.apache.uima.resource.ResourceInitializationException;
@@ -92,8 +92,9 @@ public class XMIWriter extends
 
 		logger.info("Dumping to `" + outputFile.getAbsolutePath() + "'...");
 		try {
-			CasIOUtil.writeXmi(jCas, outputFile);
-		} catch (IOException ex) {
+            OutputStream outputStream = new FileOutputStream(outputFile);
+            XmiCasSerializer.serialize(jCas.getCas(), outputStream);
+		} catch (SAXException | IOException ex) {
 			logger.fatal("Couldn't dump `" + outputFile + "''", ex);
 		}
 	}

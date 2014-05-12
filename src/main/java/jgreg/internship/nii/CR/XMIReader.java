@@ -1,8 +1,10 @@
 package jgreg.internship.nii.CR;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
@@ -13,11 +15,11 @@ import jgreg.internship.nii.RES.StringListRES;
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.apache.uima.UimaContext;
+import org.apache.uima.cas.impl.XmiCasDeserializer;
 import org.apache.uima.collection.CollectionException;
 import org.apache.uima.fit.component.JCasCollectionReader_ImplBase;
 import org.apache.uima.fit.descriptor.ConfigurationParameter;
 import org.apache.uima.fit.descriptor.ExternalResource;
-import org.apache.uima.fit.util.CasIOUtil;
 import org.apache.uima.jcas.JCas;
 import org.apache.uima.resource.ResourceInitializationException;
 import org.apache.uima.util.Progress;
@@ -62,13 +64,14 @@ public class XMIReader extends JCasCollectionReader_ImplBase {
 		inputDirectory = new File(inputDirectoryName);
 
 		if (!inputDirectory.exists()) {
-			logger.error("could not find the PubMed directory at `"
+			logger.error("could not find the input directory at `"
 					+ inputDirectoryName + "'");
 			throw new ResourceInitializationException();
 		}
+
 		Collection<File> filesList;
 		if (restrictOn == null) {
-            String[] ext = {"xmi"};
+			String[] ext = { "xmi" };
 			filesList = FileUtils.listFiles(inputDirectory, ext, true);
 		} else {
 			filesList = restrictOn.getList().stream()
@@ -76,8 +79,7 @@ public class XMIReader extends JCasCollectionReader_ImplBase {
 					.collect(Collectors.toList());
 		}
 
-		files = filesList.stream()
-		.filter(file -> {
+		files = filesList.stream().filter(file -> {
 			if (file.exists()) {
 				return true;
 			} else {
@@ -97,9 +99,10 @@ public class XMIReader extends JCasCollectionReader_ImplBase {
 		logger.info("Reading[" + docIndex + "/" + files.size() + " ] `"
 				+ file.getAbsolutePath() + "'...");
 		try {
-			CasIOUtil.readJCas(jCas, file);
+            InputStream inputStream = new FileInputStream(file);
+            XmiCasDeserializer.deserialize(inputStream, jCas.getCas());
 		} catch (Exception ex) {
-			throw new CollectionException(ex);
+			logger.fatal(null, ex);
 		}
 	}
 
