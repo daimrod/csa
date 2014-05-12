@@ -48,11 +48,17 @@ public class XMIWriter extends
 	@ConfigurationParameter(name = CLEAR_DIRECTORY, mandatory = false, defaultValue = "false")
 	private boolean clearDirectory;
 
+	/**
+	 * The name of the Type annotation that contains the name of a CAS
+	 */
 	public static final String NAME_TYPE = "nameTYPE";
 	@ConfigurationParameter(name = NAME_TYPE, mandatory = true)
 	private String nameType;
 	private Type nameT;
 
+	/**
+	 * The name of the Feature that contains the name of a CAS
+	 */
 	public static final String NAME_FEATURE = "nameFeature";
 	@ConfigurationParameter(name = NAME_FEATURE, mandatory = true)
 	private String nameFeature;
