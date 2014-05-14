@@ -1,6 +1,6 @@
 
 
-/* First created by JCasGen Fri May 09 23:00:41 JST 2014 */
+/* First created by JCasGen Wed May 14 16:22:43 JST 2014 */
 package jgreg.internship.nii.types;
 
 import org.apache.uima.jcas.JCas; 
@@ -11,7 +11,7 @@ import org.apache.uima.jcas.tcas.Annotation;
 
 
 /** ID(s) of the document.
- * Updated by JCasGen Fri May 09 23:00:41 JST 2014
+ * Updated by JCasGen Wed May 14 16:22:43 JST 2014
  * XML source: src/main/resources/jgreg/internship/nii/types/CitationSentimentAnalysisTS.xml
  * @generated */
 public class ID extends Annotation {
@@ -96,6 +96,28 @@ public class ID extends Annotation {
     if (ID_Type.featOkTst && ((ID_Type)jcasType).casFeat_PMID == null)
       jcasType.jcas.throwFeatMissing("PMID", "jgreg.internship.nii.types.ID");
     jcasType.ll_cas.ll_setStringValue(addr, ((ID_Type)jcasType).casFeatCode_PMID, v);}    
+   
+    
+  //*--------------*
+  //* Feature: year
+
+  /** getter for year - gets The Year of the document.
+   * @generated
+   * @return value of the feature 
+   */
+  public long getYear() {
+    if (ID_Type.featOkTst && ((ID_Type)jcasType).casFeat_year == null)
+      jcasType.jcas.throwFeatMissing("year", "jgreg.internship.nii.types.ID");
+    return jcasType.ll_cas.ll_getLongValue(addr, ((ID_Type)jcasType).casFeatCode_year);}
+    
+  /** setter for year - sets The Year of the document. 
+   * @generated
+   * @param v value to set into the feature 
+   */
+  public void setYear(long v) {
+    if (ID_Type.featOkTst && ((ID_Type)jcasType).casFeat_year == null)
+      jcasType.jcas.throwFeatMissing("year", "jgreg.internship.nii.types.ID");
+    jcasType.ll_cas.ll_setLongValue(addr, ((ID_Type)jcasType).casFeatCode_year, v);}    
   }
 
     

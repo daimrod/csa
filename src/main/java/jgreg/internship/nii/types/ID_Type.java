@@ -1,5 +1,5 @@
 
-/* First created by JCasGen Fri May 09 23:00:41 JST 2014 */
+/* First created by JCasGen Wed May 14 16:22:43 JST 2014 */
 package jgreg.internship.nii.types;
 
 import org.apache.uima.jcas.JCas;
@@ -14,7 +14,7 @@ import org.apache.uima.cas.Feature;
 import org.apache.uima.jcas.tcas.Annotation_Type;
 
 /** ID(s) of the document.
- * Updated by JCasGen Fri May 09 23:00:41 JST 2014
+ * Updated by JCasGen Wed May 14 16:22:43 JST 2014
  * @generated */
 public class ID_Type extends Annotation_Type {
   /** @generated 
@@ -69,6 +69,30 @@ public class ID_Type extends Annotation_Type {
     ll_cas.ll_setStringValue(addr, casFeatCode_PMID, v);}
     
   
+ 
+  /** @generated */
+  final Feature casFeat_year;
+  /** @generated */
+  final int     casFeatCode_year;
+  /** @generated
+   * @param addr low level Feature Structure reference
+   * @return the feature value 
+   */ 
+  public long getYear(int addr) {
+        if (featOkTst && casFeat_year == null)
+      jcas.throwFeatMissing("year", "jgreg.internship.nii.types.ID");
+    return ll_cas.ll_getLongValue(addr, casFeatCode_year);
+  }
+  /** @generated
+   * @param addr low level Feature Structure reference
+   * @param v value to set 
+   */    
+  public void setYear(int addr, long v) {
+        if (featOkTst && casFeat_year == null)
+      jcas.throwFeatMissing("year", "jgreg.internship.nii.types.ID");
+    ll_cas.ll_setLongValue(addr, casFeatCode_year, v);}
+    
+  
 
 
 
@@ -84,6 +108,10 @@ public class ID_Type extends Annotation_Type {
  
     casFeat_PMID = jcas.getRequiredFeatureDE(casType, "PMID", "uima.cas.String", featOkTst);
     casFeatCode_PMID  = (null == casFeat_PMID) ? JCas.INVALID_FEATURE_CODE : ((FeatureImpl)casFeat_PMID).getCode();
+
+ 
+    casFeat_year = jcas.getRequiredFeatureDE(casType, "year", "uima.cas.Long", featOkTst);
+    casFeatCode_year  = (null == casFeat_year) ? JCas.INVALID_FEATURE_CODE : ((FeatureImpl)casFeat_year).getCode();
 
   }
 }

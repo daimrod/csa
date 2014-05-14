@@ -96,7 +96,13 @@
         <description>The PMID of the document.</description>
         <rangeTypeName>uima.cas.String</rangeTypeName>
       </featureDescription>
+      <featureDescription>
+        <name>year</name>
+        <description>The Year of the document.</description>
+        <rangeTypeName>uima.cas.Long</rangeTypeName>
+      </featureDescription>
     </typeDescription>
+    
     <typeDescription>
       <name>jgreg.internship.nii.types.Filename</name>
       <description>filename of the document.</description>
