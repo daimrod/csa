@@ -51,4 +51,12 @@ public class Utils {
 				.filter(line -> !line.startsWith("#")).map(line -> line.trim())
 				.filter(line -> !line.isEmpty()).collect(Collectors.toList()));
 	}
+
+    public static ArrayList<Integer> List(int size, Integer initialElement) {
+        ArrayList<Integer> ret = new ArrayList<>(size);
+        for (int idx = 0; idx < size; idx++) {
+            ret.add(idx, initialElement);
+        }
+        return ret;
+    }
 }
