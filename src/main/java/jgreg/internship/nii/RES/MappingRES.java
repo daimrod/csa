@@ -1,15 +1,15 @@
 package jgreg.internship.nii.RES;
 
-import java.io.File;
-import java.io.IOException;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
-import jgreg.internship.nii.Utils.Utils;
-
+import org.apache.commons.configuration.ConfigurationException;
+import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.log4j.Logger;
 import org.apache.uima.resource.DataResource;
 import org.apache.uima.resource.ResourceInitializationException;
@@ -32,26 +32,20 @@ public final class MappingRES implements SharedResourceObject {
 
 	public void load(DataResource aData) throws ResourceInitializationException {
 		String filename = aData.getUri().toString();
-		File file = new File(filename);
+        PropertiesConfiguration config;
+        try {
+            config = new PropertiesConfiguration(filename);
+        } catch (ConfigurationException ex) {
+            throw new ResourceInitializationException(ex);
+        }
 
 		mapping = new HashMap<>();
-		try {
-			for (String line : Utils.readLines(file)) {
-				// data[0] = class name
-				// data[1] = filename
-				String[] data = line.split(";");
-				if (data.length != 2) {
-					logger.warn("ill-formed line `" + data.toString() + "'");
-					continue;
-				}
-				if (!mapping.containsKey(data[0])) {
-					mapping.put(data[0], new HashSet<>());
-				}
-				mapping.get(data[0]).add(data[1]);
-			}
-		} catch (IOException ex) {
-			throw new ResourceInitializationException(ex);
-		}
+        for (Iterator<String> iter = config.getKeys(); iter.hasNext();) {
+            String key = iter.next();
+            Set<String> set = new HashSet<>(Arrays.asList(config.getStringArray(key)));
+            logger.debug(key + " = " + set);
+            mapping.put(key, set);
+        }
 	}
 
 	public boolean containsKey(Object key) {
