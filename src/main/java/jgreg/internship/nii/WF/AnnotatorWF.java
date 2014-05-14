@@ -75,8 +75,8 @@ public class AnnotatorWF {
 		// Sentence Model
 		ExternalResourceDescription sentenceModel = ExternalResourceFactory
 				.createExternalResourceDescription(
-						SentenceModelResourceImpl.class,
-						"file:org/apache/ctakes/core/sentdetect/sd-med-model.zip");
+						SentenceModelResourceImpl.class, 
+						"file:org/apache/ctakes/core/sentdetect/sd-med-model.bin");
 		// Token Model
 		ExternalResourceDescription tokenModel = ExternalResourceFactory
 				.createExternalResourceDescription(
