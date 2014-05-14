@@ -1,6 +1,6 @@
 package jgreg.internship.nii.WF;
 
-import jgreg.internship.nii.AE.ExtractAll;
+import jgreg.internship.nii.AE.ExtractMax;
 import jgreg.internship.nii.CR.XMIReader;
 import jgreg.internship.nii.RES.MappingRES;
 import jgreg.internship.nii.types.Citation;
@@ -28,8 +28,8 @@ public class StatisticsWF {
 	private static final Logger logger = Logger.getLogger(StatisticsWF.class
 			.getCanonicalName());
 
-	public static void process(String inputDirectory, String mappingFilename)
-			throws Exception {
+	public static void process(String inputDirectory, String mappingFilename,
+			String outputFile) throws Exception {
 		CollectionReaderDescription reader = CollectionReaderFactory
 				.createReaderDescription(XMIReader.class,
 						XMIReader.INPUT_DIRECTORY, inputDirectory);
@@ -47,10 +47,9 @@ public class StatisticsWF {
 
 		String[] headers = { "positive", "neutral", "negative" };
 		AnalysisEngineDescription extractor = AnalysisEngineFactory
-				.createEngineDescription(ExtractAll.class, ExtractAll.MAPPING,
-						mapping, ExtractAll.HEADERS, headers,
-						ExtractAll.OUTPUT_FILE,
-						"/home/daimrod/corpus/pubmed/dev/output/out.dat");
+				.createEngineDescription(ExtractMax.class, ExtractMax.MAPPING,
+						mapping, ExtractMax.HEADERS, headers,
+						ExtractMax.OUTPUT_FILE, outputFile);
 
 		builder.add(extractor);
 		SimplePipeline
@@ -59,7 +58,8 @@ public class StatisticsWF {
 
 	public static void main(String[] args) throws Exception {
 		StatisticsWF.process("/home/daimrod/corpus/pubmed/dev/output/",
-				"/home/daimrod/corpus/pubmed/dev/mapping.lst");
+				"/home/daimrod/corpus/pubmed/dev/mapping.lst",
+				"/home/daimrod/corpus/pubmed/dev/output/max-out.dat");
 		logger.info("done!");
 	}
 }

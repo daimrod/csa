@@ -5,10 +5,12 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import jgreg.internship.nii.RES.MappingRES;
+import jgreg.internship.nii.Utils.Utils;
 import jgreg.internship.nii.types.CitationContext;
 import jgreg.internship.nii.types.ID;
 import jgreg.internship.nii.types.Sentiment;
@@ -32,20 +34,29 @@ import org.apache.uima.resource.ResourceInitializationException;
  *
  * @author Grégoire Jadi
  */
-public class ExtractAll extends
+public class ExtractMax extends
 		org.apache.uima.fit.component.JCasAnnotator_ImplBase {
-	protected static final Logger logger = Logger.getLogger(ExtractAll.class
+	protected static final Logger logger = Logger.getLogger(ExtractMax.class
 			.getCanonicalName());
 
+	/**
+	 * The headers used to dump the data.
+	 */
 	public static final String HEADERS = "paramHeaders";
 	@ConfigurationParameter(name = HEADERS, mandatory = true)
 	private String[] paramHeaders;
 	private ArrayList<String> headers;
 
+	/**
+	 * The separator used when dumping data
+	 */
 	public static final String SEPARATOR = "separator";
 	@ConfigurationParameter(name = SEPARATOR, mandatory = false, defaultValue = ";")
 	private String separator;
 
+	/**
+	 * Where should we dump the data.
+	 */
 	public static final String OUTPUT_FILE = "outputFileName";
 	@ConfigurationParameter(name = OUTPUT_FILE, mandatory = true)
 	private String outputFileName;
@@ -78,18 +89,25 @@ public class ExtractAll extends
 		Map<CitationContext, Collection<Sentiment>> map = JCasUtil
 				.indexCovered(jCas, CitationContext.class, Sentiment.class);
 		ID id = JCasUtil.selectSingle(jCas, ID.class);
+		Map<String, List<Integer>> mem = new HashMap<>();
 
 		for (CitationContext context : JCasUtil.select(jCas,
 				CitationContext.class)) {
-			List<Integer> acc = new ArrayList(headers.size());
-			for (int idx = 0; idx < headers.size(); idx++) {
-				acc.add(idx, 0);
-			}
+			ArrayList<Integer> acc = Utils.List(headers.size(), 0);
 
 			// Compute the number of each kind of Sentiment within the context
 			for (Sentiment sentiment : map.get(context)) {
 				int idx = headers.indexOf(sentiment.getName());
 				acc.set(idx, acc.get(idx) + 1);
+			}
+
+			// Find the predominant Sentiment
+			int max = 0, idx_max = 0;
+			for (int idx = 0; idx < acc.size(); idx++) {
+				if (max < acc.get(idx)) {
+					max = acc.get(idx);
+					idx_max = idx;
+				}
 			}
 
 			// Add those numbers to all cited articles within the context
@@ -100,12 +118,26 @@ public class ExtractAll extends
 			for (int idx = 0; idx < citationsFSA.size(); idx++) {
 				FeatureStructure citationFS = citationsFSA.get(idx);
 				String pmid = citationFS.getStringValue(citationPMIDF);
-				strAcc.append(id.getPMID()).append(separator).append(pmid);
-				for (Integer i : acc) {
-					strAcc.append(separator).append(i);
+
+				List<Integer> lst;
+				if (!mem.containsKey(pmid)) {
+					lst = Utils.List(headers.size(), 0);
+					mem.put(pmid, lst);
+				} else {
+					lst = mem.get(pmid);
 				}
-				strAcc.append("\n");
+
+				lst.set(idx_max, lst.get(idx_max) + 1);
 			}
+		}
+
+		for (String pmid : mem.keySet()) {
+			strAcc.append(id.getPMID()).append(separator).append(id.getYear())
+					.append(separator).append(pmid);
+			for (Integer i : mem.get(pmid)) {
+				strAcc.append(separator).append(i);
+			}
+			strAcc.append("\n");
 		}
 	}
 
