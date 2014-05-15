@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.Map.Entry;
 
 import jgreg.internship.nii.RES.Article;
-import jgreg.internship.nii.RES.ArticlesDB;
 import jgreg.internship.nii.XML.PubMedXMLParser;
 import jgreg.internship.nii.types.Citation;
 import jgreg.internship.nii.types.Filename;
@@ -24,7 +23,6 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.apache.log4j.Logger;
 import org.apache.uima.analysis_engine.AnalysisEngineProcessException;
 import org.apache.uima.cas.CASException;
-import org.apache.uima.fit.descriptor.ExternalResource;
 import org.apache.uima.fit.util.JCasUtil;
 import org.apache.uima.jcas.JCas;
 
@@ -46,11 +44,6 @@ public class PubMedParserAE extends
 	/** The Constant logger. */
 	private static final Logger logger = Logger.getLogger(PubMedParserAE.class
 			.getCanonicalName());
-
-	/** The Constant PARAM_DB. */
-	public final static String PARAM_DB = "articlesDB";
-	@ExternalResource(key = PARAM_DB, mandatory = true)
-	private ArticlesDB articlesDB;
 
 	/*
 	 * (non-Javadoc)
@@ -79,7 +72,6 @@ public class PubMedParserAE extends
 
 		Article article = parser.getArticle();
 		article.setFilename(filename.getFilename());
-		articlesDB.add(article);
 
 		ID docId = new ID(jCas);
 		docId.setPMID(article.getPMID());
@@ -99,10 +91,6 @@ public class PubMedParserAE extends
 				citation.setEnd(citationIdx.getRight());
 				citation.setPMID(entry.getKey());
 				citation.addToIndexes();
-
-				if (articlesDB.get(entry.getKey()) == null) {
-					articlesDB.add(new Article(entry.getKey()));
-				}
 			}
 		}
 

@@ -1,3 +1,6 @@
+/*
+ * 
+ */
 package jgreg.internship.nii.WF;
 
 import jgreg.internship.nii.AE.CitationContextExtractorAE;
@@ -36,30 +39,26 @@ import org.apache.uima.fit.factory.TypePrioritiesFactory;
 import org.apache.uima.fit.pipeline.SimplePipeline;
 import org.apache.uima.resource.ExternalResourceDescription;
 
+// TODO: Auto-generated Javadoc
 /**
- * This my full Pipeline
+ * This my full Pipeline.
  */
 public class AnnotatorWF {
+	
+	/** The Constant logger. */
 	private static final Logger logger = Logger.getLogger(AnnotatorWF.class
 			.getCanonicalName());
 
 	/**
 	 * Run the Pipeline.
 	 *
-	 * @param inputDirectory
-	 *            contains all articles.
-	 * @param outputDirectory
-	 *            stores all output data (XMI, ...).
-	 * @param listArticlesFilename
-	 *            lists articles of interest.
-	 * @param listFocusedArticlesFilename
-	 *            lists PMIDS of interest.
-	 * @param mappingFilename
-	 *            describes the mapping system.
-	 * @param windowSize
-	 *            is the size of the citation context.
-	 *
-	 * @throws Exception
+	 * @param inputDirectory            contains all articles.
+	 * @param outputDirectory            stores all output data (XMI, ...).
+	 * @param listArticlesFilename            lists articles of interest.
+	 * @param listFocusedArticlesFilename            lists PMIDS of interest.
+	 * @param mappingFilename            describes the mapping system.
+	 * @param windowSize            is the size of the citation context.
+	 * @throws Exception the exception
 	 */
 	public static void process(String inputDirectory, String outputDirectory,
 			String listArticlesFilename, String listFocusedArticlesFilename,
@@ -68,10 +67,6 @@ public class AnnotatorWF {
 		/*
 		 * Resources
 		 */
-		// Articles DB
-		ExternalResourceDescription articlesDB = ExternalResourceFactory
-				.createExternalResourceDescription(ArticlesDB.class, "");
-
 		// Sentence Model
 		ExternalResourceDescription sentenceModel = ExternalResourceFactory
 				.createExternalResourceDescription(
@@ -116,8 +111,7 @@ public class AnnotatorWF {
 		 */
 		// Parser XML
 		AnalysisEngineDescription xmlParser = AnalysisEngineFactory
-				.createEngineDescription(PubMedParserAE.class,
-						PubMedParserAE.PARAM_DB, articlesDB);
+				.createEngineDescription(PubMedParserAE.class);
 
 		// Sentence Detector
 		AnalysisEngineDescription sentenceDetector = AnalysisEngineFactory
@@ -189,6 +183,12 @@ public class AnnotatorWF {
 				.runPipeline(reader, builder.createAggregateDescription());
 	}
 
+	/**
+	 * The main method.
+	 *
+	 * @param args the arguments
+	 * @throws Exception the exception
+	 */
 	public static void main(String[] args) throws Exception {
 		AnnotatorWF.process("/home/daimrod/corpus/pubmed/corpus/",
 				"/home/daimrod/corpus/pubmed/dev/output/",
