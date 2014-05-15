@@ -24,24 +24,31 @@ import org.apache.uima.jcas.cas.FSArray;
  * Add {@link jgreg.internship.nii.types.CitationContext} annotation around
  * {@link jgreg.internship.nii.types.Citation}.
  *
+ * <p>
  * The size of the context corresponds to the number of
  * {@link jgreg.internship.nii.types.Sentence} indicated by
  * {@link #PARAM_WINDOW_SIZE}.
+ * </p>
  *
+ * <p>
  * For example given the following sentences: {@code s1. s2. s3. s4. s5. s6}.
- *
  * Let's suppose there is a {@link jgreg.internship.nii.types.Citation} in s2
  * and {@link #PARAM_WINDOW_SIZE} is set to 2. Then there will be a
  * {@link jgreg.internship.nii.types.CitationContext} covering s1, s2, s3, and
  * s4. That is, at most {@link #PARAM_WINDOW_SIZE} sentence before and after the
  * sentence.
+ * </p>
  *
+ * <p>
  * No matter what, the {@link jgreg.internship.nii.types.Sentence} in which the
  * {@link jgreg.internship.nii.types.Citation} occurs is always covered by the
  * {@link jgreg.internship.nii.types.CitationContext}.
+ * </p>
  *
+ * <p>
  * The {@link jgreg.internship.nii.types.Citation} considered can be restricted
  * with {@link #FOCUSED_ARTICLES}.
+ * </p>
  *
  * @author Grégoire Jadi
  */
