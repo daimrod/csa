@@ -32,53 +32,71 @@ import org.apache.uima.resource.ResourceInitializationException;
 
 // TODO: Auto-generated Javadoc
 /**
- * The Class ExtractMax.
+ * Extract {@link jgreg.internship.nii.types.Sentiment} information from
+ * {@link jgreg.internship.nii.types.CitationContext} using the most frequent
+ * one.
+ *
+ *
+ * Count all {@link jgreg.internship.nii.types.Sentiment} annotations in all
+ * {@link jgreg.internship.nii.types.CitationContext} and consider the most
+ * frequent {@link jgreg.internship.nii.types.Sentiment} as the "real" one.
+ *
+ *
+ * For example, given a {@link jgreg.internship.nii.types.CitationContext} with
+ * 3 {@link jgreg.internship.nii.types.Sentiment} named "positive" and 2 named
+ * "neutral". Then we consider that the "real"
+ * {@link jgreg.internship.nii.types.Sentiment} is "positive".
+ *
+ *
+ * All data are dumped in an CSV like format in {@link #OUTPUT_FILE}. The
+ * {@link #HEADERS} parameter can be used to determine in which order the
+ * {@link jgreg.internship.nii.types.Sentiment#name} are displayed.
  *
  * @author Grégoire Jadi
  */
 public class ExtractMaxAE extends
 		org.apache.uima.fit.component.JCasAnnotator_ImplBase {
-	
+
 	/** The Constant logger. */
 	protected static final Logger logger = Logger.getLogger(ExtractMaxAE.class
 			.getCanonicalName());
 
 	/**
-	 * The headers used to dump the data.
+	 * This parameter can be used to customize the order in which
+	 * {@link jgreg.internship.nii.types.Sentiment#name} are used and dumped.
 	 */
 	public static final String HEADERS = "paramHeaders";
-	
-	/** The param headers. */
 	@ConfigurationParameter(name = HEADERS, mandatory = true)
 	private String[] paramHeaders;
-	
-	/** The headers. */
+
+	// ArrayList<String> are easier to manipulate compared to raw arrays
+	// String[].
 	private ArrayList<String> headers;
 
-	/** The separator used when dumping data. */
+	/** The separator used when dumping data. By default it uses a semi-colon. */
 	public static final String SEPARATOR = "separator";
-	
-	/** The separator. */
 	@ConfigurationParameter(name = SEPARATOR, mandatory = false, defaultValue = ";")
 	private String separator;
 
 	/**
-	 * Where should we dump the data.
+	 * The file where the data should be dumped.
 	 */
 	public static final String OUTPUT_FILE = "outputFileName";
-	
-	/** The output file name. */
 	@ConfigurationParameter(name = OUTPUT_FILE, mandatory = true)
 	private String outputFileName;
-	
+
 	/** The output file. */
 	private File outputFile;
 
 	/** The str acc. */
 	private StringBuilder strAcc;
 
-	/* (non-Javadoc)
-	 * @see org.apache.uima.fit.component.JCasAnnotator_ImplBase#initialize(org.apache.uima.UimaContext)
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see
+	 * org.apache.uima.fit.component.JCasAnnotator_ImplBase#initialize(org.apache
+	 * .uima.UimaContext)
 	 */
 	@Override
 	public void initialize(UimaContext context)
@@ -87,6 +105,7 @@ public class ExtractMaxAE extends
 		outputFile = new File(outputFileName);
 
 		headers = new ArrayList<String>(Arrays.asList(paramHeaders));
+
 		strAcc = new StringBuilder();
 		strAcc.append("cites").append(separator).append("cited")
 				.append(separator).append(StringUtils.join(headers, separator))
@@ -94,22 +113,31 @@ public class ExtractMaxAE extends
 	}
 
 	/**
-	 * The name of the files in which we will look for patterns.
+	 * This mapping describe contains the patterns used for each
+	 * {@link jgreg.internship.nii.types.Sentiment#name}.
 	 */
 	public final static String MAPPING = "mapping";
-	
-	/** The mapping. */
 	@ExternalResource(key = MAPPING, mandatory = true)
 	private MappingRES mapping;
 
-	/* (non-Javadoc)
-	 * @see org.apache.uima.analysis_component.JCasAnnotator_ImplBase#process(org.apache.uima.jcas.JCas)
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see
+	 * org.apache.uima.analysis_component.JCasAnnotator_ImplBase#process(org
+	 * .apache.uima.jcas.JCas)
 	 */
 	@Override
 	public void process(JCas jCas) throws AnalysisEngineProcessException {
 		Map<CitationContext, Collection<Sentiment>> map = JCasUtil
 				.indexCovered(jCas, CitationContext.class, Sentiment.class);
+
+        // Current article information
 		ID id = JCasUtil.selectSingle(jCas, ID.class);
+
+        // Mapping PMID -> [#c1, #c2, #c3] where PMID is a PMID to a
+        // document cited by the current article and #cX are the
+        // number of Sentiment named cX.
 		Map<String, List<Integer>> mem = new HashMap<>();
 
 		for (CitationContext context : JCasUtil.select(jCas,
@@ -162,8 +190,11 @@ public class ExtractMaxAE extends
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see org.apache.uima.analysis_component.AnalysisComponent_ImplBase#collectionProcessComplete()
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see org.apache.uima.analysis_component.AnalysisComponent_ImplBase#
+	 * collectionProcessComplete()
 	 */
 	@Override
 	public void collectionProcessComplete()
