@@ -15,12 +15,22 @@ import edu.stanford.nlp.ling.tokensregex.MultiPatternMatcher;
 import edu.stanford.nlp.ling.tokensregex.TokenSequenceMatcher;
 import edu.stanford.nlp.ling.tokensregex.TokenSequencePattern;
 
+// TODO: Auto-generated Javadoc
 /**
  * This simple workflow runs the PubMedReaderCR and the
  * CoCitationExtractorAE.
  */
 public class TestWF04 {
+    
+    /** The Constant logger. */
     private static final Logger logger = Logger.getLogger(TestWF04.class.getCanonicalName());
+    
+    /**
+     * The main method.
+     *
+     * @param args the arguments
+     * @throws Exception the exception
+     */
     public static void main(String[] args) throws Exception {
         JCas jCas = JCasFactory.createJCas();
         jCas.setDocumentText("some text");
