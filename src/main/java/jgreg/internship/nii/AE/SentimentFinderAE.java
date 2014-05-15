@@ -30,19 +30,19 @@ import edu.stanford.nlp.ling.tokensregex.TokenSequenceMatcher;
 import edu.stanford.nlp.ling.tokensregex.TokenSequencePattern;
 
 /**
- * Find matches recognized by the patterns in PARAM_PATTERN_FILE and add the
- * Sentiment annotation denoted by PARAM_SENTIMENT_CLASS_NAME.
+ * Find matches recognized by the patterns in {@link #PARAM_PATTERN_FILE} and
+ * add {@link jgreg.internship.nii.types.Sentiment} .
  *
  * @author Grégoire Jadi
  */
 public class SentimentFinderAE extends
 		org.apache.uima.fit.component.JCasAnnotator_ImplBase {
+
+	/** The Constant logger. */
 	private static final Logger logger = Logger
 			.getLogger(SentimentFinderAE.class.getCanonicalName());
 
-	/**
-	 * Default score for sentiment annotation
-	 */
+	/** Default score for sentiment annotation. */
 	private Integer DEFAULT_SCORE = 1;
 
 	/**
@@ -57,6 +57,13 @@ public class SentimentFinderAE extends
 	 */
 	private Map<String, TokenSequencePattern> patterns;
 
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see
+	 * org.apache.uima.fit.component.JCasAnnotator_ImplBase#initialize(org.apache
+	 * .uima.UimaContext)
+	 */
 	@Override
 	public void initialize(UimaContext context)
 			throws ResourceInitializationException {
@@ -65,6 +72,8 @@ public class SentimentFinderAE extends
 		// Initialize the patterns for all classes
 		patterns = new HashMap<>();
 		try {
+            // Combine all patterns in one big pattern using the
+            // conjunction operator.
 			for (String className : mapping.keySet()) {
 				List<String> strs = new LinkedList<>();
 				for (String filename : mapping.get(className)) {
@@ -85,8 +94,9 @@ public class SentimentFinderAE extends
 	 * Find all matching patterns in all CitationContext.
 	 *
 	 * @param jCas
-	 *
+	 *            the j cas
 	 * @throws AnalysisEngineProcessException
+	 *             the analysis engine process exception
 	 */
 	@Override
 	public void process(JCas jCas) throws AnalysisEngineProcessException {
@@ -103,31 +113,32 @@ public class SentimentFinderAE extends
 			// and the equivalent annotations in StanfordNLP
 			List<CoreLabel> labels = Utils.convertUIMA2STANFORD(tokens);
 
-            // Let's try to match!
-            for (String className : patterns.keySet()) {
-                TokenSequenceMatcher matcher = patterns.get(className).getMatcher(labels);
+			// Let's try to match!
+			for (String className : patterns.keySet()) {
+				TokenSequenceMatcher matcher = patterns.get(className)
+						.getMatcher(labels);
 
-                while (matcher.find()) {
-                    try {
-                        // matcher.start is the index of the first element that
-                        // matches
-                        int begin = tokens.get(matcher.start()).getBegin();
-                        // matcher.end is the index of the first next element
-                        // that doesn't match
-                        int end = tokens.get(matcher.end() - 1).getEnd();
+				while (matcher.find()) {
+					try {
+						// matcher.start is the index of the first element that
+						// matches
+						int begin = tokens.get(matcher.start()).getBegin();
+						// matcher.end is the index of the first next element
+						// that doesn't match
+						int end = tokens.get(matcher.end() - 1).getEnd();
 
-                        Sentiment sentiment = new Sentiment(jCas);
-                        sentiment.setBegin(begin);
-                        sentiment.setEnd(end);
-                        sentiment.setScore(DEFAULT_SCORE);
-                        sentiment.setName(className);
-                        sentiment.setContext(context);
-                        sentiment.addToIndexes();
-                    } catch (Exception ex) {
-                        throw new AnalysisEngineProcessException(ex);
-                    }
-                }
-            }
+						Sentiment sentiment = new Sentiment(jCas);
+						sentiment.setBegin(begin);
+						sentiment.setEnd(end);
+						sentiment.setScore(DEFAULT_SCORE);
+						sentiment.setName(className);
+						sentiment.setContext(context);
+						sentiment.addToIndexes();
+					} catch (Exception ex) {
+						throw new AnalysisEngineProcessException(ex);
+					}
+				}
+			}
 		}
 	}
 }
