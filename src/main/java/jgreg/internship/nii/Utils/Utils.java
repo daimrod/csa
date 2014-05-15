@@ -74,16 +74,16 @@ public class Utils {
 	}
 
 	/**
-	 * List.
+	 * Create a new ArrayList filled with an initial element.
 	 *
 	 * @param size
-	 *            the size
+	 *            of the list.
 	 * @param initialElement
-	 *            the initial element
-	 * @return the array list
+	 *            the initial element.
+	 * @return an array list.
 	 */
-	public static ArrayList<Integer> List(int size, Integer initialElement) {
-		ArrayList<Integer> ret = new ArrayList<>(size);
+	public static <T> ArrayList<T> List(int size, T initialElement) {
+		ArrayList<T> ret = new ArrayList<>(size);
 		for (int idx = 0; idx < size; idx++) {
 			ret.add(idx, initialElement);
 		}
