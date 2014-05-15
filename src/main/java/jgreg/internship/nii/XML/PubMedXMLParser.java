@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package jgreg.internship.nii.XML;
 
 import java.io.Reader;
@@ -24,34 +19,65 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
+// TODO: Auto-generated Javadoc
 /**
+ * Parse PubMed articles.
  *
- * @author daimrod
+ * <p>
+ * PubMed's articles use the JATS format which is described <a
+ * href="http://jats.nlm.nih.gov/archiving/tag-library/0.4/t-2000.html"
+ * >here</a>.
+ * </p>
+ *
+ * @author Grégoire Jadi
  */
 public class PubMedXMLParser {
 
+	/** The Constant logger. */
 	private static final org.apache.log4j.Logger logger = org.apache.log4j.Logger
 			.getLogger(PubMedXMLParser.class.getCanonicalName());
 
+	/** The text. */
 	private StringBuilder text;
+
+	/** The citations. */
 	private Map<String, List<Pair<Integer, Integer>>> citations;
+
+	/** The sections. */
 	private List<Pair<Integer, Integer>> sections;
+
+	/** The section start. */
 	private Integer sectionStart;
+
+	/** The paragraphs. */
 	private List<Pair<Integer, Integer>> paragraphs;
+
+	/** The paragraph start. */
 	private Integer paragraphStart;
+
+	/** The titles. */
 	private List<Pair<Integer, Integer>> titles;
+
+	/** The title start. */
 	private Integer titleStart;
 
+	/** The xmlr. */
 	private XMLStreamReader xmlr;
+
+	/** The xmlif. */
 	private XMLInputFactory xmlif;
+
+	/** The event type. */
 	private int eventType;
 
+	/** The article. */
 	private Article article;
 
 	/**
-	 * Initialize a parser
+	 * Initialize a parser.
 	 *
 	 * @param reader
+	 *            the reader
 	 */
 	public PubMedXMLParser(Reader reader) {
 		text = new StringBuilder();
@@ -73,9 +99,10 @@ public class PubMedXMLParser {
 	}
 
 	/**
-	 * Parse the body of a PubMed's article
+	 * Parse the body of a PubMed's article.
 	 *
-	 * @throws javax.xml.stream.XMLStreamException
+	 * @throws XMLStreamException
+	 *             the XML stream exception
 	 */
 	private void parseBody() throws XMLStreamException {
 		while (xmlr.hasNext()) {
@@ -136,9 +163,10 @@ public class PubMedXMLParser {
 	}
 
 	/**
-	 * Parse the references of a PubMed's article
+	 * Parse the references of a PubMed's article.
 	 *
-	 * @throws javax.xml.stream.XMLStreamException
+	 * @throws XMLStreamException
+	 *             the XML stream exception
 	 */
 	private void parseReferences() throws XMLStreamException {
 		boolean continue_ = true;
@@ -172,10 +200,10 @@ public class PubMedXMLParser {
 	}
 
 	/**
-	 *
-	 * Extract Meta information from the article
+	 * Extract Meta information from the article.
 	 *
 	 * @throws XMLStreamException
+	 *             the XML stream exception
 	 */
 	private void parseMeta() throws XMLStreamException {
 		while (xmlr.hasNext()) {
@@ -218,7 +246,7 @@ public class PubMedXMLParser {
 	}
 
 	/**
-	 * Extract the important stuff from the XML
+	 * Extract the important stuff from the XML.
 	 */
 	private void parse() {
 		try {
@@ -250,7 +278,10 @@ public class PubMedXMLParser {
 	/**
 	 * *************************************************************************
 	 * Utils
-	 * ************************************************************************
+	 * ************************************************************************.
+	 *
+	 * @throws XMLStreamException
+	 *             the XML stream exception
 	 */
 	/**
 	 * Skip the current subtree
@@ -287,8 +318,9 @@ public class PubMedXMLParser {
 	 *            to go
 	 * @param op
 	 *            is a predicate
-	 * @throws XMLStreamException
 	 * @return true if the op returned true during the last run, false otherwise
+	 * @throws XMLStreamException
+	 *             the XML stream exception
 	 */
 	private boolean gotoTag(String tag, Predicate<XMLStreamReader> op)
 			throws XMLStreamException {
@@ -312,12 +344,21 @@ public class PubMedXMLParser {
 		return !continue_;
 	}
 
+	/**
+	 * Goto tag.
+	 *
+	 * @param tag
+	 *            the tag
+	 * @return true, if successful
+	 * @throws XMLStreamException
+	 *             the XML stream exception
+	 */
 	private boolean gotoTag(String tag) throws XMLStreamException {
 		return gotoTag(tag, _ignore -> true);
 	}
 
 	/**
-	 * Add a citation at the given position
+	 * Add a citation at the given position.
 	 *
 	 * @param citation
 	 *            to add
@@ -336,6 +377,14 @@ public class PubMedXMLParser {
 		}
 	}
 
+	/**
+	 * Adds the start.
+	 *
+	 * @param start
+	 *            the start
+	 * @param name
+	 *            the name
+	 */
 	private void addStart(Integer start, String name) {
 		switch (name.toLowerCase()) {
 		case "p":
@@ -350,6 +399,14 @@ public class PubMedXMLParser {
 		}
 	}
 
+	/**
+	 * Adds the end.
+	 *
+	 * @param end
+	 *            the end
+	 * @param name
+	 *            the name
+	 */
 	private void addEnd(Integer end, String name) {
 		switch (name.toLowerCase()) {
 		case "p":
@@ -367,39 +424,73 @@ public class PubMedXMLParser {
 	/**
 	 * *************************************************************************
 	 * Getters
-	 * ************************************************************************
+	 * ************************************************************************.
+	 *
+	 * @return the text
 	 */
 	public String getText() {
 		return text.toString();
 	}
 
+	/**
+	 * Gets the citations.
+	 *
+	 * @return the citations
+	 */
 	public Map<String, List<Pair<Integer, Integer>>> getCitations() {
 		return citations;
 	}
 
+	/**
+	 * Gets the sections.
+	 *
+	 * @return the sections
+	 */
 	public List<Pair<Integer, Integer>> getSections() {
 		return sections;
 	}
 
+	/**
+	 * Gets the titles.
+	 *
+	 * @return the titles
+	 */
 	public List<Pair<Integer, Integer>> getTitles() {
 		return titles;
 	}
 
 	/**
+	 * Gets the article.
+	 *
 	 * @return the article
 	 */
 	public Article getArticle() {
 		return article;
 	}
 
+	/**
+	 * Gets the paragraphs.
+	 *
+	 * @return the paragraphs
+	 */
 	public List<Pair<Integer, Integer>> getParagraphs() {
 		return paragraphs;
 	}
 
+	/**
+	 * Gets the pmid.
+	 *
+	 * @return the pmid
+	 */
 	public String getPMID() {
 		return article.getPMID();
 	}
 
+	/**
+	 * Checks for pmid.
+	 *
+	 * @return true, if successful
+	 */
 	public boolean hasPMID() {
 		return !getPMID().isEmpty();
 	}
