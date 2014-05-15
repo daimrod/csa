@@ -7,7 +7,7 @@ import jgreg.internship.nii.AE.CitationContextExtractorAE;
 import jgreg.internship.nii.AE.PubMedParserAE;
 import jgreg.internship.nii.AE.SentimentFinderAE;
 import jgreg.internship.nii.AE.XMIWriter;
-import jgreg.internship.nii.CR.PubMedReaderCR;
+import jgreg.internship.nii.CR.DirectoryReaderCR;
 import jgreg.internship.nii.RES.ArticlesDB;
 import jgreg.internship.nii.RES.MappingRES;
 import jgreg.internship.nii.RES.StringListRES;
@@ -102,9 +102,9 @@ public class AnnotatorWF {
 		 * Collection Reader
 		 */
 		CollectionReaderDescription reader = CollectionReaderFactory
-				.createReaderDescription(PubMedReaderCR.class,
-						PubMedReaderCR.INPUT_DIRECTORY, inputDirectory,
-						PubMedReaderCR.CORPUS_ARTICLES, corpusArticles);
+				.createReaderDescription(DirectoryReaderCR.class,
+						DirectoryReaderCR.INPUT_DIRECTORY, inputDirectory,
+						DirectoryReaderCR.CORPUS_ARTICLES, corpusArticles);
 
 		/*
 		 * Analysis Engine
