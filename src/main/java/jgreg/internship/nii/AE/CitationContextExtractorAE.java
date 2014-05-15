@@ -21,7 +21,8 @@ import org.apache.uima.jcas.JCas;
 import org.apache.uima.jcas.cas.FSArray;
 
 /**
- * Add CitationContext annotation around all Citation.
+ * Add {@link jgreg.internship.nii.types.CitationContext} annotation around
+ * {@link jgreg.internship.nii.types.Citation}.
  *
  * The size of the context corresponds to the number of
  * {@link jgreg.internship.nii.types.Sentence} indicated by
@@ -38,6 +39,9 @@ import org.apache.uima.jcas.cas.FSArray;
  * No matter what, the {@link jgreg.internship.nii.types.Sentence} in which the
  * {@link jgreg.internship.nii.types.Citation} occurs is always covered by the
  * {@link jgreg.internship.nii.types.CitationContext}.
+ *
+ * The {@link jgreg.internship.nii.types.Citation} considered can be restricted
+ * with {@link #FOCUSED_ARTICLES}.
  *
  * @author Grégoire Jadi
  */
@@ -85,12 +89,12 @@ public class CitationContextExtractorAE extends
 		for (Sentence sentence : JCasUtil.select(jCas, Sentence.class)) {
 			List<Citation> citations;
 			if (focusedArticles == null) {
-                // If we don't have a list of articles to focus on, we
-                // look at all of them.
+				// If we don't have a list of articles to focus on, we
+				// look at all of them.
 				citations = new ArrayList(sentence2Citations.get(sentence));
 			} else {
-                // Otherwise, we only consider the Citation that
-                // interest us.
+				// Otherwise, we only consider the Citation that
+				// interest us.
 				citations = sentence2Citations
 						.get(sentence)
 						.stream()
@@ -103,8 +107,8 @@ public class CitationContextExtractorAE extends
 				continue;
 			}
 
-            // Convert the List<Citation> to List<FeatureStructure>
-            // because that's what UIMA manipulates.
+			// Convert the List<Citation> to List<FeatureStructure>
+			// because that's what UIMA manipulates.
 			List<FeatureStructure> citationsFS = new ArrayList(citations);
 
 			int begin, end;
@@ -119,7 +123,7 @@ public class CitationContextExtractorAE extends
 				begin = sentence.getBegin();
 			}
 
-            // Extract the Sentence that belongs to the
+			// Extract the Sentence that belongs to the
 			// CitationContext *after* the Sentence in which the
 			// Citation occurs.
 			List<Sentence> followings = JCasUtil.selectFollowing(
@@ -134,8 +138,8 @@ public class CitationContextExtractorAE extends
 			context.setBegin(begin);
 			context.setEnd(end);
 
-            // Unfortunately, UIMA "complex" structures are very
-            // crudes. That's why this code is ugly.
+			// Unfortunately, UIMA "complex" structures are very
+			// crudes. That's why this code is ugly.
 			FSArray fsArray = new FSArray(jCas, citationsFS.size());
 			fsArray.copyFromArray(citationsFS
 					.toArray(new FeatureStructure[citationsFS.size()]), 0, 0,
