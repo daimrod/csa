@@ -3,6 +3,7 @@ package jgreg.internship.nii.CR;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -26,29 +27,35 @@ import org.apache.uima.util.Progress;
  * List files in {@link #INPUT_DIRECTORY} and make CAS from the raw text.
  *
  * The text isn't stored in the default view but in the view named originalText.
- * This way, the {@link jgreg.internship.nii.AE.PubMedParserAE} can parse the
- * XML and set the CAS text in the default view.
+ * This way, the AnalysisEngine that follow can parse the original text and set
+ * the CAS text in the default view.
  *
- * @author daimrod
+ * This is useful to parse large collection of documents and you really don't
+ * want to see your pipelane interrupted because of parsing errors.
+ *
+ * @author Grégoire Jadi
  */
-public class PubMedReaderCR extends JCasCollectionReader_ImplBase {
+public class DirectoryReaderCR extends JCasCollectionReader_ImplBase {
 
 	/** The Constant logger. */
-	private static final Logger logger = Logger.getLogger(PubMedReaderCR.class
-			.getCanonicalName());
+	private static final Logger logger = Logger
+			.getLogger(DirectoryReaderCR.class.getCanonicalName());
 
-	/** Path to the PubMed Corpus. */
+	/** Path to the directory. */
 	public static final String INPUT_DIRECTORY = "inputDirectoryName";
 	@ConfigurationParameter(name = INPUT_DIRECTORY, mandatory = true)
 	private String inputDirectoryName;
-
-	/** The input directory. */
 	private File inputDirectory;
 
 	/** The list of articles we want to anaylze. */
 	public static final String CORPUS_ARTICLES = "corpusArticles";
-	@ExternalResource(key = CORPUS_ARTICLES, mandatory = true)
+	@ExternalResource(key = CORPUS_ARTICLES, mandatory = false)
 	StringListRES corpusArticles;
+
+    /** The extensions of file we want to analyze. */
+	public static final String EXTENSIONS = "extensions";
+	@ConfigurationParameter(name = EXTENSIONS, mandatory = false, defaultValue = "null")
+	private String[] extensions;
 
 	/** The files. */
 	private List<File> files;
@@ -60,7 +67,7 @@ public class PubMedReaderCR extends JCasCollectionReader_ImplBase {
 	private int docIndex = 0;
 
 	/**
-	 * Get PubMedReaderCR ready to read files in {@link #INPUT_DIRECTORY}.
+	 * Get DirectoryReaderCR ready to read files in {@link #INPUT_DIRECTORY}.
 	 *
 	 * @param context
 	 *            the context
@@ -76,21 +83,29 @@ public class PubMedReaderCR extends JCasCollectionReader_ImplBase {
 		inputDirectory = new File(inputDirectoryName);
 
 		if (!inputDirectory.exists()) {
-			logger.error("could not find the PubMed directory at `"
+			logger.error("could not find the directory at `"
 					+ inputDirectoryName + "'");
 			throw new ResourceInitializationException();
 		}
 
-		files = corpusArticles.getList().stream()
+        if (corpusArticles != null) {
+            files = corpusArticles.getList().stream()
 				.map(filename -> new File(inputDirectory, filename))
 				.filter(file -> {
-					if (file.exists()) {
-						return true;
-					} else {
-						logger.warn(file.getAbsolutePath() + " doesn't exist");
-						return false;
-					}
-				}).collect(Collectors.toList());
+                        if (file.exists()) {
+                            return true;
+                        } else {
+                            logger.warn(file.getAbsolutePath() + " doesn't exist");
+                            return false;
+                        }
+                    }).collect(Collectors.toList());
+        } else if (extensions != null) {
+            files = new ArrayList(FileUtils.listFiles(inputDirectory, extensions, true));
+        } else {
+            logger.fatal("You need to set either CORPUS_ARTICLES or EXTENSIONS.");
+            throw new ResourceInitializationException();
+        }
+        
 		filesIt = files.iterator();
 	}
 
