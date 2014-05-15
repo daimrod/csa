@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package jgreg.internship.nii.CR;
 
 import java.io.File;
@@ -28,35 +23,49 @@ import org.apache.uima.resource.ResourceInitializationException;
 import org.apache.uima.util.Progress;
 
 /**
+ * List files in {@link #INPUT_DIRECTORY} and make CAS from the raw text.
+ *
+ * The text isn't stored in the default view but in the view named originalText.
+ * This way, the {@link jgreg.internship.nii.AE.PubMedParserAE} can parse the
+ * XML and set the CAS text in the default view.
  *
  * @author daimrod
  */
 public class PubMedReaderCR extends JCasCollectionReader_ImplBase {
 
+	/** The Constant logger. */
 	private static final Logger logger = Logger.getLogger(PubMedReaderCR.class
 			.getCanonicalName());
 
-	/**
-	 * Path to the PubMed Corpus
-	 */
+	/** Path to the PubMed Corpus. */
 	public static final String INPUT_DIRECTORY = "inputDirectoryName";
 	@ConfigurationParameter(name = INPUT_DIRECTORY, mandatory = true)
 	private String inputDirectoryName;
+
+	/** The input directory. */
 	private File inputDirectory;
 
+	/** The list of articles we want to anaylze. */
 	public static final String CORPUS_ARTICLES = "corpusArticles";
 	@ExternalResource(key = CORPUS_ARTICLES, mandatory = true)
 	StringListRES corpusArticles;
 
+	/** The files. */
 	private List<File> files;
+
+	/** The files it. */
 	private Iterator<File> filesIt;
+
+	/** The doc index. */
 	private int docIndex = 0;
 
 	/**
-	 * Get PubMedReaderCR ready to read files in INPUT_DIRECTORY.
+	 * Get PubMedReaderCR ready to read files in {@link #INPUT_DIRECTORY}.
 	 *
 	 * @param context
+	 *            the context
 	 * @throws ResourceInitializationException
+	 *             the resource initialization exception
 	 */
 	@Override
 	public void initialize(UimaContext context)
@@ -85,10 +94,17 @@ public class PubMedReaderCR extends JCasCollectionReader_ImplBase {
 		filesIt = files.iterator();
 	}
 
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see
+	 * org.apache.uima.fit.component.JCasCollectionReader_ImplBase#getNext(org
+	 * .apache.uima.jcas.JCas)
+	 */
 	@Override
 	public void getNext(JCas jCas) throws IOException, CollectionException,
 			FileNotFoundException {
-        docIndex++;
+		docIndex++;
 
 		File file = filesIt.next();
 		logger.info("Reading[" + docIndex + "/" + files.size() + " ] `"
@@ -105,11 +121,22 @@ public class PubMedReaderCR extends JCasCollectionReader_ImplBase {
 		}
 	}
 
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see org.apache.uima.collection.base_cpm.BaseCollectionReader#hasNext()
+	 */
 	@Override
 	public boolean hasNext() throws IOException, CollectionException {
 		return filesIt.hasNext();
 	}
 
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see
+	 * org.apache.uima.collection.base_cpm.BaseCollectionReader#getProgress()
+	 */
 	@Override
 	public Progress[] getProgress() {
 		return new Progress[docIndex];
