@@ -30,27 +30,35 @@ import org.apache.uima.jcas.JCas;
 import org.apache.uima.jcas.cas.FSArray;
 import org.apache.uima.resource.ResourceInitializationException;
 
+// TODO: Auto-generated Javadoc
 /**
+ * The Class ExtractMax.
  *
  * @author Grégoire Jadi
  */
-public class ExtractMax extends
+public class ExtractMaxAE extends
 		org.apache.uima.fit.component.JCasAnnotator_ImplBase {
-	protected static final Logger logger = Logger.getLogger(ExtractMax.class
+	
+	/** The Constant logger. */
+	protected static final Logger logger = Logger.getLogger(ExtractMaxAE.class
 			.getCanonicalName());
 
 	/**
 	 * The headers used to dump the data.
 	 */
 	public static final String HEADERS = "paramHeaders";
+	
+	/** The param headers. */
 	@ConfigurationParameter(name = HEADERS, mandatory = true)
 	private String[] paramHeaders;
+	
+	/** The headers. */
 	private ArrayList<String> headers;
 
-	/**
-	 * The separator used when dumping data
-	 */
+	/** The separator used when dumping data. */
 	public static final String SEPARATOR = "separator";
+	
+	/** The separator. */
 	@ConfigurationParameter(name = SEPARATOR, mandatory = false, defaultValue = ";")
 	private String separator;
 
@@ -58,12 +66,20 @@ public class ExtractMax extends
 	 * Where should we dump the data.
 	 */
 	public static final String OUTPUT_FILE = "outputFileName";
+	
+	/** The output file name. */
 	@ConfigurationParameter(name = OUTPUT_FILE, mandatory = true)
 	private String outputFileName;
+	
+	/** The output file. */
 	private File outputFile;
 
+	/** The str acc. */
 	private StringBuilder strAcc;
 
+	/* (non-Javadoc)
+	 * @see org.apache.uima.fit.component.JCasAnnotator_ImplBase#initialize(org.apache.uima.UimaContext)
+	 */
 	@Override
 	public void initialize(UimaContext context)
 			throws ResourceInitializationException {
@@ -81,9 +97,14 @@ public class ExtractMax extends
 	 * The name of the files in which we will look for patterns.
 	 */
 	public final static String MAPPING = "mapping";
+	
+	/** The mapping. */
 	@ExternalResource(key = MAPPING, mandatory = true)
 	private MappingRES mapping;
 
+	/* (non-Javadoc)
+	 * @see org.apache.uima.analysis_component.JCasAnnotator_ImplBase#process(org.apache.uima.jcas.JCas)
+	 */
 	@Override
 	public void process(JCas jCas) throws AnalysisEngineProcessException {
 		Map<CitationContext, Collection<Sentiment>> map = JCasUtil
@@ -141,6 +162,9 @@ public class ExtractMax extends
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see org.apache.uima.analysis_component.AnalysisComponent_ImplBase#collectionProcessComplete()
+	 */
 	@Override
 	public void collectionProcessComplete()
 			throws AnalysisEngineProcessException {

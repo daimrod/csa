@@ -1,6 +1,6 @@
 package jgreg.internship.nii.WF;
 
-import jgreg.internship.nii.AE.ExtractMax;
+import jgreg.internship.nii.AE.ExtractMaxAE;
 import jgreg.internship.nii.CR.XMIReader;
 import jgreg.internship.nii.RES.MappingRES;
 import jgreg.internship.nii.types.Citation;
@@ -47,9 +47,9 @@ public class StatisticsWF {
 
 		String[] headers = { "positive", "neutral", "negative" };
 		AnalysisEngineDescription extractor = AnalysisEngineFactory
-				.createEngineDescription(ExtractMax.class, ExtractMax.MAPPING,
-						mapping, ExtractMax.HEADERS, headers,
-						ExtractMax.OUTPUT_FILE, outputFile);
+				.createEngineDescription(ExtractMaxAE.class, ExtractMaxAE.MAPPING,
+						mapping, ExtractMaxAE.HEADERS, headers,
+						ExtractMaxAE.OUTPUT_FILE, outputFile);
 
 		builder.add(extractor);
 		SimplePipeline
