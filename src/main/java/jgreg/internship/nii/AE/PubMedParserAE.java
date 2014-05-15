@@ -29,23 +29,36 @@ import org.apache.uima.fit.util.JCasUtil;
 import org.apache.uima.jcas.JCas;
 
 /**
- * This analysis parses PubMed's articles and add the following annotations: -
- * Citation - Section - Title (the section's title) - Paragraph - ID (article's
- * PMID)
- *
- * All of this is done is a newly created View named "parsed".
+ * This analysis parses PubMed's articles and add the following annotations:
+ * <ul>
+ * <li> {@link jgreg.internship.nii.types.Citation} </li>
+ * <li> {@link jgreg.internship.nii.types.Section} </li>
+ * <li> {@link jgreg.internship.nii.types.Title} (the section's title) </li>
+ * <li> {@link jgreg.internship.nii.types.Paragraph} </li>
+ * <li> {@link jgreg.internship.nii.types.ID} (article's PMID) </li>
+ * </ul>
  *
  * @author Grégoire Jadi
  */
 public class PubMedParserAE extends
 		org.apache.uima.fit.component.JCasAnnotator_ImplBase {
+
+	/** The Constant logger. */
 	private static final Logger logger = Logger.getLogger(PubMedParserAE.class
 			.getCanonicalName());
 
-    public final static String PARAM_DB = "articlesDB";
-    @ExternalResource(key = PARAM_DB, mandatory = true)
-    private ArticlesDB articlesDB;
+	/** The Constant PARAM_DB. */
+	public final static String PARAM_DB = "articlesDB";
+	@ExternalResource(key = PARAM_DB, mandatory = true)
+	private ArticlesDB articlesDB;
 
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see
+	 * org.apache.uima.analysis_component.JCasAnnotator_ImplBase#process(org
+	 * .apache.uima.jcas.JCas)
+	 */
 	@Override
 	public void process(JCas jCas) throws AnalysisEngineProcessException {
 		JCas originalText;
@@ -64,32 +77,32 @@ public class PubMedParserAE extends
 
 		jCas.setDocumentText(parser.getText());
 
-        Article article = parser.getArticle();
-        article.setFilename(filename.getFilename());
-        articlesDB.add(article);
-        
+		Article article = parser.getArticle();
+		article.setFilename(filename.getFilename());
+		articlesDB.add(article);
+
 		ID docId = new ID(jCas);
 		docId.setPMID(article.getPMID());
-        docId.setYear(article.getYear());
-        docId.setBegin(0);
-        docId.setEnd(1);
+		docId.setYear(article.getYear());
+		docId.setBegin(0);
+		docId.setEnd(1);
 		docId.addToIndexes();
 
 		// Citation annotation
-        // and Article from citations
+		// and Article from citations
 		for (Entry<String, List<Pair<Integer, Integer>>> entry : parser
 				.getCitations().entrySet()) {
 			for (Pair<Integer, Integer> citationIdx : entry.getValue()) {
-                // create and add a Citation
+				// create and add a Citation
 				Citation citation = new Citation(jCas);
 				citation.setBegin(citationIdx.getLeft());
 				citation.setEnd(citationIdx.getRight());
 				citation.setPMID(entry.getKey());
 				citation.addToIndexes();
 
-                if (articlesDB.get(entry.getKey()) == null) {
-                    articlesDB.add(new Article(entry.getKey()));
-                }
+				if (articlesDB.get(entry.getKey()) == null) {
+					articlesDB.add(new Article(entry.getKey()));
+				}
 			}
 		}
 
