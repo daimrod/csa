@@ -113,6 +113,7 @@ public class SentimentFinderAE extends
 			for (String className : mapping.keySet()) {
 				List<String> strs = new LinkedList<>();
 				for (String filename : mapping.get(className)) {
+                    logger.info("Reading `" + filename + "'...");
 					strs.add(StringUtils.join(
 							Utils.readLines(new File(filename)).stream()
 									.map(line -> "(" + line + ")").iterator(),
