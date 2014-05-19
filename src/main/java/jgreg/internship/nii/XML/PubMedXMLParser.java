@@ -1,20 +1,20 @@
-// 
+//
 // Author:: Grégoire Jadi <daimrod@gmail.com>
 // Copyright:: Copyright (c) 2014, Grégoire Jadi
 // All rights reserved.
-// 
+//
 // Redistribution and use in source and binary forms, with or without
 // modification, are permitted provided that the following conditions are
 // met:
-// 
+//
 //    1. Redistributions of source code must retain the above copyright
 //       notice, this list of conditions and the following disclaimer.
-// 
+//
 //    2. Redistributions in binary form must reproduce the above
 //       copyright notice, this list of conditions and the following
 //       disclaimer in the documentation and/or other materials provided
 //       with the distribution.
-// 
+//
 // THIS SOFTWARE IS PROVIDED BY GRÉGOIRE JADI ``AS IS'' AND ANY
 // EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
 // IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
@@ -27,17 +27,16 @@
 // OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
 // OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 // SUCH DAMAGE.
-// 
+//
 // The views and conclusions contained in the software and
 // documentation are those of the authors and should not be
 // interpreted as representing official policies, either expressed or
 // implied, of Grégoire Jadi.
-// 
+//
 
 package jgreg.internship.nii.XML;
 
 import java.io.Reader;
-import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -54,6 +53,7 @@ import jgreg.internship.nii.RES.Article;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
+import org.apache.log4j.Level;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -116,6 +116,7 @@ public class PubMedXMLParser {
 	 *            the reader
 	 */
 	public PubMedXMLParser(Reader reader) {
+
 		text = new StringBuilder();
 		citations = new HashMap<>();
 		article = new Article("");
@@ -173,8 +174,9 @@ public class PubMedXMLParser {
 
 				// Keep this order
 				String citationIds = xmlr.getAttributeValue(null, "rid"); // 1
-				String citation = xmlr.getElementText(); // 2
-				logger.debug("Found xref `" + citationIds + "'");
+				String citation = getElementsText(); // 2
+                logger.debug("Found xref `" + citationIds + "' for `" + citation + "'");
+                
 				for (String citationId : citationIds.split(" ")) {
 					int start = text.length();
 					int end = start + citation.length();
@@ -325,15 +327,35 @@ public class PubMedXMLParser {
 	 * @throws XMLStreamException
 	 */
 	private void skipSubtree() throws XMLStreamException {
-		String toTrack = xmlr.getLocalName();
 		int count = 1;
 		while (xmlr.hasNext() && count > 0) {
 			eventType = xmlr.next();
-			if (XMLStreamConstants.END_ELEMENT == eventType && xmlr.hasName()
-					&& xmlr.getLocalName().equals(toTrack)) {
-				count = count - 1;
+			if (XMLStreamConstants.START_ELEMENT == eventType) {
+				count += 1;
+			} else if (XMLStreamConstants.END_ELEMENT == eventType) {
+				count -= 1;
 			}
 		}
+	}
+
+	private String getElementsText() throws XMLStreamException {
+		StringBuilder ret = new StringBuilder();
+		int count = 1;
+		while (xmlr.hasNext() && count > 0) {
+			eventType = xmlr.next();
+			if (XMLStreamConstants.START_ELEMENT == eventType) {
+				count += 1;
+			} else if (XMLStreamConstants.END_ELEMENT == eventType) {
+				count -= 1;
+			} else if (XMLStreamConstants.CHARACTERS == eventType
+					|| XMLStreamConstants.CDATA == eventType
+					|| XMLStreamConstants.SPACE == eventType
+					|| XMLStreamConstants.ENTITY_REFERENCE == eventType) {
+				ret.append(xmlr.getText());
+			}
+		}
+
+		return ret.toString();
 	}
 
 	/**
@@ -454,6 +476,43 @@ public class PubMedXMLParser {
 		case "sec":
 			sections.add(new ImmutablePair<>(sectionStart, end));
 			break;
+		}
+	}
+
+	private static String debugXMLStreamConstants(int eventType) {
+		switch (eventType) {
+		case XMLStreamConstants.ATTRIBUTE:
+			return "ATTRIBUTE";
+		case XMLStreamConstants.CDATA:
+			return "CDATA";
+		case XMLStreamConstants.CHARACTERS:
+			return "CHARACTERS";
+		case XMLStreamConstants.COMMENT:
+			return "COMMENT";
+		case XMLStreamConstants.DTD:
+			return "DTD";
+		case XMLStreamConstants.END_DOCUMENT:
+			return "END_DOCUMENT";
+		case XMLStreamConstants.END_ELEMENT:
+			return "END_ELEMENT";
+		case XMLStreamConstants.ENTITY_DECLARATION:
+			return "ENTITY_DECLARATION";
+		case XMLStreamConstants.ENTITY_REFERENCE:
+			return "ENTITY_REFERENCE";
+		case XMLStreamConstants.NAMESPACE:
+			return "NAMESPACE";
+		case XMLStreamConstants.NOTATION_DECLARATION:
+			return "NOTATION_DECLARATION";
+		case XMLStreamConstants.PROCESSING_INSTRUCTION:
+			return "PROCESSING_INSTRUCTION";
+		case XMLStreamConstants.SPACE:
+			return "SPACE";
+		case XMLStreamConstants.START_DOCUMENT:
+			return "START_DOCUMENT";
+		case XMLStreamConstants.START_ELEMENT:
+			return "START_ELEMENT";
+		default:
+			return "Unknown constants";
 		}
 	}
 
