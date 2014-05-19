@@ -53,7 +53,6 @@ import jgreg.internship.nii.RES.Article;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
-import org.apache.log4j.Level;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -167,7 +166,7 @@ public class PubMedXMLParser {
 			} else if (xmlr.hasName()
 					&& XMLStreamConstants.START_ELEMENT == eventType
 					&& xmlr.getLocalName().equals("xref")
-					&& xmlr.getAttributeValue(null, "ref-type").equals("bibr")) {
+					&& "bibr".equals(xmlr.getAttributeValue(null, "ref-type"))) {
 				/*
 				 * Store references
 				 */
