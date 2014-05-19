@@ -1,20 +1,20 @@
-// 
+//
 // Author:: Grégoire Jadi <daimrod@gmail.com>
 // Copyright:: Copyright (c) 2014, Grégoire Jadi
 // All rights reserved.
-// 
+//
 // Redistribution and use in source and binary forms, with or without
 // modification, are permitted provided that the following conditions are
 // met:
-// 
+//
 //    1. Redistributions of source code must retain the above copyright
 //       notice, this list of conditions and the following disclaimer.
-// 
+//
 //    2. Redistributions in binary form must reproduce the above
 //       copyright notice, this list of conditions and the following
 //       disclaimer in the documentation and/or other materials provided
 //       with the distribution.
-// 
+//
 // THIS SOFTWARE IS PROVIDED BY GRÉGOIRE JADI ``AS IS'' AND ANY
 // EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
 // IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
@@ -27,12 +27,12 @@
 // OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
 // OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 // SUCH DAMAGE.
-// 
+//
 // The views and conclusions contained in the software and
 // documentation are those of the authors and should not be
 // interpreted as representing official policies, either expressed or
 // implied, of Grégoire Jadi.
-// 
+//
 
 package jgreg.internship.nii.WF;
 
@@ -77,7 +77,7 @@ import org.apache.uima.resource.ExternalResourceDescription;
  * This my full Pipeline.
  */
 public class AnnotatorWF {
-	
+
 	/** The Constant logger. */
 	private static final Logger logger = Logger.getLogger(AnnotatorWF.class
 			.getCanonicalName());
@@ -85,13 +85,20 @@ public class AnnotatorWF {
 	/**
 	 * Run the Pipeline.
 	 *
-	 * @param inputDirectory            contains all articles.
-	 * @param outputDirectory            stores all output data (XMI, ...).
-	 * @param listArticlesFilename            lists articles of interest.
-	 * @param listFocusedArticlesFilename            lists PMIDS of interest.
-	 * @param mappingFilename            describes the mapping system.
-	 * @param windowSize            is the size of the citation context.
-	 * @throws Exception the exception
+	 * @param inputDirectory
+	 *            contains all articles.
+	 * @param outputDirectory
+	 *            stores all output data (XMI, ...).
+	 * @param listArticlesFilename
+	 *            lists articles of interest.
+	 * @param listFocusedArticlesFilename
+	 *            lists PMIDS of interest.
+	 * @param mappingFilename
+	 *            describes the mapping system.
+	 * @param windowSize
+	 *            is the size of the citation context.
+	 * @throws Exception
+	 *             the exception
 	 */
 	public static void process(String inputDirectory, String outputDirectory,
 			String listArticlesFilename, String listFocusedArticlesFilename,
@@ -103,7 +110,7 @@ public class AnnotatorWF {
 		// Sentence Model
 		ExternalResourceDescription sentenceModel = ExternalResourceFactory
 				.createExternalResourceDescription(
-						SentenceModelResourceImpl.class, 
+						SentenceModelResourceImpl.class,
 						"file:org/apache/ctakes/core/sentdetect/sd-med-model.bin");
 		// Token Model
 		ExternalResourceDescription tokenModel = ExternalResourceFactory
@@ -219,15 +226,17 @@ public class AnnotatorWF {
 	/**
 	 * The main method.
 	 *
-	 * @param args the arguments
-	 * @throws Exception the exception
+	 * @param args
+	 *            the arguments
+	 * @throws Exception
+	 *             the exception
 	 */
 	public static void main(String[] args) throws Exception {
 		AnnotatorWF.process("/home/daimrod/corpus/pubmed/corpus/",
 				"/home/daimrod/corpus/pubmed/dev/output/",
-				"/home/daimrod/corpus/pubmed/dev/test1.lst",
+				"/home/daimrod/corpus/pubmed/dev/debug.lst",
 				"/home/daimrod/corpus/pubmed/dev/co-cited.lst",
-				"/home/daimrod/corpus/pubmed/dev/mapping.lst", 4);
+				"/home/daimrod/corpus/pubmed/dev/hs-mapping.lst", 4);
 
 		logger.info("done!");
 	}
