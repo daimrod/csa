@@ -234,7 +234,7 @@ public class AnnotatorWF {
 	public static void main(String[] args) throws Exception {
 		AnnotatorWF.process("/home/daimrod/corpus/pubmed/corpus/",
 				"/home/daimrod/corpus/pubmed/dev/output/",
-				"/home/daimrod/corpus/pubmed/dev/debug.lst",
+				"/home/daimrod/corpus/pubmed/dev/test2.lst",
 				"/home/daimrod/corpus/pubmed/dev/co-cited.lst",
 				"/home/daimrod/corpus/pubmed/dev/hs-mapping.lst", 4);
 
