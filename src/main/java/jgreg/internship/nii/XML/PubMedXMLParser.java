@@ -145,19 +145,19 @@ public class PubMedXMLParser {
 			eventType = xmlr.next();
 
 			if (xmlr.hasName() && XMLStreamConstants.END_ELEMENT == eventType
-					&& xmlr.getLocalName().equals("body")) {
+					&& "body".equals(xmlr.getLocalName())) {
 				break;
 			} else if (xmlr.hasName()
 					&& XMLStreamConstants.START_ELEMENT == eventType
-					&& (xmlr.getLocalName().equals("p")
-							|| xmlr.getLocalName().equals("title") || xmlr
-							.getLocalName().equals("sec"))) {
+					&& ("p".equals(xmlr.getLocalName())
+							|| "title".equals(xmlr.getLocalName()) || "sec"
+								.equals(xmlr.getLocalName()))) {
 				addStart(text.length(), xmlr.getLocalName());
 			} else if (xmlr.hasName()
 					&& XMLStreamConstants.END_ELEMENT == eventType
-					&& (xmlr.getLocalName().equals("p")
-							|| xmlr.getLocalName().equals("title") || xmlr
-							.getLocalName().equals("sec"))) {
+					&& ("p".equals(xmlr.getLocalName())
+							|| "title".equals(xmlr.getLocalName()) || "sec"
+								.equals(xmlr.getLocalName()))) {
 				/*
 				 * Add newline when it's necessary
 				 */
@@ -165,7 +165,7 @@ public class PubMedXMLParser {
 				addEnd(text.length(), xmlr.getLocalName());
 			} else if (xmlr.hasName()
 					&& XMLStreamConstants.START_ELEMENT == eventType
-					&& xmlr.getLocalName().equals("xref")
+					&& "xref".equals(xmlr.getLocalName())
 					&& "bibr".equals(xmlr.getAttributeValue(null, "ref-type"))) {
 				/*
 				 * Store references
@@ -174,8 +174,9 @@ public class PubMedXMLParser {
 				// Keep this order
 				String citationIds = xmlr.getAttributeValue(null, "rid"); // 1
 				String citation = getElementsText(); // 2
-                logger.debug("Found xref `" + citationIds + "' for `" + citation + "'");
-                
+				logger.debug("Found xref `" + citationIds + "' for `"
+						+ citation + "'");
+
 				for (String citationId : citationIds.split(" ")) {
 					int start = text.length();
 					int end = start + citation.length();
@@ -184,8 +185,8 @@ public class PubMedXMLParser {
 				}
 			} else if (xmlr.hasName()
 					&& XMLStreamConstants.START_ELEMENT == eventType
-					&& (xmlr.getLocalName().equals("table-wrap") || xmlr
-							.getLocalName().equals("fig"))) {
+					&& ("table-wrap".equals(xmlr.getLocalName()) || "fig"
+							.equals(xmlr.getLocalName()))) {
 				/*
 				 * Ignore table and figure
 				 */
@@ -211,13 +212,13 @@ public class PubMedXMLParser {
 		while (xmlr.hasNext() && continue_) {
 			eventType = xmlr.next();
 			if (XMLStreamConstants.START_ELEMENT == eventType && xmlr.hasName()
-					&& xmlr.getLocalName().equals("ref")) {
+					&& "ref".equals(xmlr.getLocalName())) {
 				String localId = xmlr.getAttributeValue(null, "id");
 				if (citations.containsKey(localId)
 						&& gotoTag(
 								"pub-id",
-								(XMLStreamReader xr) -> xr.getAttributeValue(
-										null, "pub-id-type").equals("pmid"))) {
+								(XMLStreamReader xr) -> "pmid".equals(xr
+										.getAttributeValue(null, "pub-id-type")))) {
 					/**
 					 * Update the citations Replace the local reference by the
 					 * appropriate PMID
@@ -253,9 +254,9 @@ public class PubMedXMLParser {
 			(!hasPMID()
 					&& xmlr.hasName()
 					&& XMLStreamConstants.START_ELEMENT == eventType
-					&& xmlr.getLocalName().equals("article-id")
-					&& xmlr.getAttributeValue(null, "pub-id-type").equals(
-							"pmid")) {
+					&& "article-id".equals(xmlr.getLocalName())
+					&& "pmid".equals(xmlr
+							.getAttributeValue(null, "pub-id-type"))) {
 				article.setPMID(StringUtils.trim(xmlr.getElementText()));
 
 			} else if
@@ -264,7 +265,7 @@ public class PubMedXMLParser {
 			 */
 			(article.getYear() == null
 					&& XMLStreamConstants.START_ELEMENT == eventType
-					&& xmlr.hasName() && xmlr.getLocalName().equals("pub-date")) {
+					&& xmlr.hasName() && "pub-date".equals(xmlr.getLocalName())) {
 				if (gotoTag("year")) {
 					article.setYear(new Integer(xmlr.getElementText()));
 				}
@@ -273,7 +274,7 @@ public class PubMedXMLParser {
 			 * End parsing of the metadata
 			 */
 			(XMLStreamConstants.END_ELEMENT == eventType && xmlr.hasName()
-					&& xmlr.getLocalName().equals("article-meta")) {
+					&& "article-meta".equals(xmlr.getLocalName())) {
 				if (article.getYear() == null) {
 					logger.warn("No date for " + article.getPMID());
 				}
@@ -386,7 +387,7 @@ public class PubMedXMLParser {
 		while (xmlr.hasNext() && continue_ && depth > 0) {
 			eventType = xmlr.next();
 			continue_ = !(XMLStreamConstants.START_ELEMENT == eventType
-					&& xmlr.hasName() && xmlr.getLocalName().equals(tag)
+					&& xmlr.hasName() && tag.equals(xmlr.getLocalName())
 					&& op != null && op.test(xmlr));
 			switch (eventType) {
 			case XMLStreamConstants.START_ELEMENT:
