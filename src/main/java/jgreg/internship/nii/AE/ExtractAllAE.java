@@ -137,9 +137,9 @@ public class ExtractAllAE extends
 		headers = new ArrayList<String>(Arrays.asList(paramHeaders));
 
 		strAcc = new StringBuilder();
-		strAcc.append("cites").append(separator).append("cited")
-				.append(separator).append(StringUtils.join(headers, separator))
-				.append("\n");
+		strAcc.append("cites").append(separator).append("year")
+				.append(separator).append("cited").append(separator)
+				.append(StringUtils.join(headers, separator)).append("\n");
 	}
 
 	/**
