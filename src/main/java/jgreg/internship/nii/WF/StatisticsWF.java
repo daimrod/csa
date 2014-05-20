@@ -114,8 +114,8 @@ public class StatisticsWF {
 				"emerged" };
 		AnalysisEngineDescription extractor = AnalysisEngineFactory
 				.createEngineDescription(ExtractAllAE.class,
-						ExtractAllAE.MAPPING, mapping, ExtractAllAE.HEADERS,
-						headers, ExtractAllAE.OUTPUT_FILE, outputFile);
+						ExtractAllAE.HEADERS, headers,
+						ExtractAllAE.OUTPUT_FILE, outputFile);
 
 		builder.add(deserializer);
 		builder.add(extractor);
