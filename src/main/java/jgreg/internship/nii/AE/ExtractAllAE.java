@@ -41,11 +41,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import jgreg.internship.nii.RES.MappingRES;
 import jgreg.internship.nii.Utils.Utils;
 import jgreg.internship.nii.types.CitationContext;
 import jgreg.internship.nii.types.ID;
@@ -60,7 +58,6 @@ import org.apache.uima.cas.Feature;
 import org.apache.uima.cas.FeatureStructure;
 import org.apache.uima.cas.Type;
 import org.apache.uima.fit.descriptor.ConfigurationParameter;
-import org.apache.uima.fit.descriptor.ExternalResource;
 import org.apache.uima.fit.util.JCasUtil;
 import org.apache.uima.jcas.JCas;
 import org.apache.uima.jcas.cas.FSArray;
@@ -137,18 +134,10 @@ public class ExtractAllAE extends
 		headers = new ArrayList<String>(Arrays.asList(paramHeaders));
 
 		strAcc = new StringBuilder();
-		strAcc.append("cites").append(separator).append("year")
-				.append(separator).append("cited").append(separator)
-				.append(StringUtils.join(headers, separator)).append("\n");
+		strAcc.append("cites").append(separator).append("cited")
+				.append(separator).append(StringUtils.join(headers, separator))
+				.append("\n");
 	}
-
-	/**
-	 * This mapping describe contains the patterns used for each
-	 * {@link jgreg.internship.nii.types.Sentiment#name}.
-	 */
-	public final static String MAPPING = "mapping";
-	@ExternalResource(key = MAPPING, mandatory = true)
-	private MappingRES mapping;
 
 	/*
 	 * (non-Javadoc)
@@ -165,13 +154,16 @@ public class ExtractAllAE extends
 		// Current article information
 		ID id = JCasUtil.selectSingle(jCas, ID.class);
 
-		// Mapping PMID -> [#c1, #c2, #c3] where PMID is a PMID to a
-		// document cited by the current article and #cX are the
-		// number of Sentiment named cX.
-		Map<String, List<Integer>> mem = new HashMap<>();
-
 		for (CitationContext context : JCasUtil.select(jCas,
 				CitationContext.class)) {
+            FSArray citationsFSA = context.getPMIDS();
+            
+            // Well, this shouldn't happen, but who knows...
+            if (citationsFSA.size() <= 0) {
+                continue;
+            }
+			strAcc.append(id.getPMID()).append(separator);
+
 			ArrayList<Integer> acc = Utils.List(headers.size(), 0);
 
 			// Compute the number of each kind of Sentiment within the context
@@ -181,35 +173,21 @@ public class ExtractAllAE extends
 			}
 
 			// Add those numbers to all cited articles within the context
-			FSArray citationsFSA = context.getPMIDS();
 			Type citationT = jCas.getTypeSystem().getType(
 					"jgreg.internship.nii.types.Citation");
 			Feature citationPMIDF = citationT.getFeatureByBaseName("PMID");
-			for (int idx = 0; idx < citationsFSA.size(); idx++) {
+
+			for (int idx = 0; idx < citationsFSA.size() - 1; idx++) {
 				FeatureStructure citationFS = citationsFSA.get(idx);
-				String pmid = citationFS.getStringValue(citationPMIDF);
-
-				List<Integer> lst;
-				if (!mem.containsKey(pmid)) {
-					lst = Utils.List(headers.size(), 0);
-					mem.put(pmid, lst);
-				} else {
-					lst = mem.get(pmid);
-				}
-
-				for (int j = 0; j < lst.size(); j++) {
-					lst.set(j, lst.get(j) + acc.get(j));
-				}
+				strAcc.append(citationFS.getStringValue(citationPMIDF)).append(
+						',');
 			}
-		}
+			strAcc.append(citationsFSA.get(citationsFSA.size() - 1).getStringValue(
+					citationPMIDF));
 
-		for (String pmid : mem.keySet()) {
-			strAcc.append(id.getPMID()).append(separator).append(id.getYear())
-					.append(separator).append(pmid);
-			for (Integer i : mem.get(pmid)) {
-				strAcc.append(separator).append(i);
-			}
-			strAcc.append("\n");
+            strAcc.append(separator).append(StringUtils.join(acc, separator));
+
+			strAcc.append('\n');
 		}
 	}
 
