@@ -39,11 +39,10 @@ package jgreg.internship.nii.AE;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
-import java.util.List;
 import java.util.Map;
 
+import jgreg.internship.nii.RES.MappingRES;
 import jgreg.internship.nii.Utils.Utils;
 import jgreg.internship.nii.types.CitationContext;
 import jgreg.internship.nii.types.ID;
@@ -58,6 +57,7 @@ import org.apache.uima.cas.Feature;
 import org.apache.uima.cas.FeatureStructure;
 import org.apache.uima.cas.Type;
 import org.apache.uima.fit.descriptor.ConfigurationParameter;
+import org.apache.uima.fit.descriptor.ExternalResource;
 import org.apache.uima.fit.util.JCasUtil;
 import org.apache.uima.jcas.JCas;
 import org.apache.uima.jcas.cas.FSArray;
@@ -92,8 +92,9 @@ public class ExtractAllAE extends
 	 * This parameter can be used to customize the order in which
 	 * {@link jgreg.internship.nii.types.Sentiment#name} are used and dumped.
 	 */
-	public static final String HEADERS = "paramHeaders";
-	@ConfigurationParameter(name = HEADERS, mandatory = true)
+	public static final String MAPPING = "mapping";
+	@ExternalResource(key = MAPPING, mandatory = true)
+    private MappingRES mapping;
 	private String[] paramHeaders;
 
 	// ArrayList<String> are easier to manipulate compared to raw arrays
@@ -131,7 +132,7 @@ public class ExtractAllAE extends
 		super.initialize(context);
 		outputFile = new File(outputFileName);
 
-		headers = new ArrayList<String>(Arrays.asList(paramHeaders));
+		headers = new ArrayList<String>(mapping.get("order"));
 
 		strAcc = new StringBuilder();
 		strAcc.append("cites").append(separator).append("cited")
