@@ -105,16 +105,9 @@ public class StatisticsWF {
 		AnalysisEngineDescription deserializer = AnalysisEngineFactory
 				.createEngineDescription(XMIReaderAE.class);
 
-		String[] headers = { "established", "previous", "causality",
-				"consensus", "importance", "discovered", "achieved",
-				"improved", "modified", "supported", "hypothesis", "reported",
-				"constructed", "method", "usage", "interest", "new",
-				"differentiated", "associated", "similarity", "difficulty",
-				"future", "uncertainty", "weakness", "criticism", "negation",
-				"emerged" };
 		AnalysisEngineDescription extractor = AnalysisEngineFactory
 				.createEngineDescription(ExtractAllAE.class,
-						ExtractAllAE.HEADERS, headers,
+						ExtractAllAE.MAPPING, mapping,
 						ExtractAllAE.OUTPUT_FILE, outputFile);
 
 		builder.add(deserializer);
