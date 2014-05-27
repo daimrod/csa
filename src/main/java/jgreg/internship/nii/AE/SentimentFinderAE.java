@@ -111,6 +111,10 @@ public class SentimentFinderAE extends
             // Combine all patterns in one big pattern using the
             // conjunction operator.
 			for (String className : mapping.keySet()) {
+                if ("order".equals(className)) {
+                    continue;
+                }
+                
 				List<String> strs = new LinkedList<>();
 				for (String filename : mapping.get(className)) {
                     logger.info("Reading `" + filename + "'...");
