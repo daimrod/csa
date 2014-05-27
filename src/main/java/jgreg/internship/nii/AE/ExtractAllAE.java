@@ -45,6 +45,7 @@ import java.util.Map;
 import jgreg.internship.nii.RES.MappingRES;
 import jgreg.internship.nii.Utils.Utils;
 import jgreg.internship.nii.types.CitationContext;
+import jgreg.internship.nii.types.Filename;
 import jgreg.internship.nii.types.ID;
 import jgreg.internship.nii.types.Sentiment;
 
@@ -53,6 +54,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.uima.UimaContext;
 import org.apache.uima.analysis_engine.AnalysisEngineProcessException;
+import org.apache.uima.cas.CASException;
 import org.apache.uima.cas.Feature;
 import org.apache.uima.cas.FeatureStructure;
 import org.apache.uima.cas.Type;
@@ -94,7 +96,7 @@ public class ExtractAllAE extends
 	 */
 	public static final String MAPPING = "mapping";
 	@ExternalResource(key = MAPPING, mandatory = true)
-    private MappingRES mapping;
+	private MappingRES mapping;
 	private String[] paramHeaders;
 
 	// ArrayList<String> are easier to manipulate compared to raw arrays
@@ -116,6 +118,13 @@ public class ExtractAllAE extends
 	/** The output file. */
 	private File outputFile;
 
+	public static final String INFO_FILE = "infoFileName";
+	@ConfigurationParameter(name = INFO_FILE, mandatory = true)
+	private String infoFileName;
+	// Another output file
+	private File infoFile;
+	private StringBuilder infoAcc;
+
 	/** The str acc. */
 	private StringBuilder strAcc;
 
@@ -131,6 +140,10 @@ public class ExtractAllAE extends
 			throws ResourceInitializationException {
 		super.initialize(context);
 		outputFile = new File(outputFileName);
+		infoFile = new File(infoFileName);
+		infoAcc = new StringBuilder();
+		infoAcc.append("pmid").append(separator).append("year")
+				.append(separator).append("filename").append('\n');
 
 		headers = new ArrayList<String>(mapping.get("order"));
 
@@ -154,15 +167,25 @@ public class ExtractAllAE extends
 
 		// Current article information
 		ID id = JCasUtil.selectSingle(jCas, ID.class);
+		JCas originalText;
+		try {
+			originalText = jCas.getView("originalText");
+		} catch (CASException ex) {
+			throw new AnalysisEngineProcessException(ex);
+		}
+
+		Filename filename = JCasUtil.selectSingle(originalText, Filename.class);
+		infoAcc.append(id.getPMID()).append(separator).append(id.getYear())
+				.append(separator).append(filename.getFilename()).append('\n');
 
 		for (CitationContext context : JCasUtil.select(jCas,
 				CitationContext.class)) {
-            FSArray citationsFSA = context.getPMIDS();
-            
-            // Well, this shouldn't happen, but who knows...
-            if (citationsFSA.size() <= 0) {
-                continue;
-            }
+			FSArray citationsFSA = context.getPMIDS();
+
+			// Well, this shouldn't happen, but who knows...
+			if (citationsFSA.size() <= 0) {
+				continue;
+			}
 			strAcc.append(id.getPMID()).append(separator);
 
 			ArrayList<Integer> acc = Utils.List(headers.size(), 0);
@@ -183,10 +206,10 @@ public class ExtractAllAE extends
 				strAcc.append(citationFS.getStringValue(citationPMIDF)).append(
 						',');
 			}
-			strAcc.append(citationsFSA.get(citationsFSA.size() - 1).getStringValue(
-					citationPMIDF));
+			strAcc.append(citationsFSA.get(citationsFSA.size() - 1)
+					.getStringValue(citationPMIDF));
 
-            strAcc.append(separator).append(StringUtils.join(acc, separator));
+			strAcc.append(separator).append(StringUtils.join(acc, separator));
 
 			strAcc.append('\n');
 		}
@@ -205,6 +228,7 @@ public class ExtractAllAE extends
 				+ "'...");
 		try {
 			FileUtils.write(outputFile, strAcc.toString());
+			FileUtils.write(infoFile, infoAcc.toString());
 		} catch (IOException ex) {
 			throw new AnalysisEngineProcessException(ex);
 		}

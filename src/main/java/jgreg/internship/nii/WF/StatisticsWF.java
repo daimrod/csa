@@ -84,7 +84,7 @@ public class StatisticsWF {
 	 *             the exception
 	 */
 	public static void process(String inputDirectory, String mappingFilename,
-			String outputFile) throws Exception {
+			String outputFile, String infoFile) throws Exception {
 		String[] extensions = { "xmi" };
 		CollectionReaderDescription reader = CollectionReaderFactory
 				.createReaderDescription(DirectoryReaderCR.class,
@@ -108,7 +108,8 @@ public class StatisticsWF {
 		AnalysisEngineDescription extractor = AnalysisEngineFactory
 				.createEngineDescription(ExtractAllAE.class,
 						ExtractAllAE.MAPPING, mapping,
-						ExtractAllAE.OUTPUT_FILE, outputFile);
+						ExtractAllAE.OUTPUT_FILE, outputFile,
+						ExtractAllAE.INFO_FILE, infoFile);
 
 		builder.add(deserializer);
 		builder.add(extractor);
@@ -127,7 +128,8 @@ public class StatisticsWF {
 	public static void main(String[] args) throws Exception {
 		StatisticsWF.process("/home/daimrod/corpus/pubmed/dev/output/",
 				"/home/daimrod/corpus/pubmed/dev/hs-mapping.lst",
-				"/home/daimrod/corpus/pubmed/dev/output/all-out.dat");
+				"/home/daimrod/corpus/pubmed/dev/output/all-out.dat",
+				"/home/daimrod/corpus/pubmed/dev/output/info.dat");
 		logger.info("done!");
 	}
 }
