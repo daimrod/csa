@@ -1,5 +1,5 @@
 
-/* First created by JCasGen Wed May 14 16:22:43 JST 2014 */
+/* First created by JCasGen Wed May 28 16:36:49 JST 2014 */
 package jgreg.internship.nii.types;
 
 import org.apache.uima.jcas.JCas;
@@ -14,7 +14,7 @@ import org.apache.uima.cas.Feature;
 import org.apache.uima.jcas.tcas.Annotation_Type;
 
 /** ID(s) of the document.
- * Updated by JCasGen Wed May 14 16:22:43 JST 2014
+ * Updated by JCasGen Wed May 28 16:36:49 JST 2014
  * @generated */
 public class ID_Type extends Annotation_Type {
   /** @generated 
@@ -93,6 +93,30 @@ public class ID_Type extends Annotation_Type {
     ll_cas.ll_setLongValue(addr, casFeatCode_year, v);}
     
   
+ 
+  /** @generated */
+  final Feature casFeat_title;
+  /** @generated */
+  final int     casFeatCode_title;
+  /** @generated
+   * @param addr low level Feature Structure reference
+   * @return the feature value 
+   */ 
+  public String getTitle(int addr) {
+        if (featOkTst && casFeat_title == null)
+      jcas.throwFeatMissing("title", "jgreg.internship.nii.types.ID");
+    return ll_cas.ll_getStringValue(addr, casFeatCode_title);
+  }
+  /** @generated
+   * @param addr low level Feature Structure reference
+   * @param v value to set 
+   */    
+  public void setTitle(int addr, String v) {
+        if (featOkTst && casFeat_title == null)
+      jcas.throwFeatMissing("title", "jgreg.internship.nii.types.ID");
+    ll_cas.ll_setStringValue(addr, casFeatCode_title, v);}
+    
+  
 
 
 
@@ -112,6 +136,10 @@ public class ID_Type extends Annotation_Type {
  
     casFeat_year = jcas.getRequiredFeatureDE(casType, "year", "uima.cas.Long", featOkTst);
     casFeatCode_year  = (null == casFeat_year) ? JCas.INVALID_FEATURE_CODE : ((FeatureImpl)casFeat_year).getCode();
+
+ 
+    casFeat_title = jcas.getRequiredFeatureDE(casType, "title", "uima.cas.String", featOkTst);
+    casFeatCode_title  = (null == casFeat_title) ? JCas.INVALID_FEATURE_CODE : ((FeatureImpl)casFeat_title).getCode();
 
   }
 }

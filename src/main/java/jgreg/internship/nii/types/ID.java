@@ -1,6 +1,6 @@
 
 
-/* First created by JCasGen Wed May 14 16:22:43 JST 2014 */
+/* First created by JCasGen Wed May 28 16:36:49 JST 2014 */
 package jgreg.internship.nii.types;
 
 import org.apache.uima.jcas.JCas; 
@@ -11,7 +11,7 @@ import org.apache.uima.jcas.tcas.Annotation;
 
 
 /** ID(s) of the document.
- * Updated by JCasGen Wed May 14 16:22:43 JST 2014
+ * Updated by JCasGen Wed May 28 16:36:49 JST 2014
  * XML source: src/main/resources/jgreg/internship/nii/types/CitationSentimentAnalysisTS.xml
  * @generated */
 public class ID extends Annotation {
@@ -118,6 +118,28 @@ public class ID extends Annotation {
     if (ID_Type.featOkTst && ((ID_Type)jcasType).casFeat_year == null)
       jcasType.jcas.throwFeatMissing("year", "jgreg.internship.nii.types.ID");
     jcasType.ll_cas.ll_setLongValue(addr, ((ID_Type)jcasType).casFeatCode_year, v);}    
+   
+    
+  //*--------------*
+  //* Feature: title
+
+  /** getter for title - gets The title of the document.
+   * @generated
+   * @return value of the feature 
+   */
+  public String getTitle() {
+    if (ID_Type.featOkTst && ((ID_Type)jcasType).casFeat_title == null)
+      jcasType.jcas.throwFeatMissing("title", "jgreg.internship.nii.types.ID");
+    return jcasType.ll_cas.ll_getStringValue(addr, ((ID_Type)jcasType).casFeatCode_title);}
+    
+  /** setter for title - sets The title of the document. 
+   * @generated
+   * @param v value to set into the feature 
+   */
+  public void setTitle(String v) {
+    if (ID_Type.featOkTst && ((ID_Type)jcasType).casFeat_title == null)
+      jcasType.jcas.throwFeatMissing("title", "jgreg.internship.nii.types.ID");
+    jcasType.ll_cas.ll_setStringValue(addr, ((ID_Type)jcasType).casFeatCode_title, v);}    
   }
 
     

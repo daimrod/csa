@@ -101,6 +101,11 @@
         <description>The Year of the document.</description>
         <rangeTypeName>uima.cas.Long</rangeTypeName>
       </featureDescription>
+      <featureDescription>
+        <name>title</name>
+        <description>The title of the document.</description>
+        <rangeTypeName>uima.cas.String</rangeTypeName>
+      </featureDescription>
     </typeDescription>
     
     <typeDescription>
