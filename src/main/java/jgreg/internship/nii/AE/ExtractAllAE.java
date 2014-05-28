@@ -143,7 +143,8 @@ public class ExtractAllAE extends
 		infoFile = new File(infoFileName);
 		infoAcc = new StringBuilder();
 		infoAcc.append("pmid").append(separator).append("year")
-				.append(separator).append("filename").append('\n');
+				.append(separator).append("title").append(separator)
+				.append("filename").append('\n');
 
 		headers = new ArrayList<String>(mapping.get("order"));
 
@@ -176,7 +177,8 @@ public class ExtractAllAE extends
 
 		Filename filename = JCasUtil.selectSingle(originalText, Filename.class);
 		infoAcc.append(id.getPMID()).append(separator).append(id.getYear())
-				.append(separator).append(filename.getFilename()).append('\n');
+				.append(separator).append(id.getTitle()).append(separator)
+				.append(filename.getFilename()).append('\n');
 
 		for (CitationContext context : JCasUtil.select(jCas,
 				CitationContext.class)) {

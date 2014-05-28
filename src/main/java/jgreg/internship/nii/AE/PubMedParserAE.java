@@ -107,6 +107,7 @@ public class PubMedParserAE extends
 		ID docId = new ID(jCas);
 		docId.setPMID(article.getPMID());
 		docId.setYear(article.getYear());
+        docId.setTitle(article.getTitle());
 		docId.setBegin(0);
 		docId.setEnd(1);
 		docId.addToIndexes();

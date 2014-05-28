@@ -260,6 +260,14 @@ public class PubMedXMLParser {
 				article.setPMID(StringUtils.trim(xmlr.getElementText()));
 
 			} else if
+            /**
+			 * Extract the TITLE from the document
+			 */
+			(article.getYear() == null
+					&& XMLStreamConstants.START_ELEMENT == eventType
+					&& xmlr.hasName() && "article-title".equals(xmlr.getLocalName())) {
+                article.setTitle(getElementsText());
+			} else if
 			/**
 			 * Extract the YEAR from the document
 			 */

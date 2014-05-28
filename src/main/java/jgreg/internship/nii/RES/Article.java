@@ -60,6 +60,9 @@ public class Article {
 	/** The year. */
 	private Integer year;
 
+    /** The Title. */
+    private String title;
+
 	/**
 	 * Create a new ArticleScore.
 	 *
@@ -134,6 +137,20 @@ public class Article {
 	 */
 	public void setYear(Integer year) {
 		this.year = year;
+	}
+
+	/**
+	 * @return the title
+	 */
+	public String getTitle() {
+		return title;
+	}
+
+	/**
+	 * @param title the title to set
+	 */
+	public void setTitle(String title) {
+		this.title = title;
 	}
 
 	/* (non-Javadoc)
