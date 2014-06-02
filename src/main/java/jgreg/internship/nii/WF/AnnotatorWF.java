@@ -41,7 +41,6 @@ import jgreg.internship.nii.AE.PubMedParserAE;
 import jgreg.internship.nii.AE.SentimentFinderAE;
 import jgreg.internship.nii.AE.XMIWriter;
 import jgreg.internship.nii.CR.DirectoryReaderCR;
-import jgreg.internship.nii.RES.ArticlesDB;
 import jgreg.internship.nii.RES.MappingRES;
 import jgreg.internship.nii.RES.StringListRES;
 import jgreg.internship.nii.types.Citation;
@@ -61,6 +60,7 @@ import opennlp.uima.sentdetect.SentenceModelResourceImpl;
 import opennlp.uima.tokenize.Tokenizer;
 import opennlp.uima.tokenize.TokenizerModelResourceImpl;
 
+import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.log4j.Logger;
 import org.apache.uima.analysis_engine.AnalysisEngineDescription;
 import org.apache.uima.collection.CollectionReaderDescription;
@@ -232,11 +232,21 @@ public class AnnotatorWF {
 	 *             the exception
 	 */
 	public static void main(String[] args) throws Exception {
-		AnnotatorWF.process("/home/daimrod/corpus/pubmed/corpus/",
-				"/home/daimrod/corpus/pubmed/dev/output/",
-				"/home/daimrod/corpus/pubmed/dev/test2.lst",
-				"/home/daimrod/corpus/pubmed/dev/co-cited.lst",
-				"/home/daimrod/corpus/pubmed/dev/hs-mapping.lst", 4);
+		String configFilename;
+		if (args.length == 1) {
+			configFilename = args[0];
+		} else {
+			configFilename = "annotator.conf";
+		}
+		PropertiesConfiguration annotatorConfig = new PropertiesConfiguration(
+				configFilename);
+
+		AnnotatorWF.process(annotatorConfig.getString("inputDirectory"),
+				annotatorConfig.getString("outputDirectory"),
+				annotatorConfig.getString("listArticlesFilename"),
+				annotatorConfig.getString("listFocusedArticlesFilename"),
+				annotatorConfig.getString("mappingFilename"),
+				annotatorConfig.getInt("windowSize"));
 
 		logger.info("done!");
 	}
