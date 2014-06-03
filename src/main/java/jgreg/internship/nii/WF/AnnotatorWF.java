@@ -60,6 +60,12 @@ import opennlp.uima.sentdetect.SentenceModelResourceImpl;
 import opennlp.uima.tokenize.Tokenizer;
 import opennlp.uima.tokenize.TokenizerModelResourceImpl;
 
+import org.apache.commons.cli.BasicParser;
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.CommandLineParser;
+import org.apache.commons.cli.HelpFormatter;
+import org.apache.commons.cli.OptionBuilder;
+import org.apache.commons.cli.Options;
 import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.log4j.Logger;
 import org.apache.uima.analysis_engine.AnalysisEngineDescription;
@@ -78,176 +84,226 @@ import org.apache.uima.resource.ExternalResourceDescription;
  */
 public class AnnotatorWF {
 
-	/** The Constant logger. */
-	private static final Logger logger = Logger.getLogger(AnnotatorWF.class
-			.getCanonicalName());
+    /** The Constant logger. */
+    private static final Logger logger = Logger.getLogger(AnnotatorWF.class
+            .getCanonicalName());
 
-	/**
-	 * Run the Pipeline.
-	 *
-	 * @param inputDirectory
-	 *            contains all articles.
-	 * @param outputDirectory
-	 *            stores all output data (XMI, ...).
-	 * @param listArticlesFilename
-	 *            lists articles of interest.
-	 * @param listFocusedArticlesFilename
-	 *            lists PMIDS of interest.
-	 * @param mappingFilename
-	 *            describes the mapping system.
-	 * @param windowSize
-	 *            is the size of the citation context.
-	 * @throws Exception
-	 *             the exception
-	 */
-	public static void process(String inputDirectory, String outputDirectory,
-			String listArticlesFilename, String listFocusedArticlesFilename,
-			String mappingFilename, Integer windowSize) throws Exception {
+    /**
+     * Run the Pipeline.
+     *
+     * @param inputDirectory
+     *            contains all articles.
+     * @param outputDirectory
+     *            stores all output data (XMI, ...).
+     * @param listArticlesFilename
+     *            lists articles of interest.
+     * @param listFocusedArticlesFilename
+     *            lists PMIDS of interest.
+     * @param mappingFilename
+     *            describes the mapping system.
+     * @param windowSize
+     *            is the size of the citation context.
+     * @throws Exception
+     *             the exception
+     */
+    public static void process(String inputDirectory, String outputDirectory,
+            String listArticlesFilename, String listFocusedArticlesFilename,
+            String mappingFilename, Integer windowSize) throws Exception {
 
-		/*
-		 * Resources
-		 */
-		// Sentence Model
-		ExternalResourceDescription sentenceModel = ExternalResourceFactory
-				.createExternalResourceDescription(
-						SentenceModelResourceImpl.class,
-						"file:org/apache/ctakes/core/sentdetect/sd-med-model.bin");
-		// Token Model
-		ExternalResourceDescription tokenModel = ExternalResourceFactory
-				.createExternalResourceDescription(
-						TokenizerModelResourceImpl.class,
-						"file:opennlp/uima/models/en-token.bin");
+        /*
+         * Resources
+         */
+        // Sentence Model
+        ExternalResourceDescription sentenceModel = ExternalResourceFactory
+                .createExternalResourceDescription(
+                        SentenceModelResourceImpl.class,
+                        "file:org/apache/ctakes/core/sentdetect/sd-med-model.bin");
+        // Token Model
+        ExternalResourceDescription tokenModel = ExternalResourceFactory
+                .createExternalResourceDescription(
+                        TokenizerModelResourceImpl.class,
+                        "file:opennlp/uima/models/en-token.bin");
 
-		// POS tagger Model
-		ExternalResourceDescription POSModel = ExternalResourceFactory
-				.createExternalResourceDescription(POSModelResourceImpl.class,
-						"file:opennlp/uima/models/en-pos-perceptron.bin");
+        // POS tagger Model
+        ExternalResourceDescription POSModel = ExternalResourceFactory
+                .createExternalResourceDescription(POSModelResourceImpl.class,
+                        "file:opennlp/uima/models/en-pos-perceptron.bin");
 
-		// Corpus Articles
-		ExternalResourceDescription corpusArticles = ExternalResourceFactory
-				.createExternalResourceDescription(StringListRES.class,
-						listArticlesFilename);
+        // Corpus Articles
+        ExternalResourceDescription corpusArticles = ExternalResourceFactory
+                .createExternalResourceDescription(StringListRES.class,
+                        listArticlesFilename);
 
-		// Focused Articles
-		ExternalResourceDescription focusedArticles = ExternalResourceFactory
-				.createExternalResourceDescription(StringListRES.class,
-						listFocusedArticlesFilename);
+        // Focused Articles
+        ExternalResourceDescription focusedArticles = ExternalResourceFactory
+                .createExternalResourceDescription(StringListRES.class,
+                        listFocusedArticlesFilename);
 
-		// Mapping
-		ExternalResourceDescription mapping = ExternalResourceFactory
-				.createExternalResourceDescription(MappingRES.class,
-						mappingFilename);
+        // Mapping
+        ExternalResourceDescription mapping = ExternalResourceFactory
+                .createExternalResourceDescription(MappingRES.class,
+                        mappingFilename);
 
-		/*
-		 * Collection Reader
-		 */
-		CollectionReaderDescription reader = CollectionReaderFactory
-				.createReaderDescription(DirectoryReaderCR.class,
-						DirectoryReaderCR.INPUT_DIRECTORY, inputDirectory,
-						DirectoryReaderCR.CORPUS_ARTICLES, corpusArticles);
+        /*
+         * Collection Reader
+         */
+        CollectionReaderDescription reader = CollectionReaderFactory
+                .createReaderDescription(DirectoryReaderCR.class,
+                        DirectoryReaderCR.INPUT_DIRECTORY, inputDirectory,
+                        DirectoryReaderCR.CORPUS_ARTICLES, corpusArticles);
 
-		/*
-		 * Analysis Engine
-		 */
-		// Parser XML
-		AnalysisEngineDescription xmlParser = AnalysisEngineFactory
-				.createEngineDescription(PubMedParserAE.class);
+        /*
+         * Analysis Engine
+         */
+        // Parser XML
+        AnalysisEngineDescription xmlParser = AnalysisEngineFactory
+                .createEngineDescription(PubMedParserAE.class);
 
-		// Sentence Detector
-		AnalysisEngineDescription sentenceDetector = AnalysisEngineFactory
-				.createEngineDescription(SentenceDetector.class,
-						"opennlp.uima.ModelName", sentenceModel,
-						"opennlp.uima.SentenceType",
-						"jgreg.internship.nii.types.Sentence",
-						"opennlp.uima.ContainerType",
-						"jgreg.internship.nii.types.Paragraph");
+        // Sentence Detector
+        AnalysisEngineDescription sentenceDetector = AnalysisEngineFactory
+                .createEngineDescription(SentenceDetector.class,
+                        "opennlp.uima.ModelName", sentenceModel,
+                        "opennlp.uima.SentenceType",
+                        "jgreg.internship.nii.types.Sentence",
+                        "opennlp.uima.ContainerType",
+                        "jgreg.internship.nii.types.Paragraph");
 
-		// Citation Context Detector
-		AnalysisEngineDescription citationContextDetector = AnalysisEngineFactory
-				.createEngineDescription(CitationContextExtractorAE.class,
-						CitationContextExtractorAE.FOCUSED_ARTICLES,
-						focusedArticles,
-						CitationContextExtractorAE.PARAM_WINDOW_SIZE,
-						windowSize);
+        // Citation Context Detector
+        AnalysisEngineDescription citationContextDetector = AnalysisEngineFactory
+                .createEngineDescription(CitationContextExtractorAE.class,
+                        CitationContextExtractorAE.FOCUSED_ARTICLES,
+                        focusedArticles,
+                        CitationContextExtractorAE.PARAM_WINDOW_SIZE,
+                        windowSize);
 
-		// Tokenizer
-		AnalysisEngineDescription tokenizer = AnalysisEngineFactory
-				.createEngineDescription(Tokenizer.class,
-						"opennlp.uima.ModelName", tokenModel,
-						"opennlp.uima.SentenceType",
-						"jgreg.internship.nii.types.Sentence",
-						"opennlp.uima.TokenType",
-						"jgreg.internship.nii.types.Token");
+        // Tokenizer
+        AnalysisEngineDescription tokenizer = AnalysisEngineFactory
+                .createEngineDescription(Tokenizer.class,
+                        "opennlp.uima.ModelName", tokenModel,
+                        "opennlp.uima.SentenceType",
+                        "jgreg.internship.nii.types.Sentence",
+                        "opennlp.uima.TokenType",
+                        "jgreg.internship.nii.types.Token");
 
-		// POS Tagger
-		AnalysisEngineDescription POSTagger = AnalysisEngineFactory
-				.createEngineDescription(POSTagger.class,
-						"opennlp.uima.ModelName", POSModel,
-						"opennlp.uima.SentenceType",
-						"jgreg.internship.nii.types.Sentence",
-						"opennlp.uima.TokenType",
-						"jgreg.internship.nii.types.Token",
-						"opennlp.uima.POSFeature", "POS");
+        // POS Tagger
+        AnalysisEngineDescription POSTagger = AnalysisEngineFactory
+                .createEngineDescription(POSTagger.class,
+                        "opennlp.uima.ModelName", POSModel,
+                        "opennlp.uima.SentenceType",
+                        "jgreg.internship.nii.types.Sentence",
+                        "opennlp.uima.TokenType",
+                        "jgreg.internship.nii.types.Token",
+                        "opennlp.uima.POSFeature", "POS");
 
-		// Sentiment Finder
-		AnalysisEngineDescription sentimentFinder = AnalysisEngineFactory
-				.createEngineDescription(SentimentFinderAE.class,
-						SentimentFinderAE.MAPPING, mapping);
+        // Sentiment Finder
+        AnalysisEngineDescription sentimentFinder = AnalysisEngineFactory
+                .createEngineDescription(SentimentFinderAE.class,
+                        SentimentFinderAE.MAPPING, mapping);
 
-		// XMI Writer
-		AnalysisEngineDescription xmiWriter = AnalysisEngineFactory
-				.createEngineDescription(XMIWriter.class,
-						XMIWriter.OUTPUT_DIRECTORY, outputDirectory,
-						XMIWriter.CLEAR_DIRECTORY, true, XMIWriter.NAME_TYPE,
-						"jgreg.internship.nii.types.ID",
-						XMIWriter.NAME_FEATURE, "PMID");
+        // XMI Writer
+        AnalysisEngineDescription xmiWriter = AnalysisEngineFactory
+                .createEngineDescription(XMIWriter.class,
+                        XMIWriter.OUTPUT_DIRECTORY, outputDirectory,
+                        XMIWriter.CLEAR_DIRECTORY, true, XMIWriter.NAME_TYPE,
+                        "jgreg.internship.nii.types.ID",
+                        XMIWriter.NAME_FEATURE, "PMID");
 
-		/*
-		 * The type priority is important especially to retrieve tokens. The
-		 * rest of the order is not accurate but it does not matter.
-		 */
-		AggregateBuilder builder = new AggregateBuilder(null,
-				TypePrioritiesFactory.createTypePriorities(ID.class,
-						Title.class, Section.class, Paragraph.class,
-						CitationContext.class, Sentence.class, Citation.class,
-						Token.class, Sentiment.class), null);
+        /*
+         * The type priority is important especially to retrieve tokens. The
+         * rest of the order is not accurate but it does not matter.
+         */
+        AggregateBuilder builder = new AggregateBuilder(null,
+                TypePrioritiesFactory.createTypePriorities(ID.class,
+                        Title.class, Section.class, Paragraph.class,
+                        CitationContext.class, Sentence.class, Citation.class,
+                        Token.class, Sentiment.class), null);
 
-		builder.add(xmlParser);
-		builder.add(sentenceDetector);
-		builder.add(citationContextDetector);
-		builder.add(tokenizer);
-		builder.add(POSTagger);
-		builder.add(sentimentFinder);
-		builder.add(xmiWriter);
-		SimplePipeline
-				.runPipeline(reader, builder.createAggregateDescription());
-	}
+        builder.add(xmlParser);
+        builder.add(sentenceDetector);
+        builder.add(citationContextDetector);
+        builder.add(tokenizer);
+        builder.add(POSTagger);
+        builder.add(sentimentFinder);
+        builder.add(xmiWriter);
+        SimplePipeline
+                .runPipeline(reader, builder.createAggregateDescription());
+    }
 
-	/**
-	 * The main method.
-	 *
-	 * @param args
-	 *            the arguments
-	 * @throws Exception
-	 *             the exception
-	 */
-	public static void main(String[] args) throws Exception {
-		String configFilename;
-		if (args.length == 1) {
-			configFilename = args[0];
-		} else {
-			configFilename = "annotator.conf";
-		}
-		PropertiesConfiguration annotatorConfig = new PropertiesConfiguration(
-				configFilename);
+    /**
+     * The main method.
+     *
+     * @param args
+     *            the arguments
+     * @throws Exception
+     *             the exception
+     */
+    public static void main(String[] args) throws Exception {
+        Options options = new Options();
+        options.addOption("help", false, "print this message");
 
-		AnnotatorWF.process(annotatorConfig.getString("inputDirectory"),
-				annotatorConfig.getString("outputDirectory"),
-				annotatorConfig.getString("listArticlesFilename"),
-				annotatorConfig.getString("listFocusedArticlesFilename"),
-				annotatorConfig.getString("mappingFilename"),
-				annotatorConfig.getInt("windowSize"));
+        options.addOption(OptionBuilder.withArgName("inputDirectory").hasArg()
+                .isRequired(false).create("inputDirectory"));
+        options.addOption(OptionBuilder.withArgName("outputDirectory").hasArg()
+                .isRequired(false).create("outputDirectory"));
+        options.addOption(OptionBuilder.withArgName("listArticlesFilename")
+                .hasArg().isRequired(false)
+                .create("listArticlesFilename"));
+        options.addOption(OptionBuilder
+                .withArgName("listFocusedArticlesFilename").hasArg()
+                .isRequired(false).create("listFocusedArticlesFilename"));
+        options.addOption(OptionBuilder.withArgName("mappingFilename").hasArg()
+                .isRequired(false).create("mappingFilename"));
+        options.addOption(OptionBuilder.withArgName("windowSize").hasArg()
+                .withType(Integer.class).isRequired(false).create("windowSize"));
 
-		logger.info("done!");
-	}
+        options.addOption(OptionBuilder.withArgName("config").hasArg()
+                .isRequired(false).create("config"));
+
+        CommandLineParser parser = new BasicParser();
+        CommandLine line = parser.parse(options, args);
+
+        HelpFormatter formatter = new HelpFormatter();
+        if (line.hasOption("help")) {
+            formatter.printHelp("csa", options);
+            return;
+        }
+
+        // Initialize configuration file if any
+        String configFilename;
+        configFilename = line.getOptionValue("config", "annotator.conf");
+        PropertiesConfiguration annotatorConfig = new PropertiesConfiguration(
+                configFilename);
+
+        // Initialize parameters
+        String inputDirectory;
+        inputDirectory = line.getOptionValue("inputDirectory",
+                annotatorConfig.getString("inputDirectory"));
+
+        String outputDirectory;
+        outputDirectory = line.getOptionValue("outputDirectory",
+                annotatorConfig.getString("outputDirectory"));
+
+        String listArticlesFilename;
+        listArticlesFilename = line.getOptionValue("listArticlesFilename",
+                annotatorConfig.getString("listArticlesFilename"));
+
+        String listFocusedArticlesFilename;
+        listFocusedArticlesFilename = line.getOptionValue(
+                "listFocusedArticlesFilename",
+                annotatorConfig.getString("listFocusedArticlesFilename"));
+
+        String mappingFilename;
+        mappingFilename = line.getOptionValue("mappingFilename",
+                annotatorConfig.getString("mappingFilename"));
+
+        Integer windowSize;
+        windowSize = new Integer(line.getOptionValue("windowSize",
+                annotatorConfig.getString("windowSize")));
+
+        AnnotatorWF.process(inputDirectory, outputDirectory,
+                listArticlesFilename, listFocusedArticlesFilename,
+                mappingFilename, windowSize);
+
+        logger.info("done!");
+ }
 }
