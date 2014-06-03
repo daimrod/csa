@@ -207,8 +207,7 @@ public class AnnotatorWF {
 		AnalysisEngineDescription xmiWriter = AnalysisEngineFactory
 				.createEngineDescription(XMIWriter.class,
 						XMIWriter.OUTPUT_DIRECTORY, outputDirectory,
-						XMIWriter.CLEAR_DIRECTORY, true, XMIWriter.NAME_TYPE,
-						"jgreg.internship.nii.types.ID",
+						XMIWriter.NAME_TYPE, "jgreg.internship.nii.types.ID",
 						XMIWriter.NAME_FEATURE, "PMID");
 
 		/*
