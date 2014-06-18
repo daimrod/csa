@@ -50,6 +50,13 @@ import jgreg.internship.nii.types.Sentiment;
 import jgreg.internship.nii.types.Title;
 import jgreg.internship.nii.types.Token;
 
+import org.apache.commons.cli.BasicParser;
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.CommandLineParser;
+import org.apache.commons.cli.HelpFormatter;
+import org.apache.commons.cli.OptionBuilder;
+import org.apache.commons.cli.Options;
+import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.log4j.Logger;
 import org.apache.uima.analysis_engine.AnalysisEngineDescription;
 import org.apache.uima.collection.CollectionReaderDescription;
@@ -80,6 +87,8 @@ public class StatisticsWF {
 	 *            the mapping filename
 	 * @param outputFile
 	 *            the output file
+	 * @param infoFile
+	 *            the info file
 	 * @throws Exception
 	 *             the exception
 	 */
@@ -126,10 +135,49 @@ public class StatisticsWF {
 	 *             the exception
 	 */
 	public static void main(String[] args) throws Exception {
-		StatisticsWF.process("/home/daimrod/corpus/pubmed/dev/output/",
-				"/home/daimrod/corpus/pubmed/dev/hs-mapping.lst",
-				"/home/daimrod/corpus/pubmed/dev/output/all-out.dat",
-				"/home/daimrod/corpus/pubmed/dev/output/info.dat");
+		Options options = new Options();
+		options.addOption("help", false, "print this message");
+
+        options.addOption(OptionBuilder.withArgName("config").hasArg()
+				.isRequired(false).create("config"));
+		options.addOption(OptionBuilder.withArgName("inputDirectory").hasArg()
+				.isRequired(false).create("inputDirectory"));
+		options.addOption(OptionBuilder.withArgName("mappingFilename").hasArg()
+				.isRequired(false).create("mappingFilename"));
+		options.addOption(OptionBuilder.withArgName("outputFile").hasArg()
+				.isRequired(false).create("outputFile"));
+		options.addOption(OptionBuilder.withArgName("infoFile").hasArg()
+				.isRequired(false).create("infoFile"));
+
+		CommandLineParser parser = new BasicParser();
+		CommandLine line = parser.parse(options, args);
+
+		HelpFormatter formatter = new HelpFormatter();
+		if (line.hasOption("help")) {
+			formatter.printHelp("csa", options);
+			return;
+		}
+
+		// Initialize configuration file if any
+		String configFilename;
+		configFilename = line.getOptionValue("config", "statistic.conf");
+		PropertiesConfiguration statisticConfig = new PropertiesConfiguration(
+				configFilename);
+
+		String inputDirectory = line.getOptionValue("inputDirectory",
+				statisticConfig.getString("inputDirectory"));
+
+		String mappingFilename = line.getOptionValue("mappingFilename",
+				statisticConfig.getString("mappingFilename"));
+
+		String outputFile = line.getOptionValue("outputFile",
+				statisticConfig.getString("outputFile"));
+
+		String infoFile = line.getOptionValue("infoFile",
+				statisticConfig.getString("infoFile"));
+
+		StatisticsWF.process(inputDirectory, mappingFilename, outputFile,
+				infoFile);
 		logger.info("done!");
 	}
 }
