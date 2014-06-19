@@ -1,0 +1,84 @@
+# -*- mode:org; -*-
+
+* Quickstart
+You will need [[http://maven.apache.org/ref/3.0/][Maven 3]] and [[http://www.oracle.com/technetwork/java/javase/overview/java8-2100321.html][Java 8]] to build the project. The other dependencies such as [[https://uima.apache.org/][UIMA]], [[http://code.google.com/p/uimafit/][uimaFIT]], [[http://www-nlp.stanford.edu/software/index.shtml][StanfordNLP]] and [[https://opennlp.apache.org/][OpenNLP]] are handled by maven. You can find a list of the dependencies in the [[file:pom.xml][pom.xml]].
+
+1. Clone the repository. ~git clone https://github.com/daimrod/csa.git~
+2. Retrieve PubMed Open Access Corpus and CSV information. ([[http://www.ncbi.nlm.nih.gov/pmc/tools/ftp/][more information]])
+   - ftp://ftp.ncbi.nlm.nih.gov/pub/pmc/articles.A-B.tar.gz
+   - ftp://ftp.ncbi.nlm.nih.gov/pub/pmc/articles.C-H.tar.gz
+   - ftp://ftp.ncbi.nlm.nih.gov/pub/pmc/articles.I-N.tar.gz
+   - ftp://ftp.ncbi.nlm.nih.gov/pub/pmc/articles.O-Z.tar.gz
+   - ftp://ftp.ncbi.nlm.nih.gov/pub/pmc/file_list.csv
+3. Extract the corpus in the directory of your choice, we will suppose it's in ~\~/corpus~.
+4. Go to project directory and build it using maven. ~mvn -Ddev=true package~
+5. Create a file ~annotator.conf~ with the following information:
+   - inputDirectory :: the directory containing the PubMed Corpus
+   - outputDirectory :: the directory used to store the results
+   - listArticlesFilename :: a file containing the name of the articles to read
+   - mappingFilename :: a file describing the patterns used (more on this later)
+   - windowSize :: the size of the citation context window
+6. Run the Annotator. ~java -cp target/csa-1.0-SNAPSHOT.jar jgreg.internship.nii.WF.AnnotatorWF -config annotator.conf~
+7. Create a file ~statistic.conf~ with the following information:
+   - inputDirectory :: the directory containing the results previously computed
+   - mappingFilename :: same as before
+   - outputFile :: the file containing the extracted statistics
+   - infoFile :: the file containing some additional information
+8. Run the Statistic module. ~java -cp target/csa-1.0-SNAPSHOT.jar jgreg.internship.nii.WF.StatisticsWF -config statistic.conf~
+
+* Files format
+** Configuration files
+Here is a example of the ~annotator.conf~ file:
+#+BEGIN_SRC conf
+  inputDirectory = ~/corpus/
+  outputDirectory = ~/workspace/output/
+  listArticlesFilename = ~/workspace/mylist.txt
+  mappingFilename = ~/workspace/hs-mapping.lst
+  windowSize = 1
+#+END_SRC
+
+The ~statistic.conf~ file has the exact same syntax:
+#+BEGIN_SRC conf
+  inputDirectory = ~/workspace/output/
+  mappingFilename = ~/workspace/hs-mapping.lst
+  outputFile = ~/workspace/output/all-out.dat
+  infoFile = ~/workspace/output/info.dat
+#+END_SRC
+
+** Mapping file
+The mapping file is used to describe the order of the annotation in the results and where to find the cue phrases for each annotation.
+#+BEGIN_SRC conf
+  order = negative neutral positive
+
+  # Sentiment cues phrases
+  negative = ~/workspace/negative.pat
+  neutral = ~/workspace/neutral.pat
+  positive = ~/workspace/positive.pat
+#+END_SRC
+
+** Patterns files
+The Annotator module uses the Stanford NLP Token Sequence Matcher to match cues pharses. You can find a description of the accepted syntax [[http://nlp.stanford.edu/nlp/javadoc/javanlp/edu/stanford/nlp/ling/tokensregex/TokenSequencePattern.html][here]].
+
+The pattern files must have one pattern per line, here are some examples of the accepted patterns:
+#+BEGIN_SRC text
+  good
+  /state-of-the-art/
+  { tag:"NN" } achieve
+#+END_SRC
+
+* How to run it in parallel?
+You can dispatch the processing on N processes by splitting the list of articles in N chunks (e.g. using the split(1) command) and using the [[http://www.gnu.org/software/parallel/][GNU Parallel]] tool.
+
+For example, to use 20 cores:
+#+BEGIN_SRC sh
+  split -n l/20 path/to/listArticlesFilename list-
+  ls list-* | parallel --halt 2 \
+                       java -cp target/csa-1.0-SNAPSHOT.jar \
+                       jgreg.internship.nii.WF.AnnotatorWF \
+                       -config annotator.conf \
+                       -listArticlesFilename {}
+#+END_SRC
+
+The split(1) command will split the file ~listArticlesFilename~ in 20 files prefixed by "list-". We then use the parallel(1) command to run as many java processes as input file and overriding the ~listArticlesFilename~ parameter from the configuration file using a command line parameter.
+
+
