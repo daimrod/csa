@@ -67,6 +67,11 @@
       <supertypeName>uima.tcas.Annotation</supertypeName>
       <features>
         <featureDescription>
+          <name>ID</name>
+          <description>Context ID</description>
+          <rangeTypeName>uima.cas.Long</rangeTypeName>
+        </featureDescription>
+        <featureDescription>
           <name>PMIDS</name>
           <description>The PMIDS covered by the CitationContext</description>
           <rangeTypeName>uima.cas.FSArray</rangeTypeName>

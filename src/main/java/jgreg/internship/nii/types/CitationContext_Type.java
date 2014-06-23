@@ -1,5 +1,5 @@
 
-/* First created by JCasGen Wed May 28 16:36:49 JST 2014 */
+/* First created by JCasGen Mon Jun 23 16:12:43 JST 2014 */
 package jgreg.internship.nii.types;
 
 import org.apache.uima.jcas.JCas;
@@ -14,7 +14,7 @@ import org.apache.uima.cas.Feature;
 import org.apache.uima.jcas.tcas.Annotation_Type;
 
 /** Mark a Citation Context
- * Updated by JCasGen Wed May 28 16:36:49 JST 2014
+ * Updated by JCasGen Mon Jun 23 16:12:43 JST 2014
  * @generated */
 public class CitationContext_Type extends Annotation_Type {
   /** @generated 
@@ -45,6 +45,30 @@ public class CitationContext_Type extends Annotation_Type {
      @modifiable */
   @SuppressWarnings ("hiding")
   public final static boolean featOkTst = JCasRegistry.getFeatOkTst("jgreg.internship.nii.types.CitationContext");
+ 
+  /** @generated */
+  final Feature casFeat_ID;
+  /** @generated */
+  final int     casFeatCode_ID;
+  /** @generated
+   * @param addr low level Feature Structure reference
+   * @return the feature value 
+   */ 
+  public long getID(int addr) {
+        if (featOkTst && casFeat_ID == null)
+      jcas.throwFeatMissing("ID", "jgreg.internship.nii.types.CitationContext");
+    return ll_cas.ll_getLongValue(addr, casFeatCode_ID);
+  }
+  /** @generated
+   * @param addr low level Feature Structure reference
+   * @param v value to set 
+   */    
+  public void setID(int addr, long v) {
+        if (featOkTst && casFeat_ID == null)
+      jcas.throwFeatMissing("ID", "jgreg.internship.nii.types.CitationContext");
+    ll_cas.ll_setLongValue(addr, casFeatCode_ID, v);}
+    
+  
  
   /** @generated */
   final Feature casFeat_PMIDS;
@@ -107,6 +131,10 @@ public class CitationContext_Type extends Annotation_Type {
   public CitationContext_Type(JCas jcas, Type casType) {
     super(jcas, casType);
     casImpl.getFSClassRegistry().addGeneratorForType((TypeImpl)this.casType, getFSGenerator());
+
+ 
+    casFeat_ID = jcas.getRequiredFeatureDE(casType, "ID", "uima.cas.Long", featOkTst);
+    casFeatCode_ID  = (null == casFeat_ID) ? JCas.INVALID_FEATURE_CODE : ((FeatureImpl)casFeat_ID).getCode();
 
  
     casFeat_PMIDS = jcas.getRequiredFeatureDE(casType, "PMIDS", "uima.cas.FSArray", featOkTst);

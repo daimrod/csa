@@ -127,7 +127,8 @@ public class CitationContextExtractorAE extends
 	@Override
 	public void process(JCas jCas) throws AnalysisEngineProcessException {
 		Map<Sentence, Collection<Citation>> sentence2Citations = JCasUtil
-				.indexCovered(jCas, Sentence.class, Citation.class);
+                .indexCovered(jCas, Sentence.class, Citation.class);
+        int id = 0;
 
 		for (Sentence sentence : JCasUtil.select(jCas, Sentence.class)) {
 			List<Citation> citations;
@@ -179,7 +180,9 @@ public class CitationContextExtractorAE extends
 
 			CitationContext context = new CitationContext(jCas);
 			context.setBegin(begin);
-			context.setEnd(end);
+            context.setEnd(end);
+            context.setID(id);
+            id += 1;
 
 			// Unfortunately, UIMA "complex" structures are very
 			// crudes. That's why this code is ugly.
