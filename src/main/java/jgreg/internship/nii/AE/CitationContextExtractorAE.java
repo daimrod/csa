@@ -74,10 +74,7 @@ public class CitationContextExtractorAE extends
 	@ConfigurationParameter(name = PARAM_CONFIGURATION_FILE, mandatory = true)
 	private String configFilename;
 
-	public static final String OUTPUT_DIRECTORY = "outputDirName";
-	@ConfigurationParameter(name = OUTPUT_DIRECTORY, mandatory = true)
-	private String outputDirName;
-	private File outputDir;
+    private File outputDir;
 
 	private PropertiesConfiguration extractorConfig;
 
@@ -86,16 +83,16 @@ public class CitationContextExtractorAE extends
 			throws ResourceInitializationException {
 		super.initialize(context);
 
-		outputDir = new File(outputDirName);
-		outputDir.mkdirs();
-
-		try {
+        try {
 			extractorConfig = new PropertiesConfiguration(configFilename);
 		} catch (ConfigurationException ex) {
 			logger.fatal(ex);
 			throw new ResourceInitializationException(ex);
-		}
-	}
+        }
+
+        outputDir = new File(extractorConfig.getString("outputDirectory"));
+		outputDir.mkdirs();
+    }
 
 	public void process(JCas jCas) throws AnalysisEngineProcessException {
 		// extract current JCas' PMID
