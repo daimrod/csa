@@ -70,11 +70,11 @@ public class CitationContextExtractorAE extends
 	private static final Logger logger = Logger
 			.getLogger(CitationContextExtractorAE.class.getCanonicalName());
 
-    public static final String CONFIG_FILE = "configFilename";
-    @ConfigurationParameter(name = CONFIG_FILE, mandatory = true)
+	public static final String CONFIG_FILE = "configFilename";
+	@ConfigurationParameter(name = CONFIG_FILE, mandatory = true)
 	private String configFilename;
 
-    private File outputDir;
+	private File outputDir;
 
 	private PropertiesConfiguration config;
 
@@ -83,31 +83,30 @@ public class CitationContextExtractorAE extends
 			throws ResourceInitializationException {
 		super.initialize(context);
 
-        try {
+		try {
 			config = new PropertiesConfiguration(configFilename);
 		} catch (ConfigurationException ex) {
 			logger.fatal(ex);
 			throw new ResourceInitializationException(ex);
-        }
+		}
 
-        outputDir = new File(config.getString("outputDirectory"));
+		outputDir = new File(config.getString("outputDirectory"));
 		outputDir.mkdirs();
-    }
+	}
 
 	public void process(JCas jCas) throws AnalysisEngineProcessException {
 		// extract current JCas' PMID
 		ID id = JCasUtil.selectSingle(jCas, ID.class);
 
-		// find the list of contexts to extract from the current JCas
-		List<String> contexts = new ArrayList<String>(
-				Arrays.asList(config.getString(id.getPMID())
-						.split(" ")));
-
 		// if there is no contexts, leave
-		if (contexts.isEmpty())
+        if (!config.containsKey(id.getPMID()))
 			return;
 
-		// if not, prepare a temporary buffer
+        // otherwise, get the list of contexts to extract from the current JCas
+        List<String> contexts = new ArrayList<String>(Arrays.asList(config
+				.getString(id.getPMID()).split(" ")));
+
+		// prepare a temporary buffer
 		StringBuilder buffer = new StringBuilder();
 
 		// and iterate on all CitationContext
