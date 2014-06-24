@@ -149,9 +149,9 @@ public class ExtractAllAE extends
 		headers = new ArrayList<String>(mapping.get("order"));
 
 		strAcc = new StringBuilder();
-		strAcc.append("cites").append(separator).append("cited")
-				.append(separator).append(StringUtils.join(headers, separator))
-				.append("\n");
+		strAcc.append("cites").append(separator).append("ctxID")
+				.append(separator).append("cited").append(separator)
+				.append(StringUtils.join(headers, separator)).append("\n");
 	}
 
 	/*
@@ -188,7 +188,8 @@ public class ExtractAllAE extends
 			if (citationsFSA.size() <= 0) {
 				continue;
 			}
-			strAcc.append(id.getPMID()).append(separator);
+            strAcc.append(id.getPMID()).append(separator)
+                    .append(context.getID()).append(separator);
 
 			ArrayList<Integer> acc = Utils.List(headers.size(), 0);
 
