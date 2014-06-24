@@ -76,7 +76,7 @@ public class CitationContextExtractorAE extends
 
     private File outputDir;
 
-	private PropertiesConfiguration extractorConfig;
+	private PropertiesConfiguration config;
 
 	@Override
 	public void initialize(UimaContext context)
@@ -84,13 +84,13 @@ public class CitationContextExtractorAE extends
 		super.initialize(context);
 
         try {
-			extractorConfig = new PropertiesConfiguration(configFilename);
+			config = new PropertiesConfiguration(configFilename);
 		} catch (ConfigurationException ex) {
 			logger.fatal(ex);
 			throw new ResourceInitializationException(ex);
         }
 
-        outputDir = new File(extractorConfig.getString("outputDirectory"));
+        outputDir = new File(config.getString("outputDirectory"));
 		outputDir.mkdirs();
     }
 
@@ -100,7 +100,7 @@ public class CitationContextExtractorAE extends
 
 		// find the list of contexts to extract from the current JCas
 		List<String> contexts = new ArrayList<String>(
-				Arrays.asList(extractorConfig.getString(id.getPMID())
+				Arrays.asList(config.getString(id.getPMID())
 						.split(" ")));
 
 		// if there is no contexts, leave
