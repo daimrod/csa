@@ -70,8 +70,8 @@ public class CitationContextExtractorAE extends
 	private static final Logger logger = Logger
 			.getLogger(CitationContextExtractorAE.class.getCanonicalName());
 
-	public static final String PARAM_CONFIGURATION_FILE = "configFilename";
-	@ConfigurationParameter(name = PARAM_CONFIGURATION_FILE, mandatory = true)
+    public static final String CONFIG_FILE = "configFilename";
+    @ConfigurationParameter(name = CONFIG_FILE, mandatory = true)
 	private String configFilename;
 
     private File outputDir;
