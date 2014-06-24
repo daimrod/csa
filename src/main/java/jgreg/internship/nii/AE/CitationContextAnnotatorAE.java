@@ -88,12 +88,12 @@ import org.apache.uima.jcas.cas.FSArray;
  *
  * @author Grégoire Jadi
  */
-public class CitationContextExtractorAE extends
+public class CitationContextAnnotatorAE extends
 		org.apache.uima.fit.component.JCasAnnotator_ImplBase {
 
 	/** The Constant logger. */
 	private static final Logger logger = Logger
-			.getLogger(CitationContextExtractorAE.class.getCanonicalName());
+			.getLogger(CitationContextAnnotatorAE.class.getCanonicalName());
 
 	/**
 	 * The size of the window to consider around the

@@ -36,7 +36,7 @@
 
 package jgreg.internship.nii.WF;
 
-import jgreg.internship.nii.AE.CitationContextExtractorAE;
+import jgreg.internship.nii.AE.CitationContextAnnotatorAE;
 import jgreg.internship.nii.AE.PubMedParserAE;
 import jgreg.internship.nii.AE.SentimentFinderAE;
 import jgreg.internship.nii.AE.XMIWriter;
@@ -173,10 +173,10 @@ public class AnnotatorWF {
 
 		// Citation Context Detector
 		AnalysisEngineDescription citationContextDetector = AnalysisEngineFactory
-				.createEngineDescription(CitationContextExtractorAE.class,
-						CitationContextExtractorAE.FOCUSED_ARTICLES,
+				.createEngineDescription(CitationContextAnnotatorAE.class,
+						CitationContextAnnotatorAE.FOCUSED_ARTICLES,
 						focusedArticles,
-						CitationContextExtractorAE.PARAM_WINDOW_SIZE,
+						CitationContextAnnotatorAE.PARAM_WINDOW_SIZE,
 						windowSize);
 
 		// Tokenizer
