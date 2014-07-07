@@ -1,5 +1,3 @@
-# -*- mode:org; -*-
-
 * Quickstart
 You will need [[http://maven.apache.org/ref/3.0/][Maven 3]] and [[http://www.oracle.com/technetwork/java/javase/overview/java8-2100321.html][Java 8]] to build the project. The other dependencies such as [[https://uima.apache.org/][UIMA]], [[http://code.google.com/p/uimafit/][uimaFIT]], [[http://www-nlp.stanford.edu/software/index.shtml][StanfordNLP]] and [[https://opennlp.apache.org/][OpenNLP]] are handled by maven. You can find a list of the dependencies in the [[file:pom.xml][pom.xml]].
 
