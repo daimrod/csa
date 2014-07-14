@@ -38,7 +38,7 @@ package jgreg.internship.nii.WF;
 
 import jgreg.internship.nii.AE.CitationContextAnnotatorAE;
 import jgreg.internship.nii.AE.PubMedParserAE;
-import jgreg.internship.nii.AE.SentimentFinderAE;
+import jgreg.internship.nii.AE.PatternAnnotatorAE;
 import jgreg.internship.nii.AE.XMIWriter;
 import jgreg.internship.nii.CR.DirectoryReaderCR;
 import jgreg.internship.nii.RES.MappingRES;
@@ -200,8 +200,8 @@ public class AnnotatorWF {
 
 		// Sentiment Finder
 		AnalysisEngineDescription sentimentFinder = AnalysisEngineFactory
-				.createEngineDescription(SentimentFinderAE.class,
-						SentimentFinderAE.MAPPING, mapping);
+                .createEngineDescription(PatternAnnotatorAE.class,
+                        PatternAnnotatorAE.MAPPING, mapping);
 
 		// XMI Writer
 		AnalysisEngineDescription xmiWriter = AnalysisEngineFactory
