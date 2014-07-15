@@ -1,6 +1,6 @@
 
 
-/* First created by JCasGen Mon Jun 23 16:12:43 JST 2014 */
+/* First created by JCasGen Mon Jul 14 16:48:56 JST 2014 */
 package jgreg.internship.nii.types;
 
 import org.apache.uima.jcas.JCas; 
@@ -11,7 +11,7 @@ import org.apache.uima.jcas.tcas.Annotation;
 
 
 /** 
- * Updated by JCasGen Mon Jun 23 16:12:43 JST 2014
+ * Updated by JCasGen Mon Jul 14 16:48:56 JST 2014
  * XML source: src/main/resources/jgreg/internship/nii/types/CitationSentimentAnalysisTS.xml
  * @generated */
 public class Sentiment extends Annotation {
@@ -118,6 +118,50 @@ public class Sentiment extends Annotation {
     if (Sentiment_Type.featOkTst && ((Sentiment_Type)jcasType).casFeat_name == null)
       jcasType.jcas.throwFeatMissing("name", "jgreg.internship.nii.types.Sentiment");
     jcasType.ll_cas.ll_setStringValue(addr, ((Sentiment_Type)jcasType).casFeatCode_name, v);}    
+   
+    
+  //*--------------*
+  //* Feature: correct
+
+  /** getter for correct - gets 
+   * @generated
+   * @return value of the feature 
+   */
+  public String getCorrect() {
+    if (Sentiment_Type.featOkTst && ((Sentiment_Type)jcasType).casFeat_correct == null)
+      jcasType.jcas.throwFeatMissing("correct", "jgreg.internship.nii.types.Sentiment");
+    return jcasType.ll_cas.ll_getStringValue(addr, ((Sentiment_Type)jcasType).casFeatCode_correct);}
+    
+  /** setter for correct - sets  
+   * @generated
+   * @param v value to set into the feature 
+   */
+  public void setCorrect(String v) {
+    if (Sentiment_Type.featOkTst && ((Sentiment_Type)jcasType).casFeat_correct == null)
+      jcasType.jcas.throwFeatMissing("correct", "jgreg.internship.nii.types.Sentiment");
+    jcasType.ll_cas.ll_setStringValue(addr, ((Sentiment_Type)jcasType).casFeatCode_correct, v);}    
+   
+    
+  //*--------------*
+  //* Feature: valid
+
+  /** getter for valid - gets 
+   * @generated
+   * @return value of the feature 
+   */
+  public String getValid() {
+    if (Sentiment_Type.featOkTst && ((Sentiment_Type)jcasType).casFeat_valid == null)
+      jcasType.jcas.throwFeatMissing("valid", "jgreg.internship.nii.types.Sentiment");
+    return jcasType.ll_cas.ll_getStringValue(addr, ((Sentiment_Type)jcasType).casFeatCode_valid);}
+    
+  /** setter for valid - sets  
+   * @generated
+   * @param v value to set into the feature 
+   */
+  public void setValid(String v) {
+    if (Sentiment_Type.featOkTst && ((Sentiment_Type)jcasType).casFeat_valid == null)
+      jcasType.jcas.throwFeatMissing("valid", "jgreg.internship.nii.types.Sentiment");
+    jcasType.ll_cas.ll_setStringValue(addr, ((Sentiment_Type)jcasType).casFeatCode_valid, v);}    
    
     
   //*--------------*

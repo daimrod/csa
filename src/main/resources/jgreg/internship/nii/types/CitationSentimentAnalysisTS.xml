@@ -18,6 +18,17 @@
           <rangeTypeName>uima.cas.String</rangeTypeName>
         </featureDescription>
         <featureDescription>
+          <name>correct</name>
+          <description/>
+          <rangeTypeName>uima.cas.String</rangeTypeName>
+        </featureDescription>
+        <featureDescription>
+          <name>valid</name>
+          <description/>
+          <rangeTypeName>uima.cas.String</rangeTypeName>
+        </featureDescription>
+
+        <featureDescription>
           <name>context</name>
           <rangeTypeName>jgreg.internship.nii.types.CitationContext</rangeTypeName>
         </featureDescription>

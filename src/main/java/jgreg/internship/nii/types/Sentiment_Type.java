@@ -1,5 +1,5 @@
 
-/* First created by JCasGen Mon Jun 23 16:12:43 JST 2014 */
+/* First created by JCasGen Mon Jul 14 16:48:56 JST 2014 */
 package jgreg.internship.nii.types;
 
 import org.apache.uima.jcas.JCas;
@@ -14,7 +14,7 @@ import org.apache.uima.cas.Feature;
 import org.apache.uima.jcas.tcas.Annotation_Type;
 
 /** 
- * Updated by JCasGen Mon Jun 23 16:12:43 JST 2014
+ * Updated by JCasGen Mon Jul 14 16:48:56 JST 2014
  * @generated */
 public class Sentiment_Type extends Annotation_Type {
   /** @generated 
@@ -95,6 +95,54 @@ public class Sentiment_Type extends Annotation_Type {
   
  
   /** @generated */
+  final Feature casFeat_correct;
+  /** @generated */
+  final int     casFeatCode_correct;
+  /** @generated
+   * @param addr low level Feature Structure reference
+   * @return the feature value 
+   */ 
+  public String getCorrect(int addr) {
+        if (featOkTst && casFeat_correct == null)
+      jcas.throwFeatMissing("correct", "jgreg.internship.nii.types.Sentiment");
+    return ll_cas.ll_getStringValue(addr, casFeatCode_correct);
+  }
+  /** @generated
+   * @param addr low level Feature Structure reference
+   * @param v value to set 
+   */    
+  public void setCorrect(int addr, String v) {
+        if (featOkTst && casFeat_correct == null)
+      jcas.throwFeatMissing("correct", "jgreg.internship.nii.types.Sentiment");
+    ll_cas.ll_setStringValue(addr, casFeatCode_correct, v);}
+    
+  
+ 
+  /** @generated */
+  final Feature casFeat_valid;
+  /** @generated */
+  final int     casFeatCode_valid;
+  /** @generated
+   * @param addr low level Feature Structure reference
+   * @return the feature value 
+   */ 
+  public String getValid(int addr) {
+        if (featOkTst && casFeat_valid == null)
+      jcas.throwFeatMissing("valid", "jgreg.internship.nii.types.Sentiment");
+    return ll_cas.ll_getStringValue(addr, casFeatCode_valid);
+  }
+  /** @generated
+   * @param addr low level Feature Structure reference
+   * @param v value to set 
+   */    
+  public void setValid(int addr, String v) {
+        if (featOkTst && casFeat_valid == null)
+      jcas.throwFeatMissing("valid", "jgreg.internship.nii.types.Sentiment");
+    ll_cas.ll_setStringValue(addr, casFeatCode_valid, v);}
+    
+  
+ 
+  /** @generated */
   final Feature casFeat_context;
   /** @generated */
   final int     casFeatCode_context;
@@ -136,6 +184,14 @@ public class Sentiment_Type extends Annotation_Type {
  
     casFeat_name = jcas.getRequiredFeatureDE(casType, "name", "uima.cas.String", featOkTst);
     casFeatCode_name  = (null == casFeat_name) ? JCas.INVALID_FEATURE_CODE : ((FeatureImpl)casFeat_name).getCode();
+
+ 
+    casFeat_correct = jcas.getRequiredFeatureDE(casType, "correct", "uima.cas.String", featOkTst);
+    casFeatCode_correct  = (null == casFeat_correct) ? JCas.INVALID_FEATURE_CODE : ((FeatureImpl)casFeat_correct).getCode();
+
+ 
+    casFeat_valid = jcas.getRequiredFeatureDE(casType, "valid", "uima.cas.String", featOkTst);
+    casFeatCode_valid  = (null == casFeat_valid) ? JCas.INVALID_FEATURE_CODE : ((FeatureImpl)casFeat_valid).getCode();
 
  
     casFeat_context = jcas.getRequiredFeatureDE(casType, "context", "jgreg.internship.nii.types.CitationContext", featOkTst);

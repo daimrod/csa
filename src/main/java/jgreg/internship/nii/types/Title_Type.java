@@ -1,5 +1,5 @@
 
-/* First created by JCasGen Mon Jun 23 16:12:44 JST 2014 */
+/* First created by JCasGen Mon Jul 14 16:48:56 JST 2014 */
 package jgreg.internship.nii.types;
 
 import org.apache.uima.jcas.JCas;
@@ -12,7 +12,7 @@ import org.apache.uima.cas.Type;
 import org.apache.uima.jcas.tcas.Annotation_Type;
 
 /** Mark a Title
- * Updated by JCasGen Mon Jun 23 16:12:44 JST 2014
+ * Updated by JCasGen Mon Jul 14 16:48:56 JST 2014
  * @generated */
 public class Title_Type extends Annotation_Type {
   /** @generated 
