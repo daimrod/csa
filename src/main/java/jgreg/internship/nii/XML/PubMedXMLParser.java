@@ -165,8 +165,12 @@ public class PubMedXMLParser {
 				addEnd(text.length(), xmlr.getLocalName());
 			} else if (xmlr.hasName()
 					&& XMLStreamConstants.START_ELEMENT == eventType
-					&& "xref".equals(xmlr.getLocalName())
-					&& "bibr".equals(xmlr.getAttributeValue(null, "ref-type"))) {
+                    && "xref".equals(xmlr.getLocalName())
+                       // http://jats.nlm.nih.gov/archiving/tag-library/0.4/n-cyk2.html
+                       // ref-type="bib" should not be used but some
+                       // articles do so anyway. (e.g. 1043602 or 11067871)
+                    && ("bibr".equals(xmlr.getAttributeValue(null, "ref-type"))
+                        || "bib".equals(xmlr.getAttributeValue(null, "ref-type")))) {
 				/*
 				 * Store references
 				 */
