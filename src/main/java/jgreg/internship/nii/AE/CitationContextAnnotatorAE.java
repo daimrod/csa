@@ -1,20 +1,20 @@
-// 
+//
 // Author:: Grégoire Jadi <daimrod@gmail.com>
 // Copyright:: Copyright (c) 2014, Grégoire Jadi
 // All rights reserved.
-// 
+//
 // Redistribution and use in source and binary forms, with or without
 // modification, are permitted provided that the following conditions are
 // met:
-// 
+//
 //    1. Redistributions of source code must retain the above copyright
 //       notice, this list of conditions and the following disclaimer.
-// 
+//
 //    2. Redistributions in binary form must reproduce the above
 //       copyright notice, this list of conditions and the following
 //       disclaimer in the documentation and/or other materials provided
 //       with the distribution.
-// 
+//
 // THIS SOFTWARE IS PROVIDED BY GRÉGOIRE JADI ``AS IS'' AND ANY
 // EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
 // IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
@@ -27,12 +27,12 @@
 // OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
 // OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 // SUCH DAMAGE.
-// 
+//
 // The views and conclusions contained in the software and
 // documentation are those of the authors and should not be
 // interpreted as representing official policies, either expressed or
 // implied, of Grégoire Jadi.
-// 
+//
 
 package jgreg.internship.nii.AE;
 
@@ -127,23 +127,23 @@ public class CitationContextAnnotatorAE extends
 	@Override
 	public void process(JCas jCas) throws AnalysisEngineProcessException {
 		Map<Sentence, Collection<Citation>> sentence2Citations = JCasUtil
-                .indexCovered(jCas, Sentence.class, Citation.class);
-        int id = 0;
+				.indexCovered(jCas, Sentence.class, Citation.class);
+		int id = 0;
 
 		for (Sentence sentence : JCasUtil.select(jCas, Sentence.class)) {
-			List<Citation> citations;
+			ArrayList<Citation> citations;
 			if (focusedArticles == null) {
-				// If we don't have a list of articles to focus on, we
+                // If we don't have a list of articles to focus on, we
 				// look at all of them.
-                citations = new ArrayList<>(sentence2Citations.get(sentence));
+				citations = new ArrayList<>(sentence2Citations.get(sentence));
 			} else {
-				// Otherwise, we only consider the Citation that
+                // Otherwise, we only consider the Citation that
 				// interest us.
-				citations = sentence2Citations
+				citations = new ArrayList<>(sentence2Citations
 						.get(sentence)
 						.stream()
 						.filter(citation -> focusedArticles.contains(citation
-								.getPMID())).collect(Collectors.toList());
+								.getPMID())).collect(Collectors.toList()));
 			}
 
 			// Skip Sentence with no Citation (to focus on) in it.
@@ -153,7 +153,7 @@ public class CitationContextAnnotatorAE extends
 
 			// Convert the List<Citation> to List<FeatureStructure>
 			// because that's what UIMA manipulates.
-            List<FeatureStructure> citationsFS = new ArrayList<>(citations);
+			List<FeatureStructure> citationsFS = new ArrayList<>(citations);
 
 			int begin, end;
 			// Extract the Sentence that belongs to the
@@ -180,9 +180,9 @@ public class CitationContextAnnotatorAE extends
 
 			CitationContext context = new CitationContext(jCas);
 			context.setBegin(begin);
-            context.setEnd(end);
-            context.setID(id);
-            id += 1;
+			context.setEnd(end);
+			context.setID(id);
+			id += 1;
 
 			// Unfortunately, UIMA "complex" structures are very
 			// crudes. That's why this code is ugly.
