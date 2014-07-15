@@ -69,17 +69,22 @@ public class TestWF04 {
      */
     public static void main(String[] args) throws Exception {
         JCas jCas = JCasFactory.createJCas();
-        jCas.setDocumentText("some text");
+        jCas.setDocumentText("some text to match");
+        List<Token> tokens = new LinkedList<>();
+
         Token token = new Token(jCas);
         token.setBegin(0);
         token.setEnd(4);
         token.setPOS("NNP");
-
-        List<Token> tokens = new LinkedList<>();
         tokens.add(token);
-        logger.info("'" + token.getCoveredText() + "'");
 
-        TokenSequencePattern p1 = TokenSequencePattern.compile("some");
+        token = new Token(jCas);
+        token.setBegin(5);
+        token.setEnd(9);
+        token.setPOS("NNP");
+        tokens.add(token);
+
+        TokenSequencePattern p1 = TokenSequencePattern.compile("some text");
         TokenSequencePattern p2 = TokenSequencePattern.compile("[ tag:\"NNP\" ]?");
         TokenSequenceMatcher m = p1.getMatcher(Utils.convertUIMA2STANFORD(tokens));
 
