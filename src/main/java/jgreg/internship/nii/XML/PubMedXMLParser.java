@@ -165,28 +165,33 @@ public class PubMedXMLParser {
 				addEnd(text.length(), xmlr.getLocalName());
 			} else if (xmlr.hasName()
 					&& XMLStreamConstants.START_ELEMENT == eventType
-                    && "xref".equals(xmlr.getLocalName())
-                       // http://jats.nlm.nih.gov/archiving/tag-library/0.4/n-cyk2.html
-                       // ref-type="bib" should not be used but some
-                       // articles do so anyway. (e.g. 1043602 or 11067871)
-                    && ("bibr".equals(xmlr.getAttributeValue(null, "ref-type"))
-                        || "bib".equals(xmlr.getAttributeValue(null, "ref-type")))) {
-				/*
-				 * Store references
-				 */
+                       && "xref".equals(xmlr.getLocalName())) {
 
-				// Keep this order
-				String citationIds = xmlr.getAttributeValue(null, "rid"); // 1
-				String citation = getElementsText(); // 2
-				logger.debug("Found xref `" + citationIds + "' for `"
-						+ citation + "'");
+                if ("bibr".equals(xmlr.getAttributeValue(null, "ref-type"))
+                    // http://jats.nlm.nih.gov/archiving/tag-library/0.4/n-cyk2.html
+                    // ref-type="bib" should not be used but some articles
+                    // do so anyway. (e.g. 1043602 or 11067871)
+                    || "bib".equals(xmlr.getAttributeValue(null, "ref-type"))) {
+                    // Store bibliographic references
 
-				for (String citationId : citationIds.split(" ")) {
-					int start = text.length();
-					int end = start + citation.length();
-					addCitation(citationId, start, end);
-					addText(citation);
-				}
+                    // WARNING: DONT CHANGE THE ORDER OF THE NEXT
+                    // INSTRUCTIONS UNLESS YOU KNOW WHAT YOU ARE DOING
+                    // (operations on xmlr change the cursor position)
+                    String citationIds = xmlr.getAttributeValue(null, "rid"); // 1
+                    String citation = getElementsText(); // 2
+                    logger.debug("Found xref `" + citationIds + "' for `"
+                                 + citation + "'");
+
+                    for (String citationId : citationIds.split(" ")) {
+                        int start = text.length();
+                        int end = start + citation.length();
+                        addCitation(citationId, start, end);
+                        addText(citation);
+                    }
+                } else {
+                    // Ignore references to anything else (table, fig, ...)
+                    skipSubtree();
+                }
 			} else if (xmlr.hasName()
 					&& XMLStreamConstants.START_ELEMENT == eventType
 					&& ("table-wrap".equals(xmlr.getLocalName()) || "fig"
