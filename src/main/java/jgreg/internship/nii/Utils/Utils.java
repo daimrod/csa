@@ -101,7 +101,7 @@ public class Utils {
 	 *             Signals that an I/O exception has occurred.
 	 */
 	public static ArrayList<String> readLines(File file) throws IOException {
-		return new ArrayList(FileUtils.readLines(file).stream()
+        return new ArrayList<>(FileUtils.readLines(file).stream()
 				.filter(line -> !line.startsWith("#")).map(line -> line.trim())
 				.filter(line -> !line.isEmpty()).collect(Collectors.toList()));
 	}

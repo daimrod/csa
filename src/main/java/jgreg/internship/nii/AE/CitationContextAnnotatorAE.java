@@ -135,7 +135,7 @@ public class CitationContextAnnotatorAE extends
 			if (focusedArticles == null) {
 				// If we don't have a list of articles to focus on, we
 				// look at all of them.
-				citations = new ArrayList(sentence2Citations.get(sentence));
+                citations = new ArrayList<>(sentence2Citations.get(sentence));
 			} else {
 				// Otherwise, we only consider the Citation that
 				// interest us.
@@ -153,7 +153,7 @@ public class CitationContextAnnotatorAE extends
 
 			// Convert the List<Citation> to List<FeatureStructure>
 			// because that's what UIMA manipulates.
-			List<FeatureStructure> citationsFS = new ArrayList(citations);
+            List<FeatureStructure> citationsFS = new ArrayList<>(citations);
 
 			int begin, end;
 			// Extract the Sentence that belongs to the

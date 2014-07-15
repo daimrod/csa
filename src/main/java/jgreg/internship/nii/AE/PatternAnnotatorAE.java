@@ -156,7 +156,7 @@ public class PatternAnnotatorAE extends
 				CitationContext.class)) {
 
 			// get the tokens
-			List<Token> tokens = new LinkedList(map.get(context));
+            List<Token> tokens = new LinkedList<>(map.get(context));
 			// and the equivalent annotations in StanfordNLP
 			List<CoreLabel> labels = Utils.convertUIMA2STANFORD(tokens);
 

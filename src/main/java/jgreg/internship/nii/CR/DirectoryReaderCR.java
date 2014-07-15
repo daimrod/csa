@@ -136,7 +136,7 @@ public class DirectoryReaderCR extends JCasCollectionReader_ImplBase {
                         }
                     }).collect(Collectors.toList());
         } else if (extensions != null) {
-            files = new ArrayList(FileUtils.listFiles(inputDirectory, extensions, true));
+            files = new ArrayList<>(FileUtils.listFiles(inputDirectory, extensions, true));
         } else {
             logger.fatal("You need to set either CORPUS_ARTICLES or EXTENSIONS.");
             throw new ResourceInitializationException();
