@@ -194,5 +194,25 @@ public class CitationContextAnnotatorAE extends
 			context.setPMIDS(fsArray);
 			context.addToIndexes(jCas);
 		}
-	}
+    }
+
+    private List<Sentence> mergeContexts(List<Sentence> l1, List<Sentence> l2) {
+        List<Sentence> ret = new ArrayList<>();
+        ret.addAll(l1);
+        int i = 0, len = l2.size();
+        while (i < len && ret.contains(l2.get(i)))
+            i++;
+        if (i < len)
+            ret.addAll(l2.subList(i, len));
+        return ret;
+    }
+
+    private List<Sentence> getContext(Sentence sentence, int windowSize) {
+        List<Sentence> ret = new ArrayList<>();
+        ret.add(sentence);
+        mergeContexts(JCasUtil.selectPreceding(Sentence.class, sentence, windowSize), ret);
+        mergeContexts(ret, JCasUtil.selectFollowing(Sentence.class, sentence, windowSize));
+
+        return ret;
+    }
 }
