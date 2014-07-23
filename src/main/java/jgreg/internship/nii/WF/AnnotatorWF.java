@@ -200,8 +200,8 @@ public class AnnotatorWF {
 
 		// Sentiment Finder
 		AnalysisEngineDescription sentimentFinder = AnalysisEngineFactory
-                .createEngineDescription(PatternAnnotatorAE.class,
-                        PatternAnnotatorAE.MAPPING, mapping);
+				.createEngineDescription(PatternAnnotatorAE.class,
+						PatternAnnotatorAE.MAPPING, mapping);
 
 		// XMI Writer
 		AnalysisEngineDescription xmiWriter = AnalysisEngineFactory
