@@ -38,6 +38,7 @@ package jgreg.internship.nii.AE;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -115,11 +116,15 @@ public class CitationContextAnnotatorAE extends
 	 */
 	public static final String FOCUSED_ARTICLES = "focusedArticles";
 	@ExternalResource(key = FOCUSED_ARTICLES, mandatory = false)
-    StringListRES focusedArticles;
+	StringListRES focusedArticles;
 
-    public static final String COCITED_ARTICLES = "CoCitedArticles";
+	public static final String COCITED_ARTICLES = "CoCitedArticles";
 	@ExternalResource(key = COCITED_ARTICLES, mandatory = false)
-	StringListRES CoCitedArticles;
+    StringListRES CoCitedArticles;
+
+
+    JCas jCas = null;
+    Map<Sentence, Collection<Citation>> sentence2Citations = null;
 
 	/*
 	 * (non-Javadoc)
@@ -129,19 +134,21 @@ public class CitationContextAnnotatorAE extends
 	 * .apache.uima.jcas.JCas)
 	 */
 	@Override
-	public void process(JCas jCas) throws AnalysisEngineProcessException {
-		Map<Sentence, Collection<Citation>> sentence2Citations = JCasUtil
-				.indexCovered(jCas, Sentence.class, Citation.class);
+    public void process(JCas aCas) throws AnalysisEngineProcessException {
+        jCas = aCas;
+        sentence2Citations = JCasUtil
+            .indexCovered(jCas, Sentence.class, Citation.class);
+
 		int id = 0;
 
 		for (Sentence sentence : JCasUtil.select(jCas, Sentence.class)) {
 			ArrayList<Citation> citations;
 			if (focusedArticles == null) {
-                // If we don't have a list of articles to focus on, we
+				// If we don't have a list of articles to focus on, we
 				// look at all of them.
 				citations = new ArrayList<>(sentence2Citations.get(sentence));
 			} else {
-                // Otherwise, we only consider the Citation that
+				// Otherwise, we only consider the Citation that
 				// interest us.
 				citations = new ArrayList<>(sentence2Citations
 						.get(sentence)
@@ -155,68 +162,77 @@ public class CitationContextAnnotatorAE extends
 				continue;
 			}
 
-			// Convert the List<Citation> to List<FeatureStructure>
-			// because that's what UIMA manipulates.
-			List<FeatureStructure> citationsFS = new ArrayList<>(citations);
-
-			int begin, end;
-			// Extract the Sentence that belongs to the
-			// CitationContext *before* the Sentence in which the
-			// Citation occurs.
-			List<Sentence> precedings = JCasUtil.selectPreceding(
-					Sentence.class, sentence, windowSize);
-			if (precedings.size() > 0) {
-				begin = precedings.get(0).getBegin();
-			} else {
-				begin = sentence.getBegin();
-			}
-
-			// Extract the Sentence that belongs to the
-			// CitationContext *after* the Sentence in which the
-			// Citation occurs.
-			List<Sentence> followings = JCasUtil.selectFollowing(
-					Sentence.class, sentence, windowSize);
-			if (followings.size() > 0) {
-				end = followings.get(followings.size() - 1).getEnd();
-			} else {
-				end = sentence.getEnd();
-			}
-
-			CitationContext context = new CitationContext(jCas);
-			context.setBegin(begin);
-			context.setEnd(end);
-			context.setID(id);
+            CitationContext context = getContext(sentence, citations);
+            context.setID(id);
 			id += 1;
 
-			// Unfortunately, UIMA "complex" structures are very
-			// crudes. That's why this code is ugly.
-			FSArray fsArray = new FSArray(jCas, citationsFS.size());
-			fsArray.copyFromArray(citationsFS
-					.toArray(new FeatureStructure[citationsFS.size()]), 0, 0,
-					citationsFS.size());
-
-			context.setPMIDS(fsArray);
-			context.addToIndexes(jCas);
+            context.addToIndexes(jCas);
 		}
-    }
+	}
 
-    private List<Sentence> mergeContexts(List<Sentence> l1, List<Sentence> l2) {
-        List<Sentence> ret = new ArrayList<>();
-        ret.addAll(l1);
-        int i = 0, len = l2.size();
-        while (i < len && ret.contains(l2.get(i)))
-            i++;
-        if (i < len)
-            ret.addAll(l2.subList(i, len));
-        return ret;
-    }
+	private List<Sentence> mergeContexts(List<Sentence> l1, List<Sentence> l2) {
+		List<Sentence> ret = new ArrayList<>();
+		ret.addAll(l1);
+		int i = 0, len = l2.size();
+		while (i < len && ret.contains(l2.get(i)))
+			i++;
+		if (i < len)
+			ret.addAll(l2.subList(i, len));
+		return ret;
+	}
 
-    private List<Sentence> getContext(Sentence sentence, int windowSize) {
-        List<Sentence> ret = new ArrayList<>();
-        ret.add(sentence);
-        mergeContexts(JCasUtil.selectPreceding(Sentence.class, sentence, windowSize), ret);
-        mergeContexts(ret, JCasUtil.selectFollowing(Sentence.class, sentence, windowSize));
+    private CitationContext getContext(Sentence sentence,
+                                       List<Citation> citations) {
+        CitationContext ret = new CitationContext(jCas);
 
-        return ret;
-    }
+		// Convert the List<Citation> to List<FeatureStructure>
+		// because that's what UIMA manipulates.
+		List<FeatureStructure> citationsFS = new ArrayList<>(citations);
+
+		int begin, end;
+		// Extract the Sentence that belongs to the
+		// CitationContext *before* the Sentence in which the
+		// Citation occurs.
+		List<Sentence> precedings = JCasUtil.selectPreceding(Sentence.class,
+                sentence, windowSize);
+        begin = sentence.getBegin();
+        for (int i = precedings.size() - 1; i > 0; i--) {
+            Sentence s = precedings.get(i);
+            if (sentence2Citations.get(s).isEmpty()) {
+                begin = s.getBegin();
+            } else {
+                break;
+            }
+        }
+
+		// Extract the Sentence that belongs to the
+		// CitationContext *after* the Sentence in which the
+		// Citation occurs.
+		List<Sentence> followings = JCasUtil.selectFollowing(Sentence.class,
+                sentence, windowSize);
+        end = sentence.getEnd();
+        for (int i = 0; i < precedings.size(); i++) {
+            Sentence s = precedings.get(i);
+            if (sentence2Citations.get(s).isEmpty()) {
+                begin = s.getEnd();
+            } else {
+                break;
+            }
+        }
+
+		CitationContext context = new CitationContext(jCas);
+		context.setBegin(begin);
+		context.setEnd(end);
+
+		// Unfortunately, UIMA "complex" structures are very
+		// crudes. That's why this code is ugly.
+		FSArray fsArray = new FSArray(jCas, citationsFS.size());
+		fsArray.copyFromArray(
+				citationsFS.toArray(new FeatureStructure[citationsFS.size()]),
+				0, 0, citationsFS.size());
+
+		context.setPMIDS(fsArray);
+
+		return ret;
+  }
 }
