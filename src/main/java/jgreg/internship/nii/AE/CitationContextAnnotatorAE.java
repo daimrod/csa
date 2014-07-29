@@ -115,7 +115,11 @@ public class CitationContextAnnotatorAE extends
 	 */
 	public static final String FOCUSED_ARTICLES = "focusedArticles";
 	@ExternalResource(key = FOCUSED_ARTICLES, mandatory = false)
-	StringListRES focusedArticles;
+    StringListRES focusedArticles;
+
+    public static final String COCITED_ARTICLES = "CoCitedArticles";
+	@ExternalResource(key = COCITED_ARTICLES, mandatory = false)
+	StringListRES CoCitedArticles;
 
 	/*
 	 * (non-Javadoc)
