@@ -186,10 +186,10 @@ public class AnnotatorWF {
 		AnalysisEngineDescription citationContextDetector = AnalysisEngineFactory
 				.createEngineDescription(CitationContextAnnotatorAE.class,
 						CitationContextAnnotatorAE.FOCUSED_ARTICLES,
-						focusedArticles,
-						CitationContextAnnotatorAE.COCITED_ARTICLES,
-						coCitedArticles,
-						CitationContextAnnotatorAE.PARAM_WINDOW_SIZE,
+                        focusedArticles,
+                        CitationContextAnnotatorAE.COCITED_ARTICLES,
+                        coCitedArticles,
+                        CitationContextAnnotatorAE.PARAM_WINDOW_SIZE,
 						windowSize);
 
 		// Tokenizer

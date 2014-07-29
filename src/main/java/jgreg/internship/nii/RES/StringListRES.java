@@ -43,6 +43,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.stream.Stream;
 
 import jgreg.internship.nii.Utils.Utils;
 
@@ -188,6 +189,15 @@ public final class StringListRES implements SharedResourceObject {
 	 */
 	public Iterator<String> iterator() {
 		return list.iterator();
+    }
+
+    /**
+	 * Stream.
+	 *
+	 * @return the stream
+	 */
+	public Stream<String> stream() {
+		return list.stream();
 	}
 
 	/**
