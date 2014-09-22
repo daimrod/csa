@@ -298,8 +298,8 @@ public class AnnotatorWF {
 				annotatorConfig.getString("outputDirectory"));
 
 		String listArticlesFilename = line.getOptionValue(
-				"listArticlesFilename",
-				annotatorConfig.getString("listArticlesFilename"));
+                "listArticlesFilename",
+                annotatorConfig.getString("listArticlesFilename"));
 
 		String listFocusedArticlesFilename = line.getOptionValue(
 				"listFocusedArticlesFilename",
