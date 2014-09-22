@@ -180,16 +180,17 @@ public class PubMedXMLParser {
                     // (operations on xmlr change the cursor position)
                     // BEGIN
 					String citationIds = xmlr.getAttributeValue(null, "rid"); // 1
-                    String citation = getElementsText(); // 2
+                    String citationText = getElementsText(); // 2
                     // END
 					logger.debug("Found xref `" + citationIds + "' for `"
-							+ citation + "'");
+							+ citationText + "'");
 
 					for (String citationId : citationIds.split(" ")) {
 						int start = text.length();
-						int end = start + citation.length();
-						addCitation(citationId, start, end);
-						addText(citation);
+                        String placeholder = "CITE";
+                        int end = start + placeholder.length();
+                        addCitation(citationId, start, end);
+                        addText(placeholder);
 					}
 				} else {
 					// Ignore references to anything else (table, fig, ...)
