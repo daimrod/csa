@@ -148,7 +148,7 @@ public class AnnotatorWF {
 		// CoCited Articles
 		ExternalResourceDescription coCitedArticles = null;
 		if (!listCoCitedArticlesFilename.isEmpty()) {
-            coCitedArticles = ExternalResourceFactory
+			coCitedArticles = ExternalResourceFactory
 					.createExternalResourceDescription(StringListRES.class,
 							listCoCitedArticlesFilename);
 		}
@@ -186,10 +186,10 @@ public class AnnotatorWF {
 		AnalysisEngineDescription citationContextDetector = AnalysisEngineFactory
 				.createEngineDescription(CitationContextAnnotatorAE.class,
 						CitationContextAnnotatorAE.FOCUSED_ARTICLES,
-                        focusedArticles,
-                        CitationContextAnnotatorAE.COCITED_ARTICLES,
-                        coCitedArticles,
-                        CitationContextAnnotatorAE.PARAM_WINDOW_SIZE,
+						focusedArticles,
+						CitationContextAnnotatorAE.COCITED_ARTICLES,
+						coCitedArticles,
+						CitationContextAnnotatorAE.PARAM_WINDOW_SIZE,
 						windowSize);
 
 		// Tokenizer
@@ -298,8 +298,8 @@ public class AnnotatorWF {
 				annotatorConfig.getString("outputDirectory"));
 
 		String listArticlesFilename = line.getOptionValue(
-                "listArticlesFilename",
-                annotatorConfig.getString("listArticlesFilename"));
+				"listArticlesFilename",
+				annotatorConfig.getString("listArticlesFilename"));
 
 		String listFocusedArticlesFilename = line.getOptionValue(
 				"listFocusedArticlesFilename",
