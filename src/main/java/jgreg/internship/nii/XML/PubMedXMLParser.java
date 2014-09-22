@@ -177,9 +177,11 @@ public class PubMedXMLParser {
 
 					// WARNING: DONT CHANGE THE ORDER OF THE NEXT
 					// INSTRUCTIONS UNLESS YOU KNOW WHAT YOU ARE DOING
-					// (operations on xmlr change the cursor position)
+                    // (operations on xmlr change the cursor position)
+                    // BEGIN
 					String citationIds = xmlr.getAttributeValue(null, "rid"); // 1
-					String citation = getElementsText(); // 2
+                    String citation = getElementsText(); // 2
+                    // END
 					logger.debug("Found xref `" + citationIds + "' for `"
 							+ citation + "'");
 
