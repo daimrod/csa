@@ -1,20 +1,20 @@
-// 
+//
 // Author:: Grégoire Jadi <daimrod@gmail.com>
 // Copyright:: Copyright (c) 2014, Grégoire Jadi
 // All rights reserved.
-// 
+//
 // Redistribution and use in source and binary forms, with or without
 // modification, are permitted provided that the following conditions are
 // met:
-// 
+//
 //    1. Redistributions of source code must retain the above copyright
 //       notice, this list of conditions and the following disclaimer.
-// 
+//
 //    2. Redistributions in binary form must reproduce the above
 //       copyright notice, this list of conditions and the following
 //       disclaimer in the documentation and/or other materials provided
 //       with the distribution.
-// 
+//
 // THIS SOFTWARE IS PROVIDED BY GRÉGOIRE JADI ``AS IS'' AND ANY
 // EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
 // IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
@@ -27,12 +27,12 @@
 // OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
 // OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 // SUCH DAMAGE.
-// 
+//
 // The views and conclusions contained in the software and
 // documentation are those of the authors and should not be
 // interpreted as representing official policies, either expressed or
 // implied, of Grégoire Jadi.
-// 
+//
 
 package jgreg.internship.nii.AE;
 
@@ -60,11 +60,11 @@ import org.apache.uima.jcas.JCas;
 /**
  * This analysis parses PubMed's articles and add the following annotations:
  * <ul>
- * <li> {@link jgreg.internship.nii.types.Citation} </li>
- * <li> {@link jgreg.internship.nii.types.Section} </li>
- * <li> {@link jgreg.internship.nii.types.Title} (the section's title) </li>
- * <li> {@link jgreg.internship.nii.types.Paragraph} </li>
- * <li> {@link jgreg.internship.nii.types.ID} (article's PMID) </li>
+ * <li> {@link jgreg.internship.nii.types.Citation}</li>
+ * <li> {@link jgreg.internship.nii.types.Section}</li>
+ * <li> {@link jgreg.internship.nii.types.Title} (the section's title)</li>
+ * <li> {@link jgreg.internship.nii.types.Paragraph}</li>
+ * <li> {@link jgreg.internship.nii.types.ID} (article's PMID)</li>
  * </ul>
  *
  * @author Grégoire Jadi
@@ -107,7 +107,7 @@ public class PubMedParserAE extends
 		ID docId = new ID(jCas);
 		docId.setPMID(article.getPMID());
 		docId.setYear(article.getYear());
-        docId.setTitle(article.getTitle());
+		docId.setTitle(article.getTitle());
 		docId.setBegin(0);
 		docId.setEnd(1);
 		docId.addToIndexes();
