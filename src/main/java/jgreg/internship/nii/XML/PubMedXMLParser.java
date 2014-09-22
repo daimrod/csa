@@ -242,8 +242,7 @@ public class PubMedXMLParser {
 					logger.debug("Found PMID(" + pmid + ") for `" + localId
 							+ "'");
 				} else {
-					citations.remove(localId);
-					logger.debug("Could not find PMID for `" + localId + "'");
+                    logger.debug("Could not find PMID for `" + localId + "'");
 				}
 			}
 		}
