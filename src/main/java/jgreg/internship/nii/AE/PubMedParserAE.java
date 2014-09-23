@@ -42,7 +42,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
+import java.util.Stack;
 import java.util.function.Predicate;
 
 import javax.xml.stream.XMLInputFactory;
@@ -54,9 +54,7 @@ import jgreg.internship.nii.RES.Article;
 import jgreg.internship.nii.types.Citation;
 import jgreg.internship.nii.types.Filename;
 import jgreg.internship.nii.types.ID;
-import jgreg.internship.nii.types.Paragraph;
 import jgreg.internship.nii.types.Section;
-import jgreg.internship.nii.types.Title;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang3.tuple.ImmutablePair;
@@ -103,10 +101,7 @@ public class PubMedParserAE extends
 	private Map<String, Citation> citations;
 
 	/** The sections. */
-	private List<Pair<Integer, Integer>> sections;
-
-	/** The section start. */
-	private Integer sectionStart;
+	private Stack<Integer> sectionsStarts;
 
 	/** The paragraphs. */
 	private List<Pair<Integer, Integer>> paragraphs;
@@ -350,7 +345,7 @@ public class PubMedParserAE extends
 		citations = new HashMap<>();
 		article = new Article("");
 
-		sections = new LinkedList<>();
+		sectionsStarts = new Stack<>();
 		titles = new LinkedList<>();
 		paragraphs = new LinkedList<>();
 
@@ -507,7 +502,7 @@ public class PubMedParserAE extends
 			titleStart = start;
 			break;
 		case "sec":
-			sectionStart = start;
+			sectionsStarts.push(start);
 			break;
 		}
 	}
@@ -529,7 +524,10 @@ public class PubMedParserAE extends
 			titles.add(new ImmutablePair<>(titleStart, end));
 			break;
 		case "sec":
-			sections.add(new ImmutablePair<>(sectionStart, end));
+            Section section = new Section(jCas);
+            section.setBegin(sectionsStarts.pop());
+            section.setEnd(end);
+			section.addToIndexes();
 			break;
 		}
 	}
