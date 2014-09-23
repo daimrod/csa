@@ -39,8 +39,6 @@ package jgreg.internship.nii.AE;
 import java.io.Reader;
 import java.io.StringReader;
 import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 import java.util.function.Predicate;
@@ -54,11 +52,11 @@ import jgreg.internship.nii.RES.Article;
 import jgreg.internship.nii.types.Citation;
 import jgreg.internship.nii.types.Filename;
 import jgreg.internship.nii.types.ID;
+import jgreg.internship.nii.types.Paragraph;
 import jgreg.internship.nii.types.Section;
+import jgreg.internship.nii.types.Title;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang3.tuple.ImmutablePair;
-import org.apache.commons.lang3.tuple.Pair;
 import org.apache.log4j.Logger;
 import org.apache.uima.analysis_engine.AnalysisEngineProcessException;
 import org.apache.uima.cas.CASException;
@@ -101,19 +99,13 @@ public class PubMedParserAE extends
 	private Map<String, Citation> citations;
 
 	/** The sections. */
-	private Stack<Integer> sectionsStarts;
+	private Stack<Integer> sections;
 
 	/** The paragraphs. */
-	private List<Pair<Integer, Integer>> paragraphs;
-
-	/** The paragraph start. */
-	private Integer paragraphStart;
+	private Stack<Integer> paragraphs;
 
 	/** The titles. */
-	private List<Pair<Integer, Integer>> titles;
-
-	/** The title start. */
-	private Integer titleStart;
+	private Stack<Integer> titles;
 
 	/** The xmlr. */
 	private XMLStreamReader xmlr;
@@ -296,7 +288,7 @@ public class PubMedParserAE extends
                 /**
                  * Extract the PMID from the document
                  */
-                (!hasPMID()
+                (article.getPMID().isEmpty()
                  && xmlr.hasName()
 					&& XMLStreamConstants.START_ELEMENT == eventType
 					&& "article-id".equals(xmlr.getLocalName())
@@ -345,9 +337,9 @@ public class PubMedParserAE extends
 		citations = new HashMap<>();
 		article = new Article("");
 
-		sectionsStarts = new Stack<>();
-		titles = new LinkedList<>();
-		paragraphs = new LinkedList<>();
+		sections = new Stack<>();
+		titles = new Stack<>();
+		paragraphs = new Stack<>();
 
 		/* Initialization */
 		xmlif = XMLInputFactory.newInstance();
@@ -379,7 +371,7 @@ public class PubMedParserAE extends
 				}
 			}
 		} catch (XMLStreamException ex) {
-			logger.fatal("Could not parse `" + getPMID() + "'", ex);
+			logger.fatal("Could not parse `" + article.getPMID() + "'", ex);
 		}
 	}
 
@@ -496,13 +488,13 @@ public class PubMedParserAE extends
 	private void addStart(Integer start, String name) {
 		switch (name.toLowerCase()) {
 		case "p":
-			paragraphStart = start;
+			paragraphs.push(start);
 			break;
 		case "title":
-			titleStart = start;
+			titles.push(start);
 			break;
 		case "sec":
-			sectionsStarts.push(start);
+			sections.push(start);
 			break;
 		}
 	}
@@ -518,14 +510,20 @@ public class PubMedParserAE extends
 	private void addEnd(Integer end, String name) {
 		switch (name.toLowerCase()) {
 		case "p":
-			paragraphs.add(new ImmutablePair<>(paragraphStart, end));
+            Paragraph paragraph = new Paragraph(jCas);
+            paragraph.setBegin(paragraphs.pop());
+            paragraph.setEnd(end);
+            paragraph.addToIndexes();
 			break;
 		case "title":
-			titles.add(new ImmutablePair<>(titleStart, end));
+            Title title = new Title(jCas);
+            title.setBegin(titles.pop());
+            title.setEnd(end);
+            title.addToIndexes();
 			break;
 		case "sec":
             Section section = new Section(jCas);
-            section.setBegin(sectionsStarts.pop());
+            section.setBegin(sections.pop());
             section.setEnd(end);
 			section.addToIndexes();
 			break;
@@ -567,23 +565,5 @@ public class PubMedParserAE extends
 		default:
 			return "Unknown constants";
 		}
-	}
-
-    /**
-	 * Gets the pmid.
-	 *
-	 * @return the pmid
-	 */
-	public String getPMID() {
-		return article.getPMID();
-	}
-
-	/**
-	 * Checks for pmid.
-	 *
-	 * @return true, if successful
-	 */
-	public boolean hasPMID() {
-		return !getPMID().isEmpty();
 	}
 }
