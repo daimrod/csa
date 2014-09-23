@@ -1,5 +1,5 @@
 
-/* First created by JCasGen Mon Jul 14 16:48:55 JST 2014 */
+/* First created by JCasGen Tue Sep 23 15:15:42 CEST 2014 */
 package jgreg.internship.nii.types;
 
 import org.apache.uima.jcas.JCas;
@@ -14,7 +14,7 @@ import org.apache.uima.cas.Feature;
 import org.apache.uima.jcas.tcas.Annotation_Type;
 
 /** A citation.
- * Updated by JCasGen Mon Jul 14 16:48:55 JST 2014
+ * Updated by JCasGen Tue Sep 23 15:15:42 CEST 2014
  * @generated */
 public class Citation_Type extends Annotation_Type {
   /** @generated 
@@ -69,6 +69,54 @@ public class Citation_Type extends Annotation_Type {
     ll_cas.ll_setStringValue(addr, casFeatCode_PMID, v);}
     
   
+ 
+  /** @generated */
+  final Feature casFeat_RID;
+  /** @generated */
+  final int     casFeatCode_RID;
+  /** @generated
+   * @param addr low level Feature Structure reference
+   * @return the feature value 
+   */ 
+  public String getRID(int addr) {
+        if (featOkTst && casFeat_RID == null)
+      jcas.throwFeatMissing("RID", "jgreg.internship.nii.types.Citation");
+    return ll_cas.ll_getStringValue(addr, casFeatCode_RID);
+  }
+  /** @generated
+   * @param addr low level Feature Structure reference
+   * @param v value to set 
+   */    
+  public void setRID(int addr, String v) {
+        if (featOkTst && casFeat_RID == null)
+      jcas.throwFeatMissing("RID", "jgreg.internship.nii.types.Citation");
+    ll_cas.ll_setStringValue(addr, casFeatCode_RID, v);}
+    
+  
+ 
+  /** @generated */
+  final Feature casFeat_text;
+  /** @generated */
+  final int     casFeatCode_text;
+  /** @generated
+   * @param addr low level Feature Structure reference
+   * @return the feature value 
+   */ 
+  public String getText(int addr) {
+        if (featOkTst && casFeat_text == null)
+      jcas.throwFeatMissing("text", "jgreg.internship.nii.types.Citation");
+    return ll_cas.ll_getStringValue(addr, casFeatCode_text);
+  }
+  /** @generated
+   * @param addr low level Feature Structure reference
+   * @param v value to set 
+   */    
+  public void setText(int addr, String v) {
+        if (featOkTst && casFeat_text == null)
+      jcas.throwFeatMissing("text", "jgreg.internship.nii.types.Citation");
+    ll_cas.ll_setStringValue(addr, casFeatCode_text, v);}
+    
+  
 
 
 
@@ -84,6 +132,14 @@ public class Citation_Type extends Annotation_Type {
  
     casFeat_PMID = jcas.getRequiredFeatureDE(casType, "PMID", "uima.cas.String", featOkTst);
     casFeatCode_PMID  = (null == casFeat_PMID) ? JCas.INVALID_FEATURE_CODE : ((FeatureImpl)casFeat_PMID).getCode();
+
+ 
+    casFeat_RID = jcas.getRequiredFeatureDE(casType, "RID", "uima.cas.String", featOkTst);
+    casFeatCode_RID  = (null == casFeat_RID) ? JCas.INVALID_FEATURE_CODE : ((FeatureImpl)casFeat_RID).getCode();
+
+ 
+    casFeat_text = jcas.getRequiredFeatureDE(casType, "text", "uima.cas.String", featOkTst);
+    casFeatCode_text  = (null == casFeat_text) ? JCas.INVALID_FEATURE_CODE : ((FeatureImpl)casFeat_text).getCode();
 
   }
 }
