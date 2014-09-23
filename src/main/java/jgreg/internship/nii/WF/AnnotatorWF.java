@@ -100,7 +100,7 @@ public class AnnotatorWF {
 	 * @param listFocusedArticlesFilename
 	 *            lists PMIDS of interest.
 	 * @param listCoCitedArticlesFilename
-	 *            lists co-cited PMIDS.
+     *            lists co-cited PMIDS.
 	 * @param mappingFilename
 	 *            describes the mapping system.
 	 * @param windowSize
