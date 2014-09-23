@@ -100,7 +100,7 @@ public class PubMedParserAE extends
 	private StringBuilder text;
 
 	/** The citations. */
-	private Map<String, List<Pair<Integer, Integer>>> citations;
+	private Map<String, Citation> citations;
 
 	/** The sections. */
 	private List<Pair<Integer, Integer>> sections;
@@ -163,43 +163,6 @@ public class PubMedParserAE extends
 		docId.setBegin(0);
 		docId.setEnd(1);
 		docId.addToIndexes();
-
-		// Citation annotation
-		// and Article from citations
-		for (Entry<String, List<Pair<Integer, Integer>>> entry : citations.entrySet()) {
-			for (Pair<Integer, Integer> citationIdx : entry.getValue()) {
-				// create and add a Citation
-				Citation citation = new Citation(jCas);
-				citation.setBegin(citationIdx.getLeft());
-				citation.setEnd(citationIdx.getRight());
-				citation.setPMID(entry.getKey());
-				citation.addToIndexes();
-			}
-		}
-
-		// Section annotation
-		for (Pair<Integer, Integer> section : sections) {
-			Section annotation = new Section(jCas);
-			annotation.setBegin(section.getLeft());
-			annotation.setEnd(section.getRight());
-			annotation.addToIndexes();
-		}
-
-		// Section's Title annotation
-		for (Pair<Integer, Integer> title : titles) {
-			Title annotation = new Title(jCas);
-			annotation.setBegin(title.getLeft());
-			annotation.setEnd(title.getRight());
-			annotation.addToIndexes();
-		}
-
-		// Paragraph annotation
-		for (Pair<Integer, Integer> paragraph : paragraphs) {
-			Paragraph annotation = new Paragraph(jCas);
-			annotation.setBegin(paragraph.getLeft());
-			annotation.setEnd(paragraph.getRight());
-			annotation.addToIndexes();
-		}
     }
 
     /**
@@ -254,10 +217,17 @@ public class PubMedParserAE extends
                                  + citationText + "'");
 
 					for (String citationId : citationIds.split(" ")) {
-						int start = text.length();
                         String placeholder = "CITE";
-                        int end = start + placeholder.length();
-                        addCitation(citationId, start, end);
+                        Citation citation = new Citation(jCas);
+                        
+                        citation.setBegin(text.length());
+                        citation.setEnd(citation.getBegin() + placeholder.length());
+                        citation.setRID(citationId);
+                        citation.setText(citationText);
+                        citation.addToIndexes();
+                        
+                        citations.put(citationId, citation);
+
                         addText(placeholder);
 					}
 				} else {
@@ -305,9 +275,9 @@ public class PubMedParserAE extends
 					 * appropriate PMID
 					 */
 					String pmid = StringUtils.trim(xmlr.getElementText());
-					List<Pair<Integer, Integer>> tmp = citations.get(localId);
-					citations.remove(localId);
-					citations.put(pmid, tmp);
+					Citation citation = citations.get(localId);
+                    citation.setPMID(pmid);
+
 					logger.debug("Found PMID(" + pmid + ") for `" + localId
                                  + "'");
 				} else {
@@ -518,26 +488,6 @@ public class PubMedParserAE extends
 	 */
 	private boolean gotoTag(String tag) throws XMLStreamException {
 		return gotoTag(tag, _ignore -> true);
-	}
-
-	/**
-	 * Add a citation at the given position.
-	 *
-	 * @param citation
-	 *            to add
-	 * @param start
-	 *            of the citation
-	 * @param end
-	 *            of the citation
-	 */
-	private void addCitation(String citation, int start, int end) {
-		if (citations.containsKey(citation)) {
-			citations.get(citation).add(new ImmutablePair<>(start, end));
-		} else {
-			List<Pair<Integer, Integer>> tmp = new LinkedList<>();
-			tmp.add(new ImmutablePair<>(start, end));
-			citations.put(citation, tmp);
-		}
 	}
 
 	/**
