@@ -196,7 +196,7 @@ public class ExtractMaxAE extends
 			}
 
 			// Add those numbers to all cited articles within the context
-			FSArray citationsFSA = context.getPMIDS();
+            FSArray citationsFSA = context.getCitations();
 			Type citationT = jCas.getTypeSystem().getType(
 					"jgreg.internship.nii.types.Citation");
 			Feature citationPMIDF = citationT.getFeatureByBaseName("PMID");

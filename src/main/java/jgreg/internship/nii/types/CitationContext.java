@@ -1,6 +1,6 @@
 
 
-/* First created by JCasGen Tue Sep 23 15:15:42 CEST 2014 */
+/* First created by JCasGen Thu Sep 25 16:41:50 CEST 2014 */
 package jgreg.internship.nii.types;
 
 import org.apache.uima.jcas.JCas; 
@@ -12,7 +12,7 @@ import org.apache.uima.jcas.tcas.Annotation;
 
 
 /** Mark a Citation Context
- * Updated by JCasGen Tue Sep 23 15:15:42 CEST 2014
+ * Updated by JCasGen Thu Sep 25 16:41:50 CEST 2014
  * XML source: src/main/resources/jgreg/internship/nii/types/CitationSentimentAnalysisTS.xml
  * @generated */
 public class CitationContext extends Annotation {
@@ -100,47 +100,47 @@ public class CitationContext extends Annotation {
    
     
   //*--------------*
-  //* Feature: PMIDS
+  //* Feature: Citations
 
-  /** getter for PMIDS - gets The PMIDS covered by the CitationContext
+  /** getter for Citations - gets The citations covered by the CitationContext
    * @generated
    * @return value of the feature 
    */
-  public FSArray getPMIDS() {
-    if (CitationContext_Type.featOkTst && ((CitationContext_Type)jcasType).casFeat_PMIDS == null)
-      jcasType.jcas.throwFeatMissing("PMIDS", "jgreg.internship.nii.types.CitationContext");
-    return (FSArray)(jcasType.ll_cas.ll_getFSForRef(jcasType.ll_cas.ll_getRefValue(addr, ((CitationContext_Type)jcasType).casFeatCode_PMIDS)));}
+  public FSArray getCitations() {
+    if (CitationContext_Type.featOkTst && ((CitationContext_Type)jcasType).casFeat_Citations == null)
+      jcasType.jcas.throwFeatMissing("Citations", "jgreg.internship.nii.types.CitationContext");
+    return (FSArray)(jcasType.ll_cas.ll_getFSForRef(jcasType.ll_cas.ll_getRefValue(addr, ((CitationContext_Type)jcasType).casFeatCode_Citations)));}
     
-  /** setter for PMIDS - sets The PMIDS covered by the CitationContext 
+  /** setter for Citations - sets The citations covered by the CitationContext 
    * @generated
    * @param v value to set into the feature 
    */
-  public void setPMIDS(FSArray v) {
-    if (CitationContext_Type.featOkTst && ((CitationContext_Type)jcasType).casFeat_PMIDS == null)
-      jcasType.jcas.throwFeatMissing("PMIDS", "jgreg.internship.nii.types.CitationContext");
-    jcasType.ll_cas.ll_setRefValue(addr, ((CitationContext_Type)jcasType).casFeatCode_PMIDS, jcasType.ll_cas.ll_getFSRef(v));}    
+  public void setCitations(FSArray v) {
+    if (CitationContext_Type.featOkTst && ((CitationContext_Type)jcasType).casFeat_Citations == null)
+      jcasType.jcas.throwFeatMissing("Citations", "jgreg.internship.nii.types.CitationContext");
+    jcasType.ll_cas.ll_setRefValue(addr, ((CitationContext_Type)jcasType).casFeatCode_Citations, jcasType.ll_cas.ll_getFSRef(v));}    
     
-  /** indexed getter for PMIDS - gets an indexed value - The PMIDS covered by the CitationContext
+  /** indexed getter for Citations - gets an indexed value - The citations covered by the CitationContext
    * @generated
    * @param i index in the array to get
    * @return value of the element at index i 
    */
-  public Citation getPMIDS(int i) {
-    if (CitationContext_Type.featOkTst && ((CitationContext_Type)jcasType).casFeat_PMIDS == null)
-      jcasType.jcas.throwFeatMissing("PMIDS", "jgreg.internship.nii.types.CitationContext");
-    jcasType.jcas.checkArrayBounds(jcasType.ll_cas.ll_getRefValue(addr, ((CitationContext_Type)jcasType).casFeatCode_PMIDS), i);
-    return (Citation)(jcasType.ll_cas.ll_getFSForRef(jcasType.ll_cas.ll_getRefArrayValue(jcasType.ll_cas.ll_getRefValue(addr, ((CitationContext_Type)jcasType).casFeatCode_PMIDS), i)));}
+  public Citation getCitations(int i) {
+    if (CitationContext_Type.featOkTst && ((CitationContext_Type)jcasType).casFeat_Citations == null)
+      jcasType.jcas.throwFeatMissing("Citations", "jgreg.internship.nii.types.CitationContext");
+    jcasType.jcas.checkArrayBounds(jcasType.ll_cas.ll_getRefValue(addr, ((CitationContext_Type)jcasType).casFeatCode_Citations), i);
+    return (Citation)(jcasType.ll_cas.ll_getFSForRef(jcasType.ll_cas.ll_getRefArrayValue(jcasType.ll_cas.ll_getRefValue(addr, ((CitationContext_Type)jcasType).casFeatCode_Citations), i)));}
 
-  /** indexed setter for PMIDS - sets an indexed value - The PMIDS covered by the CitationContext
+  /** indexed setter for Citations - sets an indexed value - The citations covered by the CitationContext
    * @generated
    * @param i index in the array to set
    * @param v value to set into the array 
    */
-  public void setPMIDS(int i, Citation v) { 
-    if (CitationContext_Type.featOkTst && ((CitationContext_Type)jcasType).casFeat_PMIDS == null)
-      jcasType.jcas.throwFeatMissing("PMIDS", "jgreg.internship.nii.types.CitationContext");
-    jcasType.jcas.checkArrayBounds(jcasType.ll_cas.ll_getRefValue(addr, ((CitationContext_Type)jcasType).casFeatCode_PMIDS), i);
-    jcasType.ll_cas.ll_setRefArrayValue(jcasType.ll_cas.ll_getRefValue(addr, ((CitationContext_Type)jcasType).casFeatCode_PMIDS), i, jcasType.ll_cas.ll_getFSRef(v));}
+  public void setCitations(int i, Citation v) { 
+    if (CitationContext_Type.featOkTst && ((CitationContext_Type)jcasType).casFeat_Citations == null)
+      jcasType.jcas.throwFeatMissing("Citations", "jgreg.internship.nii.types.CitationContext");
+    jcasType.jcas.checkArrayBounds(jcasType.ll_cas.ll_getRefValue(addr, ((CitationContext_Type)jcasType).casFeatCode_Citations), i);
+    jcasType.ll_cas.ll_setRefArrayValue(jcasType.ll_cas.ll_getRefValue(addr, ((CitationContext_Type)jcasType).casFeatCode_Citations), i, jcasType.ll_cas.ll_getFSRef(v));}
   }
 
     

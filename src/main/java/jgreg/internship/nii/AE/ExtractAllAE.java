@@ -182,7 +182,7 @@ public class ExtractAllAE extends
 
 		for (CitationContext context : JCasUtil.select(jCas,
 				CitationContext.class)) {
-			FSArray citationsFSA = context.getPMIDS();
+            FSArray citationsFSA = context.getCitations();
 
 			// Well, this shouldn't happen, but who knows...
 			if (citationsFSA.size() <= 0) {

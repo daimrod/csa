@@ -212,7 +212,7 @@ public class CitationContextAnnotatorAE extends
                                       .toArray(new FeatureStructure[citationsFS.size()]), 0, 0,
                                       citationsFS.size());
 
-                context.setPMIDS(fsArray);
+                context.setCitations(fsArray);
                 context.setID(id);
                 id += 1;
 

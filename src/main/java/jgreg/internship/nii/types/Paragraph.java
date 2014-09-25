@@ -1,6 +1,6 @@
 
 
-/* First created by JCasGen Tue Sep 23 15:15:42 CEST 2014 */
+/* First created by JCasGen Thu Sep 25 16:41:50 CEST 2014 */
 package jgreg.internship.nii.types;
 
 import org.apache.uima.jcas.JCas; 
@@ -11,7 +11,7 @@ import org.apache.uima.jcas.tcas.Annotation;
 
 
 /** Mark a Paragraph
- * Updated by JCasGen Tue Sep 23 15:15:42 CEST 2014
+ * Updated by JCasGen Thu Sep 25 16:41:50 CEST 2014
  * XML source: src/main/resources/jgreg/internship/nii/types/CitationSentimentAnalysisTS.xml
  * @generated */
 public class Paragraph extends Annotation {

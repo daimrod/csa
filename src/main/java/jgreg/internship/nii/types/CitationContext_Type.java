@@ -1,5 +1,5 @@
 
-/* First created by JCasGen Tue Sep 23 15:15:42 CEST 2014 */
+/* First created by JCasGen Thu Sep 25 16:41:50 CEST 2014 */
 package jgreg.internship.nii.types;
 
 import org.apache.uima.jcas.JCas;
@@ -14,7 +14,7 @@ import org.apache.uima.cas.Feature;
 import org.apache.uima.jcas.tcas.Annotation_Type;
 
 /** Mark a Citation Context
- * Updated by JCasGen Tue Sep 23 15:15:42 CEST 2014
+ * Updated by JCasGen Thu Sep 25 16:41:50 CEST 2014
  * @generated */
 public class CitationContext_Type extends Annotation_Type {
   /** @generated 
@@ -71,39 +71,39 @@ public class CitationContext_Type extends Annotation_Type {
   
  
   /** @generated */
-  final Feature casFeat_PMIDS;
+  final Feature casFeat_Citations;
   /** @generated */
-  final int     casFeatCode_PMIDS;
+  final int     casFeatCode_Citations;
   /** @generated
    * @param addr low level Feature Structure reference
    * @return the feature value 
    */ 
-  public int getPMIDS(int addr) {
-        if (featOkTst && casFeat_PMIDS == null)
-      jcas.throwFeatMissing("PMIDS", "jgreg.internship.nii.types.CitationContext");
-    return ll_cas.ll_getRefValue(addr, casFeatCode_PMIDS);
+  public int getCitations(int addr) {
+        if (featOkTst && casFeat_Citations == null)
+      jcas.throwFeatMissing("Citations", "jgreg.internship.nii.types.CitationContext");
+    return ll_cas.ll_getRefValue(addr, casFeatCode_Citations);
   }
   /** @generated
    * @param addr low level Feature Structure reference
    * @param v value to set 
    */    
-  public void setPMIDS(int addr, int v) {
-        if (featOkTst && casFeat_PMIDS == null)
-      jcas.throwFeatMissing("PMIDS", "jgreg.internship.nii.types.CitationContext");
-    ll_cas.ll_setRefValue(addr, casFeatCode_PMIDS, v);}
+  public void setCitations(int addr, int v) {
+        if (featOkTst && casFeat_Citations == null)
+      jcas.throwFeatMissing("Citations", "jgreg.internship.nii.types.CitationContext");
+    ll_cas.ll_setRefValue(addr, casFeatCode_Citations, v);}
     
    /** @generated
    * @param addr low level Feature Structure reference
    * @param i index of item in the array
    * @return value at index i in the array 
    */
-  public int getPMIDS(int addr, int i) {
-        if (featOkTst && casFeat_PMIDS == null)
-      jcas.throwFeatMissing("PMIDS", "jgreg.internship.nii.types.CitationContext");
+  public int getCitations(int addr, int i) {
+        if (featOkTst && casFeat_Citations == null)
+      jcas.throwFeatMissing("Citations", "jgreg.internship.nii.types.CitationContext");
     if (lowLevelTypeChecks)
-      return ll_cas.ll_getRefArrayValue(ll_cas.ll_getRefValue(addr, casFeatCode_PMIDS), i, true);
-    jcas.checkArrayBounds(ll_cas.ll_getRefValue(addr, casFeatCode_PMIDS), i);
-	return ll_cas.ll_getRefArrayValue(ll_cas.ll_getRefValue(addr, casFeatCode_PMIDS), i);
+      return ll_cas.ll_getRefArrayValue(ll_cas.ll_getRefValue(addr, casFeatCode_Citations), i, true);
+    jcas.checkArrayBounds(ll_cas.ll_getRefValue(addr, casFeatCode_Citations), i);
+	return ll_cas.ll_getRefArrayValue(ll_cas.ll_getRefValue(addr, casFeatCode_Citations), i);
   }
    
   /** @generated
@@ -111,13 +111,13 @@ public class CitationContext_Type extends Annotation_Type {
    * @param i index of item in the array
    * @param v value to set
    */ 
-  public void setPMIDS(int addr, int i, int v) {
-        if (featOkTst && casFeat_PMIDS == null)
-      jcas.throwFeatMissing("PMIDS", "jgreg.internship.nii.types.CitationContext");
+  public void setCitations(int addr, int i, int v) {
+        if (featOkTst && casFeat_Citations == null)
+      jcas.throwFeatMissing("Citations", "jgreg.internship.nii.types.CitationContext");
     if (lowLevelTypeChecks)
-      ll_cas.ll_setRefArrayValue(ll_cas.ll_getRefValue(addr, casFeatCode_PMIDS), i, v, true);
-    jcas.checkArrayBounds(ll_cas.ll_getRefValue(addr, casFeatCode_PMIDS), i);
-    ll_cas.ll_setRefArrayValue(ll_cas.ll_getRefValue(addr, casFeatCode_PMIDS), i, v);
+      ll_cas.ll_setRefArrayValue(ll_cas.ll_getRefValue(addr, casFeatCode_Citations), i, v, true);
+    jcas.checkArrayBounds(ll_cas.ll_getRefValue(addr, casFeatCode_Citations), i);
+    ll_cas.ll_setRefArrayValue(ll_cas.ll_getRefValue(addr, casFeatCode_Citations), i, v);
   }
  
 
@@ -137,8 +137,8 @@ public class CitationContext_Type extends Annotation_Type {
     casFeatCode_ID  = (null == casFeat_ID) ? JCas.INVALID_FEATURE_CODE : ((FeatureImpl)casFeat_ID).getCode();
 
  
-    casFeat_PMIDS = jcas.getRequiredFeatureDE(casType, "PMIDS", "uima.cas.FSArray", featOkTst);
-    casFeatCode_PMIDS  = (null == casFeat_PMIDS) ? JCas.INVALID_FEATURE_CODE : ((FeatureImpl)casFeat_PMIDS).getCode();
+    casFeat_Citations = jcas.getRequiredFeatureDE(casType, "Citations", "uima.cas.FSArray", featOkTst);
+    casFeatCode_Citations  = (null == casFeat_Citations) ? JCas.INVALID_FEATURE_CODE : ((FeatureImpl)casFeat_Citations).getCode();
 
   }
 }

@@ -93,8 +93,8 @@
           <rangeTypeName>uima.cas.Long</rangeTypeName>
         </featureDescription>
         <featureDescription>
-          <name>PMIDS</name>
-          <description>The PMIDS covered by the CitationContext</description>
+          <name>Citations</name>
+          <description>The citations covered by the CitationContext</description>
           <rangeTypeName>uima.cas.FSArray</rangeTypeName>
           <elementType>jgreg.internship.nii.types.Citation</elementType>
         </featureDescription>
