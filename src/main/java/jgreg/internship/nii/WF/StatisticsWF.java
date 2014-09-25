@@ -96,7 +96,7 @@ public class StatisticsWF {
 			String outputFile, String infoFile) throws Exception {
 		String[] extensions = { "xmi" };
 		CollectionReaderDescription reader = CollectionReaderFactory
-				.createReaderDescription(DirectoryReaderCR.class,
+                .createReaderDescription(DirectoryReaderCR.class,
 						DirectoryReaderCR.INPUT_DIRECTORY, inputDirectory,
 						DirectoryReaderCR.EXTENSIONS, extensions);
 
