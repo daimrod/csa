@@ -136,17 +136,16 @@ public class CitationContextAnnotatorAE extends
 	public void process(JCas aCas) throws AnalysisEngineProcessException {
 		jCas = aCas;
 		sentence2Citations = JCasUtil.indexCovered(jCas, Sentence.class,
-				Citation.class);
+                Citation.class);
 
 		int id = 0;
 
-		Collection<Sentence> sentences = JCasUtil.select(jCas, Sentence.class);
-		Iterator<Sentence> it = sentences.iterator();
+        Collection<Sentence> sentences = JCasUtil.select(jCas, Sentence.class);
 
-		while (it.hasNext()) {
-			Sentence sentence = (Sentence) it.next();
+        // 1. find all citation contextes
+        for (Sentence sentence: sentences) {
 
-			ArrayList<Citation> citations;
+            ArrayList<Citation> citations;
 			if (focusedArticles == null) {
 				// If we don't have a list of articles to focus on, we
 				// look at all of them.
@@ -159,18 +158,14 @@ public class CitationContextAnnotatorAE extends
 						.stream()
 						.filter(citation -> focusedArticles.contains(citation
 								.getPMID())).collect(Collectors.toList()));
-			}
+            }
 
 			// Skip Sentence with no Citation (to focus on) in it.
 			if (citations.isEmpty()) {
 				continue;
 			}
 
-			// Convert the List<Citation> to List<FeatureStructure>
-			// because that's what UIMA manipulates.
-			List<FeatureStructure> citationsFS = new ArrayList<>(citations);
-
-			int begin, end;
+            int begin, end;
 			// Extract the Sentence that belongs to the
 			// CitationContext *before* the Sentence in which the
 			// Citation occurs.
@@ -192,30 +187,43 @@ public class CitationContextAnnotatorAE extends
 			List<Sentence> followings = JCasUtil.selectFollowing(
 					Sentence.class, sentence, windowSize);
 			end = sentence.getEnd();
-			for (int i = 0; it.hasNext() && i <= windowSize; i++) {
+            for (int i = 0; i < followings.size() && i <= windowSize; i++) {
 				end = sentence.getEnd();
-				sentence = (Sentence) it.next();
+                sentence = followings.get(i);
 				if (!sentence2Citations.get(sentence).isEmpty())
 					break;
 			}
 
-			CitationContext context = new CitationContext(jCas);
-			context.setBegin(begin);
-			context.setEnd(end);
+            for (Citation citation: citations) {
+                // Convert the List<Citation> to List<FeatureStructure>
+                // because that's what UIMA manipulates.
+                ArrayList<Citation> citationsArray = new ArrayList<>();
+                citationsArray.add(citation);
+                List<FeatureStructure> citationsFS = new ArrayList<>(citationsArray);
 
-			// Unfortunately, UIMA "complex" structures are very
-			// crudes. That's why this code is ugly.
-			FSArray fsArray = new FSArray(jCas, citationsFS.size());
-			fsArray.copyFromArray(citationsFS
-					.toArray(new FeatureStructure[citationsFS.size()]), 0, 0,
-					citationsFS.size());
+                CitationContext context = new CitationContext(jCas);
+                context.setBegin(begin);
+                context.setEnd(end);
 
-			context.setPMIDS(fsArray);
-			context.setID(id);
-			id += 1;
+                // Unfortunately, UIMA "complex" structures are very
+                // crudes. That's why this code is ugly.
+                FSArray fsArray = new FSArray(jCas, citationsFS.size());
+                fsArray.copyFromArray(citationsFS
+                                      .toArray(new FeatureStructure[citationsFS.size()]), 0, 0,
+                                      citationsFS.size());
 
-			context.addToIndexes(jCas);
-		}
+                context.setPMIDS(fsArray);
+                context.setID(id);
+                id += 1;
+
+                context.addToIndexes(jCas);
+            }
+        }
+
+        // 2. Merge all co-citation contexts when it's possible
+
+        // 3. Merge all remaining citation contexts when they occupy
+        // the same place
 	}
 
 	private List<Sentence> mergeContexts(List<Sentence> l1, List<Sentence> l2) {
