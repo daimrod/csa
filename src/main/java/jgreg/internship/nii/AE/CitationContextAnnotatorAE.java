@@ -119,9 +119,9 @@ public class CitationContextAnnotatorAE extends
 	@ExternalResource(key = FOCUSED_ARTICLES, mandatory = false)
 	StringListRES focusedArticles;
 
-    public static final String COCITED_ARTICLES = "coCitedArticles";
+	public static final String COCITED_ARTICLES = "coCitedArticles";
 	@ExternalResource(key = COCITED_ARTICLES, mandatory = false)
-    StringListRES coCitedArticles;
+	StringListRES coCitedArticles;
 
 	JCas jCas = null;
 	Map<Sentence, Collection<Citation>> sentence2Citations = null;
@@ -146,15 +146,15 @@ public class CitationContextAnnotatorAE extends
 		// 1. find all citation contextes
 		step1();
 
-        // 2. Merge all co-citation contexts when it's possible
-        if (coCitedArticles != null) {
+		// 2. Merge all co-citation contexts when it's possible
+		if (coCitedArticles != null) {
 			step2();
 		}
 
 		// 3. Merge all remaining citation contexts when they occupy
 		// the same place
-        step3();
-	}
+		step3();
+    }
 
 	private void step1() {
 		citation2ctxs = new HashMap<>();
@@ -208,10 +208,10 @@ public class CitationContextAnnotatorAE extends
 			List<Sentence> followings = JCasUtil.selectFollowing(
 					Sentence.class, sentence, windowSize);
 			end = sentence.getEnd();
-            for (int i = 0; i < followings.size(); i++) {
+			for (int i = 0; i < followings.size(); i++) {
 				sentence = followings.get(i);
 				end = sentence.getEnd();
-            }
+			}
 
 			for (Citation citation : citations) {
 				// Convert the List<Citation> to List<FeatureStructure>
@@ -252,56 +252,49 @@ public class CitationContextAnnotatorAE extends
 		}
 	}
 
-    private void step2() {
+	private void step2() {
 
-        for (String rawPMIDS : coCitedArticles.getList()) {
-            List<CitationContext> contexts = new ArrayList<>();
+		for (String rawPMIDS : coCitedArticles.getList()) {
+			List<CitationContext> contexts = new ArrayList<>();
 			for (String pmid : rawPMIDS.split(" ")) {
-                contexts.addAll(citation2ctxs.get(pmid));
-            }
+				contexts.addAll(citation2ctxs.get(pmid));
+			}
 
-            Iterator<CitationContext> outer = contexts.iterator();
-            while (outer.hasNext()){
+			for (int i = 0; i < contexts.size() - 1; i++) {
+				CitationContext c1 = contexts.get(i);
 
-                CitationContext c1, c2;
+				for (int j = i + 1; j < contexts.size(); j++) {
+					CitationContext c2 = contexts.get(j);
 
-                c1 = (CitationContext) outer.next();
-                Iterator<CitationContext> inner = outer;
-                while (inner.hasNext()) {
-                    c2 = (CitationContext) inner.next();
+					if (mergeOverlappingContexts(c1, c2)) {
+						contexts.remove(j);
+						j--;
+					}
+				}
+			}
+		}
+	}
 
-                    if (mergeOverlappingContexts(c1, c2)) {
-                        inner.remove();
-                    }
-                }
-            }
-        }
-    }
+	private void step3() {
+		List<CitationContext> contexts = new ArrayList(JCasUtil.select(jCas,
+				CitationContext.class));
 
-    private void step3() {
-        List<CitationContext> contexts = new ArrayList(JCasUtil.select(jCas, CitationContext.class));
+		for (int i = 0; i < contexts.size() - 1; i++) {
+			CitationContext c1 = contexts.get(i);
 
-        Iterator<CitationContext> outer = contexts.iterator();
-        while (outer.hasNext()){
+			for (int j = i + 1; j < contexts.size(); j++) {
+				CitationContext c2 = contexts.get(j);
 
-            CitationContext c1, c2;
+				if (mergeIdenticalContexts(c1, c2)) {
+					contexts.remove(j);
+					j--;
+				}
+			}
+		}
+	}
 
-            c1 = (CitationContext) outer.next();
-            Iterator<CitationContext> inner = outer;
-            logger.info("c1 = " + c1);
-            while (inner.hasNext()) {
-                c2 = (CitationContext) inner.next();
-                logger.info("c2 = " + c2);
-
-                if (mergeIdenticalContexts(c1, c2)) {
-                    logger.info("merge " + c1 + " with " + c2);
-                    inner.remove();
-                }
-            }
-        }
-    }
-
-	private boolean mergeOverlappingContexts(CitationContext c1, CitationContext c2) {
+	private boolean mergeOverlappingContexts(CitationContext c1,
+			CitationContext c2) {
 		boolean ret = false;
 		if (c2.getBegin() < c1.getEnd()) {
 			c1.setEnd(c2.getEnd());
@@ -339,37 +332,40 @@ public class CitationContextAnnotatorAE extends
 		}
 
 		return ret;
-  }
+	}
 
-    private boolean mergeIdenticalContexts(CitationContext c1, CitationContext c2) {
-        if (c1.getBegin() != c2.getBegin() || c1.getEnd() != c2.getEnd())
-            return false;
+	private boolean mergeIdenticalContexts(CitationContext c1,
+			CitationContext c2) {
+		if (c1.getBegin() != c2.getBegin() || c1.getEnd() != c2.getEnd())
+			return false;
 
-        List<FeatureStructure> citationsFS = new ArrayList<>();
-        // copy c1 Citations to citationsFS
-        FSArray c1FSArray = c1.getCitations();
-        for (int idx = 0; idx < c1FSArray.size(); idx++) {
-            citationsFS.add(c1FSArray.get(idx));
-        }
+		List<FeatureStructure> citationsFS = new ArrayList<>();
+		// copy c1 Citations to citationsFS
+		FSArray c1FSArray = c1.getCitations();
+		for (int idx = 0; idx < c1FSArray.size(); idx++) {
+			citationsFS.add(c1FSArray.get(idx));
+		}
 
-        // copy c2 Citations to citationsFS
-        FSArray c2FSArray = c2.getCitations();
-        for (int idx = 0; idx < c2FSArray.size(); idx++) {
-            citationsFS.add(c2FSArray.get(idx));
-        }
+		// copy c2 Citations to citationsFS
+		FSArray c2FSArray = c2.getCitations();
+		for (int idx = 0; idx < c2FSArray.size(); idx++) {
+			citationsFS.add(c2FSArray.get(idx));
+		}
 
-        // copy citationsFS into fsArray
-        FSArray fsArray = new FSArray(jCas, citationsFS.size());
-        fsArray.copyFromArray(citationsFS
-                              .toArray(new FeatureStructure[citationsFS.size()]), 0, 0,
-                              citationsFS.size());
+		// copy citationsFS into fsArray
+		FSArray fsArray = new FSArray(jCas, citationsFS.size());
+		fsArray.copyFromArray(
+				citationsFS.toArray(new FeatureStructure[citationsFS.size()]),
+				0, 0, citationsFS.size());
 
-        // store fsArray
-        c1.setCitations(fsArray);
+		// store fsArray
+		c1.setCitations(fsArray);
 
-        // cleanup unecessary citation context
-        c2.removeFromIndexes();
+		// cleanup unecessary citation context
+		c2.removeFromIndexes();
 
-        return true;
-  }
+		return true;
+	}
+
+
 }
