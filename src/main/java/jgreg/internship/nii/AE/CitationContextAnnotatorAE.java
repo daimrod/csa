@@ -39,7 +39,6 @@ package jgreg.internship.nii.AE;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -47,6 +46,7 @@ import java.util.stream.Collectors;
 import jgreg.internship.nii.RES.StringListRES;
 import jgreg.internship.nii.types.Citation;
 import jgreg.internship.nii.types.CitationContext;
+import jgreg.internship.nii.types.Paragraph;
 import jgreg.internship.nii.types.Sentence;
 
 import org.apache.log4j.Logger;
@@ -124,7 +124,8 @@ public class CitationContextAnnotatorAE extends
 	StringListRES coCitedArticles;
 
 	JCas jCas = null;
-	Map<Sentence, Collection<Citation>> sentence2Citations = null;
+    Map<Sentence, Collection<Citation>> sentence2Citations = null;
+    Map<Sentence, Collection<Paragraph>> sentence2Paragraphs = null;
 
 	Map<String, List<CitationContext>> citation2ctxs;
 
@@ -159,7 +160,9 @@ public class CitationContextAnnotatorAE extends
 	private void step1() {
 		citation2ctxs = new HashMap<>();
 		sentence2Citations = JCasUtil.indexCovered(jCas, Sentence.class,
-				Citation.class);
+                Citation.class);
+        sentence2Paragraphs = JCasUtil.indexCovering(jCas, Sentence.class, Paragraph.class);
+
 		id = 0;
 
 		sentences = JCasUtil.select(jCas, Sentence.class);
@@ -186,6 +189,10 @@ public class CitationContextAnnotatorAE extends
 				continue;
 			}
 
+            // Retrieve the (first) paragraph. It's the first paragraph
+            // because a sentence can only be in one paragraph.
+            Paragraph paragraph = sentence2Paragraphs.get(sentence).iterator().next();
+
 			int begin, end;
 			// Extract the Sentence that belongs to the
 			// CitationContext *before* the Sentence in which the
@@ -195,7 +202,7 @@ public class CitationContextAnnotatorAE extends
 			begin = sentence.getBegin();
 			for (int i = precedings.size() - 1; i > 0; i--) {
 				Sentence s = precedings.get(i);
-				if (sentence2Citations.get(s).isEmpty()) {
+                if (s.getBegin() >= paragraph.getBegin()) {
 					begin = s.getBegin();
 				} else {
 					break;
@@ -209,9 +216,13 @@ public class CitationContextAnnotatorAE extends
 					Sentence.class, sentence, windowSize);
 			end = sentence.getEnd();
 			for (int i = 0; i < followings.size(); i++) {
-				sentence = followings.get(i);
-				end = sentence.getEnd();
-			}
+                Sentence s = followings.get(i);
+                if (s.getEnd() <= paragraph.getEnd()) {
+                    end = s.getEnd();
+                } else {
+                    break;
+                }
+            }
 
 			for (Citation citation : citations) {
 				// Convert the List<Citation> to List<FeatureStructure>
@@ -267,8 +278,9 @@ public class CitationContextAnnotatorAE extends
 				for (int j = i + 1; j < contexts.size(); j++) {
 					CitationContext c2 = contexts.get(j);
 
-					if (mergeOverlappingContexts(c1, c2)) {
-						contexts.remove(j);
+                    if (mergeOverlappingContexts(c1, c2)) {
+                        c1.setCocited(true);
+                        contexts.remove(j);
 						j--;
 					}
 				}
@@ -287,8 +299,7 @@ public class CitationContextAnnotatorAE extends
 				CitationContext c2 = contexts.get(j);
 
 				if (mergeIdenticalContexts(c1, c2)) {
-					c1.setCocited(true);
-					contexts.remove(j);
+                    contexts.remove(j);
 					j--;
 				}
 			}
@@ -338,8 +349,9 @@ public class CitationContextAnnotatorAE extends
 
 	private boolean mergeIdenticalContexts(CitationContext c1,
 			CitationContext c2) {
-		if (c1.getBegin() != c2.getBegin() || c1.getEnd() != c2.getEnd())
-			return false;
+        if (c1.getBegin() != c2.getBegin() || c1.getEnd() != c2.getEnd() || c1.getCocited() || c2.getCocited()) {
+            return false;
+        }
 
 		List<FeatureStructure> citationsFS = new ArrayList<>();
 		// copy c1 Citations to citationsFS
