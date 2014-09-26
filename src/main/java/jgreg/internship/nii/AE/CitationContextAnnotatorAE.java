@@ -143,16 +143,16 @@ public class CitationContextAnnotatorAE extends
 	public void process(JCas aCas) throws AnalysisEngineProcessException {
 		jCas = aCas;
 
-		// 1. find all citation contextes
+		// 1. Annotate all citation contextes.
 		step1();
 
-		// 2. Merge all co-citation contexts when it's possible
+		// 2. Merge all co-citation contexts when it's possible.
 		if (coCitedArticles != null) {
 			step2();
 		}
 
 		// 3. Merge all remaining citation contexts when they occupy
-		// the same place
+		// the same place.
 		step3();
     }
 
@@ -234,6 +234,7 @@ public class CitationContextAnnotatorAE extends
 
 				context.setCitations(fsArray);
 				context.setID(id);
+				context.setCocited(false);
 				id += 1;
 
 				context.addToIndexes(jCas);
@@ -286,6 +287,7 @@ public class CitationContextAnnotatorAE extends
 				CitationContext c2 = contexts.get(j);
 
 				if (mergeIdenticalContexts(c1, c2)) {
+					c1.setCocited(true);
 					contexts.remove(j);
 					j--;
 				}
@@ -366,6 +368,4 @@ public class CitationContextAnnotatorAE extends
 
 		return true;
 	}
-
-
 }
