@@ -147,11 +147,11 @@ public class AnnotatorWF {
 
 		// CoCited Articles
 		ExternalResourceDescription coCitedArticles = null;
-		if (!listCoCitedArticlesFilename.isEmpty()) {
+        if (!listCoCitedArticlesFilename.isEmpty()) {
 			coCitedArticles = ExternalResourceFactory
 					.createExternalResourceDescription(StringListRES.class,
 							listCoCitedArticlesFilename);
-		}
+        }
 
 		// Mapping
 		ExternalResourceDescription mapping = ExternalResourceFactory
