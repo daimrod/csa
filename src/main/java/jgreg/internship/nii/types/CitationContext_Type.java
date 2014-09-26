@@ -1,5 +1,5 @@
 
-/* First created by JCasGen Thu Sep 25 16:41:50 CEST 2014 */
+/* First created by JCasGen Fri Sep 26 17:16:48 CEST 2014 */
 package jgreg.internship.nii.types;
 
 import org.apache.uima.jcas.JCas;
@@ -14,7 +14,7 @@ import org.apache.uima.cas.Feature;
 import org.apache.uima.jcas.tcas.Annotation_Type;
 
 /** Mark a Citation Context
- * Updated by JCasGen Thu Sep 25 16:41:50 CEST 2014
+ * Updated by JCasGen Fri Sep 26 17:16:48 CEST 2014
  * @generated */
 public class CitationContext_Type extends Annotation_Type {
   /** @generated 
@@ -67,6 +67,30 @@ public class CitationContext_Type extends Annotation_Type {
         if (featOkTst && casFeat_ID == null)
       jcas.throwFeatMissing("ID", "jgreg.internship.nii.types.CitationContext");
     ll_cas.ll_setLongValue(addr, casFeatCode_ID, v);}
+    
+  
+ 
+  /** @generated */
+  final Feature casFeat_cocited;
+  /** @generated */
+  final int     casFeatCode_cocited;
+  /** @generated
+   * @param addr low level Feature Structure reference
+   * @return the feature value 
+   */ 
+  public boolean getCocited(int addr) {
+        if (featOkTst && casFeat_cocited == null)
+      jcas.throwFeatMissing("cocited", "jgreg.internship.nii.types.CitationContext");
+    return ll_cas.ll_getBooleanValue(addr, casFeatCode_cocited);
+  }
+  /** @generated
+   * @param addr low level Feature Structure reference
+   * @param v value to set 
+   */    
+  public void setCocited(int addr, boolean v) {
+        if (featOkTst && casFeat_cocited == null)
+      jcas.throwFeatMissing("cocited", "jgreg.internship.nii.types.CitationContext");
+    ll_cas.ll_setBooleanValue(addr, casFeatCode_cocited, v);}
     
   
  
@@ -135,6 +159,10 @@ public class CitationContext_Type extends Annotation_Type {
  
     casFeat_ID = jcas.getRequiredFeatureDE(casType, "ID", "uima.cas.Long", featOkTst);
     casFeatCode_ID  = (null == casFeat_ID) ? JCas.INVALID_FEATURE_CODE : ((FeatureImpl)casFeat_ID).getCode();
+
+ 
+    casFeat_cocited = jcas.getRequiredFeatureDE(casType, "cocited", "uima.cas.Boolean", featOkTst);
+    casFeatCode_cocited  = (null == casFeat_cocited) ? JCas.INVALID_FEATURE_CODE : ((FeatureImpl)casFeat_cocited).getCode();
 
  
     casFeat_Citations = jcas.getRequiredFeatureDE(casType, "Citations", "uima.cas.FSArray", featOkTst);

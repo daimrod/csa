@@ -93,6 +93,11 @@
           <rangeTypeName>uima.cas.Long</rangeTypeName>
         </featureDescription>
         <featureDescription>
+          <name>cocited</name>
+          <description/>
+          <rangeTypeName>uima.cas.Boolean</rangeTypeName>
+        </featureDescription>
+        <featureDescription>
           <name>Citations</name>
           <description>The citations covered by the CitationContext</description>
           <rangeTypeName>uima.cas.FSArray</rangeTypeName>

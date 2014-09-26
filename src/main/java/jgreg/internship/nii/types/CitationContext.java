@@ -1,6 +1,6 @@
 
 
-/* First created by JCasGen Thu Sep 25 16:41:50 CEST 2014 */
+/* First created by JCasGen Fri Sep 26 17:16:48 CEST 2014 */
 package jgreg.internship.nii.types;
 
 import org.apache.uima.jcas.JCas; 
@@ -12,7 +12,7 @@ import org.apache.uima.jcas.tcas.Annotation;
 
 
 /** Mark a Citation Context
- * Updated by JCasGen Thu Sep 25 16:41:50 CEST 2014
+ * Updated by JCasGen Fri Sep 26 17:16:48 CEST 2014
  * XML source: src/main/resources/jgreg/internship/nii/types/CitationSentimentAnalysisTS.xml
  * @generated */
 public class CitationContext extends Annotation {
@@ -97,6 +97,28 @@ public class CitationContext extends Annotation {
     if (CitationContext_Type.featOkTst && ((CitationContext_Type)jcasType).casFeat_ID == null)
       jcasType.jcas.throwFeatMissing("ID", "jgreg.internship.nii.types.CitationContext");
     jcasType.ll_cas.ll_setLongValue(addr, ((CitationContext_Type)jcasType).casFeatCode_ID, v);}    
+   
+    
+  //*--------------*
+  //* Feature: cocited
+
+  /** getter for cocited - gets 
+   * @generated
+   * @return value of the feature 
+   */
+  public boolean getCocited() {
+    if (CitationContext_Type.featOkTst && ((CitationContext_Type)jcasType).casFeat_cocited == null)
+      jcasType.jcas.throwFeatMissing("cocited", "jgreg.internship.nii.types.CitationContext");
+    return jcasType.ll_cas.ll_getBooleanValue(addr, ((CitationContext_Type)jcasType).casFeatCode_cocited);}
+    
+  /** setter for cocited - sets  
+   * @generated
+   * @param v value to set into the feature 
+   */
+  public void setCocited(boolean v) {
+    if (CitationContext_Type.featOkTst && ((CitationContext_Type)jcasType).casFeat_cocited == null)
+      jcasType.jcas.throwFeatMissing("cocited", "jgreg.internship.nii.types.CitationContext");
+    jcasType.ll_cas.ll_setBooleanValue(addr, ((CitationContext_Type)jcasType).casFeatCode_cocited, v);}    
    
     
   //*--------------*
