@@ -276,7 +276,7 @@ public class CitationContextAnnotatorAE extends
 				CitationContext c1 = contexts.get(i);
 
 				for (int j = i + 1; j < contexts.size(); j++) {
-					CitationContext c2 = contexts.get(j);
+                    CitationContext c2 = contexts.get(j);
 
                     if (mergeOverlappingContexts(c1, c2)) {
                         c1.setCocited(true);
@@ -289,7 +289,7 @@ public class CitationContextAnnotatorAE extends
 	}
 
 	private void step3() {
-		List<CitationContext> contexts = new ArrayList(JCasUtil.select(jCas,
+        List<CitationContext> contexts = new ArrayList<>(JCasUtil.select(jCas,
 				CitationContext.class));
 
 		for (int i = 0; i < contexts.size() - 1; i++) {
