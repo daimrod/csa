@@ -119,7 +119,7 @@ public class DirectoryReaderCR extends JCasCollectionReader_ImplBase {
 		inputDirectory = new File(inputDirectoryName);
 
 		if (!inputDirectory.exists()) {
-			logger.error("could not find the directory at `"
+            logger.error("could not find Input Directory at `"
 					+ inputDirectoryName + "'");
 			throw new ResourceInitializationException();
 		}
