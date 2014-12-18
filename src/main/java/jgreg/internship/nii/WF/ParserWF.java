@@ -122,7 +122,7 @@ public class ParserWF {
 						TokenizerModelResourceImpl.class,
 						"file:opennlp/uima/models/en-token.bin");
 
-        // Corpus Articles
+		// Corpus Articles
 		ExternalResourceDescription corpusArticles = ExternalResourceFactory
 				.createExternalResourceDescription(StringListRES.class,
 						listArticlesFilename);
@@ -143,7 +143,7 @@ public class ParserWF {
 							listCoCitedArticlesFilename);
 		}
 
-        /*
+		/*
 		 * Collection Reader
 		 */
 		CollectionReaderDescription reader = CollectionReaderFactory
@@ -168,7 +168,7 @@ public class ParserWF {
 						"jgreg.internship.nii.types.Paragraph");
 
 		// Citation Context Detector
-        AnalysisEngineDescription citationContextAnnotator = AnalysisEngineFactory
+		AnalysisEngineDescription citationContextAnnotator = AnalysisEngineFactory
 				.createEngineDescription(CitationContextAnnotatorAE.class,
 						CitationContextAnnotatorAE.FOCUSED_ARTICLES,
 						focusedArticles,
@@ -186,7 +186,7 @@ public class ParserWF {
 						"opennlp.uima.TokenType",
 						"jgreg.internship.nii.types.Token");
 
-        // XMI Writer
+		// XMI Writer
 		AnalysisEngineDescription xmiWriter = AnalysisEngineFactory
 				.createEngineDescription(XMIWriter.class,
 						XMIWriter.OUTPUT_DIRECTORY, outputDirectory,
@@ -205,9 +205,9 @@ public class ParserWF {
 
 		builder.add(xmlParser);
 		builder.add(sentenceDetector);
-        builder.add(citationContextAnnotator);
+		builder.add(citationContextAnnotator);
 		builder.add(tokenizer);
-        builder.add(xmiWriter);
+		builder.add(xmiWriter);
 		SimplePipeline
 				.runPipeline(reader, builder.createAggregateDescription());
 	}
@@ -254,7 +254,7 @@ public class ParserWF {
 		}
 
 		// Initialize configuration file if any
-        String configFilename = line.getOptionValue("config", "parser.conf");
+		String configFilename = line.getOptionValue("config", "parser.conf");
 		PropertiesConfiguration annotatorConfig = new PropertiesConfiguration(
 				configFilename);
 
