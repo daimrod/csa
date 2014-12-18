@@ -88,11 +88,11 @@ public class PubMedParserAE extends
 	 * @see
 	 * org.apache.uima.analysis_component.JCasAnnotator_ImplBase#process(org
 	 * .apache.uima.jcas.JCas)
-     */
+	 */
 
-    private JCas jCas;
+	private JCas jCas;
 
-    /** The text. */
+	/** The text. */
 	private StringBuilder text;
 
 	/** The citations. */
@@ -111,7 +111,7 @@ public class PubMedParserAE extends
 	private XMLStreamReader xmlr;
 
 	/** The xmlif. */
-    private XMLInputFactory xmlif;
+	private XMLInputFactory xmlif;
 
 	/** The event type. */
 	private int eventType;
@@ -119,13 +119,15 @@ public class PubMedParserAE extends
 	/** The article. */
 	private Article article;
 
-    /** The Read */
-    Reader reader;
+	/** The Read */
+	Reader reader;
 
 	@Override
-    public void process(JCas aJCas) throws AnalysisEngineProcessException {
-        jCas = aJCas;
+	public void process(JCas aJCas) throws AnalysisEngineProcessException {
+		jCas = aJCas;
 
+		// retrieve the originalText read in
+		// jgreg.internship.nii.CR.DirectoryReaderCR
 		JCas originalText;
 		try {
 			originalText = jCas.getView("originalText");
@@ -136,23 +138,28 @@ public class PubMedParserAE extends
 		Filename filename = JCasUtil.selectSingle(originalText, Filename.class);
 		logger.info("Parsing `" + filename.getFilename() + "'...");
 
-		reader = new StringReader(originalText.getDocumentText());
-        parse();
+        reader = new StringReader(originalText.getDocumentText());
+        try {
+            parse();
 
-        jCas.setDocumentText(text.toString());
+            jCas.setDocumentText(text.toString());
 
-        article.setFilename(filename.getFilename());
+            article.setFilename(filename.getFilename());
 
-		ID docId = new ID(jCas);
-		docId.setPMID(article.getPMID());
-		docId.setYear(article.getYear());
-		docId.setTitle(article.getTitle());
-		docId.setBegin(0);
-		docId.setEnd(1);
-		docId.addToIndexes();
-    }
+            ID docId = new ID(jCas);
+            docId.setPMID(article.getPMID());
+            docId.setYear(article.getYear());
+            docId.setTitle(article.getTitle());
+            docId.setBegin(0);
+            docId.setEnd(1);
+            docId.addToIndexes();
+        } catch (Exception ex) {
+            logger.error("Couldn't parse " + filename.getFilename() + "\n" + ex);
+            throw new AnalysisEngineProcessException();
+        }
+	}
 
-    /**
+	/**
 	 * Parse the body of a PubMed's article.
 	 *
 	 * @throws XMLStreamException
@@ -163,68 +170,69 @@ public class PubMedParserAE extends
 			eventType = xmlr.next();
 
 			if (xmlr.hasName() && XMLStreamConstants.END_ELEMENT == eventType
-                && "body".equals(xmlr.getLocalName())) {
+					&& "body".equals(xmlr.getLocalName())) {
 				break;
 			} else if (xmlr.hasName()
-                       && XMLStreamConstants.START_ELEMENT == eventType
-                       && ("p".equals(xmlr.getLocalName())
-                           || "title".equals(xmlr.getLocalName()) || "sec"
-                           .equals(xmlr.getLocalName()))) {
+					&& XMLStreamConstants.START_ELEMENT == eventType
+					&& ("p".equals(xmlr.getLocalName())
+							|| "title".equals(xmlr.getLocalName()) || "sec"
+								.equals(xmlr.getLocalName()))) {
 				addStart(text.length(), xmlr.getLocalName());
 			} else if (xmlr.hasName()
-                       && XMLStreamConstants.END_ELEMENT == eventType
-                       && ("p".equals(xmlr.getLocalName())
-                           || "title".equals(xmlr.getLocalName()) || "sec"
-                           .equals(xmlr.getLocalName()))) {
+					&& XMLStreamConstants.END_ELEMENT == eventType
+					&& ("p".equals(xmlr.getLocalName())
+							|| "title".equals(xmlr.getLocalName()) || "sec"
+								.equals(xmlr.getLocalName()))) {
 				/*
 				 * Add newline when it's necessary
 				 */
 				text.append("\n\n");
 				addEnd(text.length(), xmlr.getLocalName());
 			} else if (xmlr.hasName()
-                       && XMLStreamConstants.START_ELEMENT == eventType
-                       && "xref".equals(xmlr.getLocalName())) {
+					&& XMLStreamConstants.START_ELEMENT == eventType
+					&& "xref".equals(xmlr.getLocalName())) {
 
 				if ("bibr".equals(xmlr.getAttributeValue(null, "ref-type"))
-                    // http://jats.nlm.nih.gov/archiving/tag-library/0.4/n-cyk2.html
-                    // ref-type="bib" should not be used but some articles
-                    // do so anyway. (e.g. 1043602 or 11067871)
-                    || "bib".equals(xmlr
-                                    .getAttributeValue(null, "ref-type"))) {
+				// http://jats.nlm.nih.gov/archiving/tag-library/0.4/n-cyk2.html
+				// ref-type="bib" should not be used but some articles
+				// do so anyway. (e.g. 1043602 or 11067871)
+						|| "bib".equals(xmlr
+								.getAttributeValue(null, "ref-type"))) {
 					// Store bibliographic references
 
 					// WARNING: DONT CHANGE THE ORDER OF THE NEXT
 					// INSTRUCTIONS UNLESS YOU KNOW WHAT YOU ARE DOING
-                    // (operations on xmlr change the cursor position)
-                    // BEGIN
+					// (operations on xmlr change the cursor position)
+					// BEGIN
 					String citationIds = xmlr.getAttributeValue(null, "rid"); // 1
-                    String citationText = getElementsText(); // 2
-                    // END
+					String citationText = getElementsText(); // 2
+					// END
 					logger.debug("Found xref `" + citationIds + "' for `"
-                                 + citationText + "'");
+							+ citationText + "'");
 
 					for (String citationId : citationIds.split(" ")) {
-                        String placeholder = "CITE";
-                        Citation citation = new Citation(jCas);
-                        
-                        citation.setBegin(text.length());
-                        citation.setEnd(citation.getBegin() + placeholder.length());
-                        citation.setRID(citationId);
-                        citation.setText(citationText);
-                        citation.addToIndexes();
-                        
-                        citations.put(citationId, citation);
+						String placeholder = "CITE";
+						Citation citation = new Citation(jCas);
 
-                        addText(placeholder);
+						citation.setBegin(text.length());
+						citation.setEnd(citation.getBegin()
+								+ placeholder.length());
+						citation.setRID(citationId);
+						citation.setText(citationText);
+						citation.addToIndexes();
+
+						citations.put(citationId, citation);
+
+						addText(placeholder);
 					}
 				} else {
 					// Ignore references to anything else (table, fig, ...)
 					skipSubtree();
 				}
 			} else if (xmlr.hasName()
-                       && XMLStreamConstants.START_ELEMENT == eventType
-                       && ("table-wrap".equals(xmlr.getLocalName()) || "fig"
-                           .equals(xmlr.getLocalName()))) {
+					&& XMLStreamConstants.START_ELEMENT == eventType
+					&& ("table-wrap".equals(xmlr.getLocalName()) || "fig"
+							.equals(xmlr.getLocalName()))) {
 				/*
 				 * Ignore table and figure
 				 */
@@ -250,25 +258,25 @@ public class PubMedParserAE extends
 		while (xmlr.hasNext() && continue_) {
 			eventType = xmlr.next();
 			if (XMLStreamConstants.START_ELEMENT == eventType && xmlr.hasName()
-                && "ref".equals(xmlr.getLocalName())) {
+					&& "ref".equals(xmlr.getLocalName())) {
 				String localId = xmlr.getAttributeValue(null, "id");
 				if (citations.containsKey(localId)
-                    && gotoTag(
-                               "pub-id",
-                               (XMLStreamReader xr) -> "pmid".equals(xr
-                                                                     .getAttributeValue(null, "pub-id-type")))) {
+						&& gotoTag(
+								"pub-id",
+								(XMLStreamReader xr) -> "pmid".equals(xr
+										.getAttributeValue(null, "pub-id-type")))) {
 					/**
 					 * Update the citations Replace the local reference by the
 					 * appropriate PMID
 					 */
 					String pmid = StringUtils.trim(xmlr.getElementText());
 					Citation citation = citations.get(localId);
-                    citation.setPMID(pmid);
+					citation.setPMID(pmid);
 
 					logger.debug("Found PMID(" + pmid + ") for `" + localId
-                                 + "'");
+							+ "'");
 				} else {
-                    logger.debug("Could not find PMID for `" + localId + "'");
+					logger.debug("Could not find PMID for `" + localId + "'");
 				}
 			}
 		}
@@ -285,11 +293,11 @@ public class PubMedParserAE extends
 			eventType = xmlr.next();
 
 			if
-                /**
-                 * Extract the PMID from the document
-                 */
-                (article.getPMID().isEmpty()
-                 && xmlr.hasName()
+			/**
+			 * Extract the PMID from the document
+			 */
+			(article.getPMID().isEmpty()
+					&& xmlr.hasName()
 					&& XMLStreamConstants.START_ELEMENT == eventType
 					&& "article-id".equals(xmlr.getLocalName())
 					&& "pmid".equals(xmlr
@@ -332,8 +340,8 @@ public class PubMedParserAE extends
 	/**
 	 * Extract the important stuff from the XML.
 	 */
-	private void parse() {
-        text = new StringBuilder();
+    private void parse() throws XMLStreamException {
+		text = new StringBuilder();
 		citations = new HashMap<>();
 		article = new Article("");
 
@@ -348,30 +356,25 @@ public class PubMedParserAE extends
 		} catch (XMLStreamException ex) {
 			logger.fatal(null, ex);
 		}
-        
-		try {
-			while (xmlr.hasNext()) {
-				eventType = xmlr.next();
-				/**
-				 * Detect whether we are in the body or not.
-				 */
-				if (XMLStreamConstants.START_ELEMENT == eventType
-						&& xmlr.hasName()) {
-					switch (xmlr.getLocalName().toLowerCase()) {
-					case "article-meta":
-						parseMeta();
-						break;
-					case "body":
-						parseBody();
-						break;
-					case "ref-list":
-						parseReferences();
-						break;
-					}
+
+		while (xmlr.hasNext()) {
+			eventType = xmlr.next();
+			/**
+			 * Detect whether we are in the body or not.
+			 */
+			if (XMLStreamConstants.START_ELEMENT == eventType && xmlr.hasName()) {
+				switch (xmlr.getLocalName().toLowerCase()) {
+				case "article-meta":
+					parseMeta();
+					break;
+				case "body":
+					parseBody();
+					break;
+				case "ref-list":
+					parseReferences();
+					break;
 				}
 			}
-		} catch (XMLStreamException ex) {
-			logger.fatal("Could not parse `" + article.getPMID() + "'", ex);
 		}
 	}
 
@@ -510,21 +513,21 @@ public class PubMedParserAE extends
 	private void addEnd(Integer end, String name) {
 		switch (name.toLowerCase()) {
 		case "p":
-            Paragraph paragraph = new Paragraph(jCas);
-            paragraph.setBegin(paragraphs.pop());
-            paragraph.setEnd(end);
-            paragraph.addToIndexes();
+			Paragraph paragraph = new Paragraph(jCas);
+			paragraph.setBegin(paragraphs.pop());
+			paragraph.setEnd(end);
+			paragraph.addToIndexes();
 			break;
 		case "title":
-            Title title = new Title(jCas);
-            title.setBegin(titles.pop());
-            title.setEnd(end);
-            title.addToIndexes();
+			Title title = new Title(jCas);
+			title.setBegin(titles.pop());
+			title.setEnd(end);
+			title.addToIndexes();
 			break;
 		case "sec":
-            Section section = new Section(jCas);
-            section.setBegin(sections.pop());
-            section.setEnd(end);
+			Section section = new Section(jCas);
+			section.setBegin(sections.pop());
+			section.setEnd(end);
 			section.addToIndexes();
 			break;
 		}
