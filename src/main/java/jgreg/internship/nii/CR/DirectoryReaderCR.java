@@ -125,17 +125,19 @@ public class DirectoryReaderCR extends JCasCollectionReader_ImplBase {
 		}
 
         if (corpusArticles != null) {
+            logger.info("Using corpusArticles...");
             files = corpusArticles.getList().stream()
 				.map(filename -> new File(inputDirectory, filename))
 				.filter(file -> {
-                        if (file.exists()) {
+                        if (file.exists() && file.isFile()) {
                             return true;
                         } else {
-                            logger.warn(file.getAbsolutePath() + " doesn't exist");
+                            logger.warn("Couldn't use " + file.getAbsolutePath());
                             return false;
                         }
                     }).collect(Collectors.toList());
         } else if (extensions != null) {
+            logger.info("Looking for files matching " + extensions + "...");
             files = new ArrayList<>(FileUtils.listFiles(inputDirectory, extensions, true));
         } else {
             logger.fatal("You need to set either CORPUS_ARTICLES or EXTENSIONS.");
