@@ -283,7 +283,7 @@ public class ParserWF {
 		Integer windowSize = new Integer(line.getOptionValue("windowSize",
 				annotatorConfig.getString("windowSize")));
 
-		AnnotatorWF.process(inputDirectory, outputDirectory,
+        ParserWF.process(inputDirectory, outputDirectory,
 				listArticlesFilename, listFocusedArticlesFilename,
 				listCoCitedArticlesFilename, mappingFilename, windowSize);
 
