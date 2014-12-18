@@ -135,8 +135,8 @@ public class PubMedParserAE extends
 			throw new AnalysisEngineProcessException(ex);
 		}
 
-		Filename filename = JCasUtil.selectSingle(originalText, Filename.class);
-		logger.info("Parsing `" + filename.getFilename() + "'...");
+        Filename filename = JCasUtil.selectSingle(originalText, Filename.class);
+        logger.info("Parsing `" + filename.getFilename() + "'...");
 
         reader = new StringReader(originalText.getDocumentText());
         try {
@@ -150,6 +150,7 @@ public class PubMedParserAE extends
             docId.setPMID(article.getPMID());
             docId.setYear(article.getYear());
             docId.setTitle(article.getTitle());
+            docId.setFilename(article.getFilename());
             docId.setBegin(0);
             docId.setEnd(1);
             docId.addToIndexes();
@@ -211,12 +212,12 @@ public class PubMedParserAE extends
 							+ citationText + "'");
 
 					for (String citationId : citationIds.split(" ")) {
-                        String placeholder = "CITE ";
+                        String placeholder = "<CITE>";
 						Citation citation = new Citation(jCas);
 
 						citation.setBegin(text.length());
 						citation.setEnd(citation.getBegin()
-								+ placeholder.length());
+                                + placeholder.length() - 1);
 						citation.setRID(citationId);
 						citation.setText(citationText);
 						citation.addToIndexes();
