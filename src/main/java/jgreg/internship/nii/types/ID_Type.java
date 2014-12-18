@@ -1,5 +1,5 @@
 
-/* First created by JCasGen Fri Sep 26 17:16:48 CEST 2014 */
+/* First created by JCasGen Thu Dec 18 14:16:20 CET 2014 */
 package jgreg.internship.nii.types;
 
 import org.apache.uima.jcas.JCas;
@@ -14,12 +14,10 @@ import org.apache.uima.cas.Feature;
 import org.apache.uima.jcas.tcas.Annotation_Type;
 
 /** ID(s) of the document.
- * Updated by JCasGen Fri Sep 26 17:16:48 CEST 2014
+ * Updated by JCasGen Thu Dec 18 14:16:20 CET 2014
  * @generated */
 public class ID_Type extends Annotation_Type {
-  /** @generated 
-   * @return the generator for this type
-   */
+  /** @generated */
   @Override
   protected FSGenerator getFSGenerator() {return fsGenerator;}
   /** @generated */
@@ -50,19 +48,13 @@ public class ID_Type extends Annotation_Type {
   final Feature casFeat_PMID;
   /** @generated */
   final int     casFeatCode_PMID;
-  /** @generated
-   * @param addr low level Feature Structure reference
-   * @return the feature value 
-   */ 
+  /** @generated */ 
   public String getPMID(int addr) {
         if (featOkTst && casFeat_PMID == null)
       jcas.throwFeatMissing("PMID", "jgreg.internship.nii.types.ID");
     return ll_cas.ll_getStringValue(addr, casFeatCode_PMID);
   }
-  /** @generated
-   * @param addr low level Feature Structure reference
-   * @param v value to set 
-   */    
+  /** @generated */    
   public void setPMID(int addr, String v) {
         if (featOkTst && casFeat_PMID == null)
       jcas.throwFeatMissing("PMID", "jgreg.internship.nii.types.ID");
@@ -74,19 +66,13 @@ public class ID_Type extends Annotation_Type {
   final Feature casFeat_year;
   /** @generated */
   final int     casFeatCode_year;
-  /** @generated
-   * @param addr low level Feature Structure reference
-   * @return the feature value 
-   */ 
+  /** @generated */ 
   public long getYear(int addr) {
         if (featOkTst && casFeat_year == null)
       jcas.throwFeatMissing("year", "jgreg.internship.nii.types.ID");
     return ll_cas.ll_getLongValue(addr, casFeatCode_year);
   }
-  /** @generated
-   * @param addr low level Feature Structure reference
-   * @param v value to set 
-   */    
+  /** @generated */    
   public void setYear(int addr, long v) {
         if (featOkTst && casFeat_year == null)
       jcas.throwFeatMissing("year", "jgreg.internship.nii.types.ID");
@@ -98,33 +84,42 @@ public class ID_Type extends Annotation_Type {
   final Feature casFeat_title;
   /** @generated */
   final int     casFeatCode_title;
-  /** @generated
-   * @param addr low level Feature Structure reference
-   * @return the feature value 
-   */ 
+  /** @generated */ 
   public String getTitle(int addr) {
         if (featOkTst && casFeat_title == null)
       jcas.throwFeatMissing("title", "jgreg.internship.nii.types.ID");
     return ll_cas.ll_getStringValue(addr, casFeatCode_title);
   }
-  /** @generated
-   * @param addr low level Feature Structure reference
-   * @param v value to set 
-   */    
+  /** @generated */    
   public void setTitle(int addr, String v) {
         if (featOkTst && casFeat_title == null)
       jcas.throwFeatMissing("title", "jgreg.internship.nii.types.ID");
     ll_cas.ll_setStringValue(addr, casFeatCode_title, v);}
     
   
+ 
+  /** @generated */
+  final Feature casFeat_Filename;
+  /** @generated */
+  final int     casFeatCode_Filename;
+  /** @generated */ 
+  public String getFilename(int addr) {
+        if (featOkTst && casFeat_Filename == null)
+      jcas.throwFeatMissing("Filename", "jgreg.internship.nii.types.ID");
+    return ll_cas.ll_getStringValue(addr, casFeatCode_Filename);
+  }
+  /** @generated */    
+  public void setFilename(int addr, String v) {
+        if (featOkTst && casFeat_Filename == null)
+      jcas.throwFeatMissing("Filename", "jgreg.internship.nii.types.ID");
+    ll_cas.ll_setStringValue(addr, casFeatCode_Filename, v);}
+    
+  
 
 
 
   /** initialize variables to correspond with Cas Type and Features
-	 * @generated
-	 * @param jcas JCas
-	 * @param casType Type 
-	 */
+	* @generated */
   public ID_Type(JCas jcas, Type casType) {
     super(jcas, casType);
     casImpl.getFSClassRegistry().addGeneratorForType((TypeImpl)this.casType, getFSGenerator());
@@ -140,6 +135,10 @@ public class ID_Type extends Annotation_Type {
  
     casFeat_title = jcas.getRequiredFeatureDE(casType, "title", "uima.cas.String", featOkTst);
     casFeatCode_title  = (null == casFeat_title) ? JCas.INVALID_FEATURE_CODE : ((FeatureImpl)casFeat_title).getCode();
+
+ 
+    casFeat_Filename = jcas.getRequiredFeatureDE(casType, "Filename", "uima.cas.String", featOkTst);
+    casFeatCode_Filename  = (null == casFeat_Filename) ? JCas.INVALID_FEATURE_CODE : ((FeatureImpl)casFeat_Filename).getCode();
 
   }
 }

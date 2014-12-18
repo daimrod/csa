@@ -1,6 +1,6 @@
 
 
-/* First created by JCasGen Fri Sep 26 17:16:48 CEST 2014 */
+/* First created by JCasGen Thu Dec 18 14:16:20 CET 2014 */
 package jgreg.internship.nii.types;
 
 import org.apache.uima.jcas.JCas; 
@@ -12,7 +12,7 @@ import org.apache.uima.jcas.tcas.Annotation;
 
 
 /** Mark a Citation Context
- * Updated by JCasGen Fri Sep 26 17:16:48 CEST 2014
+ * Updated by JCasGen Thu Dec 18 14:16:20 CET 2014
  * XML source: src/main/resources/jgreg/internship/nii/types/CitationSentimentAnalysisTS.xml
  * @generated */
 public class CitationContext extends Annotation {
@@ -26,9 +26,7 @@ public class CitationContext extends Annotation {
    */
   @SuppressWarnings ("hiding")
   public final static int type = typeIndexID;
-  /** @generated
-   * @return index of the type  
-   */
+  /** @generated  */
   @Override
   public              int getTypeIndexID() {return typeIndexID;}
  
@@ -37,28 +35,19 @@ public class CitationContext extends Annotation {
   protected CitationContext() {/* intentionally empty block */}
     
   /** Internal - constructor used by generator 
-   * @generated
-   * @param addr low level Feature Structure reference
-   * @param type the type of this Feature Structure 
-   */
+   * @generated */
   public CitationContext(int addr, TOP_Type type) {
     super(addr, type);
     readObject();
   }
   
-  /** @generated
-   * @param jcas JCas to which this Feature Structure belongs 
-   */
+  /** @generated */
   public CitationContext(JCas jcas) {
     super(jcas);
     readObject();   
   } 
 
-  /** @generated
-   * @param jcas JCas to which this Feature Structure belongs
-   * @param begin offset to the begin spot in the SofA
-   * @param end offset to the end spot in the SofA 
-  */  
+  /** @generated */  
   public CitationContext(JCas jcas, int begin, int end) {
     super(jcas);
     setBegin(begin);
@@ -66,13 +55,10 @@ public class CitationContext extends Annotation {
     readObject();
   }   
 
-  /** 
-   * <!-- begin-user-doc -->
-   * Write your own initialization here
-   * <!-- end-user-doc -->
-   *
-   * @generated modifiable 
-   */
+  /** <!-- begin-user-doc -->
+    * Write your own initialization here
+    * <!-- end-user-doc -->
+  @generated modifiable */
   private void readObject() {/*default - does nothing empty block */}
      
  
@@ -81,18 +67,14 @@ public class CitationContext extends Annotation {
   //* Feature: ID
 
   /** getter for ID - gets Context ID
-   * @generated
-   * @return value of the feature 
-   */
+   * @generated */
   public long getID() {
     if (CitationContext_Type.featOkTst && ((CitationContext_Type)jcasType).casFeat_ID == null)
       jcasType.jcas.throwFeatMissing("ID", "jgreg.internship.nii.types.CitationContext");
     return jcasType.ll_cas.ll_getLongValue(addr, ((CitationContext_Type)jcasType).casFeatCode_ID);}
     
   /** setter for ID - sets Context ID 
-   * @generated
-   * @param v value to set into the feature 
-   */
+   * @generated */
   public void setID(long v) {
     if (CitationContext_Type.featOkTst && ((CitationContext_Type)jcasType).casFeat_ID == null)
       jcasType.jcas.throwFeatMissing("ID", "jgreg.internship.nii.types.CitationContext");
@@ -103,18 +85,14 @@ public class CitationContext extends Annotation {
   //* Feature: cocited
 
   /** getter for cocited - gets 
-   * @generated
-   * @return value of the feature 
-   */
+   * @generated */
   public boolean getCocited() {
     if (CitationContext_Type.featOkTst && ((CitationContext_Type)jcasType).casFeat_cocited == null)
       jcasType.jcas.throwFeatMissing("cocited", "jgreg.internship.nii.types.CitationContext");
     return jcasType.ll_cas.ll_getBooleanValue(addr, ((CitationContext_Type)jcasType).casFeatCode_cocited);}
     
   /** setter for cocited - sets  
-   * @generated
-   * @param v value to set into the feature 
-   */
+   * @generated */
   public void setCocited(boolean v) {
     if (CitationContext_Type.featOkTst && ((CitationContext_Type)jcasType).casFeat_cocited == null)
       jcasType.jcas.throwFeatMissing("cocited", "jgreg.internship.nii.types.CitationContext");
@@ -125,28 +103,21 @@ public class CitationContext extends Annotation {
   //* Feature: Citations
 
   /** getter for Citations - gets The citations covered by the CitationContext
-   * @generated
-   * @return value of the feature 
-   */
+   * @generated */
   public FSArray getCitations() {
     if (CitationContext_Type.featOkTst && ((CitationContext_Type)jcasType).casFeat_Citations == null)
       jcasType.jcas.throwFeatMissing("Citations", "jgreg.internship.nii.types.CitationContext");
     return (FSArray)(jcasType.ll_cas.ll_getFSForRef(jcasType.ll_cas.ll_getRefValue(addr, ((CitationContext_Type)jcasType).casFeatCode_Citations)));}
     
   /** setter for Citations - sets The citations covered by the CitationContext 
-   * @generated
-   * @param v value to set into the feature 
-   */
+   * @generated */
   public void setCitations(FSArray v) {
     if (CitationContext_Type.featOkTst && ((CitationContext_Type)jcasType).casFeat_Citations == null)
       jcasType.jcas.throwFeatMissing("Citations", "jgreg.internship.nii.types.CitationContext");
     jcasType.ll_cas.ll_setRefValue(addr, ((CitationContext_Type)jcasType).casFeatCode_Citations, jcasType.ll_cas.ll_getFSRef(v));}    
     
   /** indexed getter for Citations - gets an indexed value - The citations covered by the CitationContext
-   * @generated
-   * @param i index in the array to get
-   * @return value of the element at index i 
-   */
+   * @generated */
   public Citation getCitations(int i) {
     if (CitationContext_Type.featOkTst && ((CitationContext_Type)jcasType).casFeat_Citations == null)
       jcasType.jcas.throwFeatMissing("Citations", "jgreg.internship.nii.types.CitationContext");
@@ -154,10 +125,7 @@ public class CitationContext extends Annotation {
     return (Citation)(jcasType.ll_cas.ll_getFSForRef(jcasType.ll_cas.ll_getRefArrayValue(jcasType.ll_cas.ll_getRefValue(addr, ((CitationContext_Type)jcasType).casFeatCode_Citations), i)));}
 
   /** indexed setter for Citations - sets an indexed value - The citations covered by the CitationContext
-   * @generated
-   * @param i index in the array to set
-   * @param v value to set into the array 
-   */
+   * @generated */
   public void setCitations(int i, Citation v) { 
     if (CitationContext_Type.featOkTst && ((CitationContext_Type)jcasType).casFeat_Citations == null)
       jcasType.jcas.throwFeatMissing("Citations", "jgreg.internship.nii.types.CitationContext");

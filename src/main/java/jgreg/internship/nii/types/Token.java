@@ -1,6 +1,6 @@
 
 
-/* First created by JCasGen Fri Sep 26 17:16:48 CEST 2014 */
+/* First created by JCasGen Thu Dec 18 14:16:20 CET 2014 */
 package jgreg.internship.nii.types;
 
 import org.apache.uima.jcas.JCas; 
@@ -11,7 +11,7 @@ import org.apache.uima.jcas.tcas.Annotation;
 
 
 /** 
- * Updated by JCasGen Fri Sep 26 17:16:48 CEST 2014
+ * Updated by JCasGen Thu Dec 18 14:16:20 CET 2014
  * XML source: src/main/resources/jgreg/internship/nii/types/CitationSentimentAnalysisTS.xml
  * @generated */
 public class Token extends Annotation {
@@ -25,9 +25,7 @@ public class Token extends Annotation {
    */
   @SuppressWarnings ("hiding")
   public final static int type = typeIndexID;
-  /** @generated
-   * @return index of the type  
-   */
+  /** @generated  */
   @Override
   public              int getTypeIndexID() {return typeIndexID;}
  
@@ -36,28 +34,19 @@ public class Token extends Annotation {
   protected Token() {/* intentionally empty block */}
     
   /** Internal - constructor used by generator 
-   * @generated
-   * @param addr low level Feature Structure reference
-   * @param type the type of this Feature Structure 
-   */
+   * @generated */
   public Token(int addr, TOP_Type type) {
     super(addr, type);
     readObject();
   }
   
-  /** @generated
-   * @param jcas JCas to which this Feature Structure belongs 
-   */
+  /** @generated */
   public Token(JCas jcas) {
     super(jcas);
     readObject();   
   } 
 
-  /** @generated
-   * @param jcas JCas to which this Feature Structure belongs
-   * @param begin offset to the begin spot in the SofA
-   * @param end offset to the end spot in the SofA 
-  */  
+  /** @generated */  
   public Token(JCas jcas, int begin, int end) {
     super(jcas);
     setBegin(begin);
@@ -65,13 +54,10 @@ public class Token extends Annotation {
     readObject();
   }   
 
-  /** 
-   * <!-- begin-user-doc -->
-   * Write your own initialization here
-   * <!-- end-user-doc -->
-   *
-   * @generated modifiable 
-   */
+  /** <!-- begin-user-doc -->
+    * Write your own initialization here
+    * <!-- end-user-doc -->
+  @generated modifiable */
   private void readObject() {/*default - does nothing empty block */}
      
  
@@ -80,18 +66,14 @@ public class Token extends Annotation {
   //* Feature: POS
 
   /** getter for POS - gets 
-   * @generated
-   * @return value of the feature 
-   */
+   * @generated */
   public String getPOS() {
     if (Token_Type.featOkTst && ((Token_Type)jcasType).casFeat_POS == null)
       jcasType.jcas.throwFeatMissing("POS", "jgreg.internship.nii.types.Token");
     return jcasType.ll_cas.ll_getStringValue(addr, ((Token_Type)jcasType).casFeatCode_POS);}
     
   /** setter for POS - sets  
-   * @generated
-   * @param v value to set into the feature 
-   */
+   * @generated */
   public void setPOS(String v) {
     if (Token_Type.featOkTst && ((Token_Type)jcasType).casFeat_POS == null)
       jcasType.jcas.throwFeatMissing("POS", "jgreg.internship.nii.types.Token");

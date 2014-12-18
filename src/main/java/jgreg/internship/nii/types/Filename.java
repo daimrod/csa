@@ -1,6 +1,6 @@
 
 
-/* First created by JCasGen Fri Sep 26 17:16:48 CEST 2014 */
+/* First created by JCasGen Thu Dec 18 14:16:20 CET 2014 */
 package jgreg.internship.nii.types;
 
 import org.apache.uima.jcas.JCas; 
@@ -11,7 +11,7 @@ import org.apache.uima.jcas.tcas.Annotation;
 
 
 /** filename of the document.
- * Updated by JCasGen Fri Sep 26 17:16:48 CEST 2014
+ * Updated by JCasGen Thu Dec 18 14:16:20 CET 2014
  * XML source: src/main/resources/jgreg/internship/nii/types/CitationSentimentAnalysisTS.xml
  * @generated */
 public class Filename extends Annotation {
@@ -25,9 +25,7 @@ public class Filename extends Annotation {
    */
   @SuppressWarnings ("hiding")
   public final static int type = typeIndexID;
-  /** @generated
-   * @return index of the type  
-   */
+  /** @generated  */
   @Override
   public              int getTypeIndexID() {return typeIndexID;}
  
@@ -36,28 +34,19 @@ public class Filename extends Annotation {
   protected Filename() {/* intentionally empty block */}
     
   /** Internal - constructor used by generator 
-   * @generated
-   * @param addr low level Feature Structure reference
-   * @param type the type of this Feature Structure 
-   */
+   * @generated */
   public Filename(int addr, TOP_Type type) {
     super(addr, type);
     readObject();
   }
   
-  /** @generated
-   * @param jcas JCas to which this Feature Structure belongs 
-   */
+  /** @generated */
   public Filename(JCas jcas) {
     super(jcas);
     readObject();   
   } 
 
-  /** @generated
-   * @param jcas JCas to which this Feature Structure belongs
-   * @param begin offset to the begin spot in the SofA
-   * @param end offset to the end spot in the SofA 
-  */  
+  /** @generated */  
   public Filename(JCas jcas, int begin, int end) {
     super(jcas);
     setBegin(begin);
@@ -65,13 +54,10 @@ public class Filename extends Annotation {
     readObject();
   }   
 
-  /** 
-   * <!-- begin-user-doc -->
-   * Write your own initialization here
-   * <!-- end-user-doc -->
-   *
-   * @generated modifiable 
-   */
+  /** <!-- begin-user-doc -->
+    * Write your own initialization here
+    * <!-- end-user-doc -->
+  @generated modifiable */
   private void readObject() {/*default - does nothing empty block */}
      
  
@@ -80,18 +66,14 @@ public class Filename extends Annotation {
   //* Feature: Filename
 
   /** getter for Filename - gets The Filename of the document.
-   * @generated
-   * @return value of the feature 
-   */
+   * @generated */
   public String getFilename() {
     if (Filename_Type.featOkTst && ((Filename_Type)jcasType).casFeat_Filename == null)
       jcasType.jcas.throwFeatMissing("Filename", "jgreg.internship.nii.types.Filename");
     return jcasType.ll_cas.ll_getStringValue(addr, ((Filename_Type)jcasType).casFeatCode_Filename);}
     
   /** setter for Filename - sets The Filename of the document. 
-   * @generated
-   * @param v value to set into the feature 
-   */
+   * @generated */
   public void setFilename(String v) {
     if (Filename_Type.featOkTst && ((Filename_Type)jcasType).casFeat_Filename == null)
       jcasType.jcas.throwFeatMissing("Filename", "jgreg.internship.nii.types.Filename");

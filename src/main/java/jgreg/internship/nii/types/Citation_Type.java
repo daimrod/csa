@@ -1,5 +1,5 @@
 
-/* First created by JCasGen Fri Sep 26 17:16:48 CEST 2014 */
+/* First created by JCasGen Thu Dec 18 14:16:20 CET 2014 */
 package jgreg.internship.nii.types;
 
 import org.apache.uima.jcas.JCas;
@@ -14,12 +14,10 @@ import org.apache.uima.cas.Feature;
 import org.apache.uima.jcas.tcas.Annotation_Type;
 
 /** A citation.
- * Updated by JCasGen Fri Sep 26 17:16:48 CEST 2014
+ * Updated by JCasGen Thu Dec 18 14:16:20 CET 2014
  * @generated */
 public class Citation_Type extends Annotation_Type {
-  /** @generated 
-   * @return the generator for this type
-   */
+  /** @generated */
   @Override
   protected FSGenerator getFSGenerator() {return fsGenerator;}
   /** @generated */
@@ -50,19 +48,13 @@ public class Citation_Type extends Annotation_Type {
   final Feature casFeat_PMID;
   /** @generated */
   final int     casFeatCode_PMID;
-  /** @generated
-   * @param addr low level Feature Structure reference
-   * @return the feature value 
-   */ 
+  /** @generated */ 
   public String getPMID(int addr) {
         if (featOkTst && casFeat_PMID == null)
       jcas.throwFeatMissing("PMID", "jgreg.internship.nii.types.Citation");
     return ll_cas.ll_getStringValue(addr, casFeatCode_PMID);
   }
-  /** @generated
-   * @param addr low level Feature Structure reference
-   * @param v value to set 
-   */    
+  /** @generated */    
   public void setPMID(int addr, String v) {
         if (featOkTst && casFeat_PMID == null)
       jcas.throwFeatMissing("PMID", "jgreg.internship.nii.types.Citation");
@@ -74,19 +66,13 @@ public class Citation_Type extends Annotation_Type {
   final Feature casFeat_RID;
   /** @generated */
   final int     casFeatCode_RID;
-  /** @generated
-   * @param addr low level Feature Structure reference
-   * @return the feature value 
-   */ 
+  /** @generated */ 
   public String getRID(int addr) {
         if (featOkTst && casFeat_RID == null)
       jcas.throwFeatMissing("RID", "jgreg.internship.nii.types.Citation");
     return ll_cas.ll_getStringValue(addr, casFeatCode_RID);
   }
-  /** @generated
-   * @param addr low level Feature Structure reference
-   * @param v value to set 
-   */    
+  /** @generated */    
   public void setRID(int addr, String v) {
         if (featOkTst && casFeat_RID == null)
       jcas.throwFeatMissing("RID", "jgreg.internship.nii.types.Citation");
@@ -98,19 +84,13 @@ public class Citation_Type extends Annotation_Type {
   final Feature casFeat_text;
   /** @generated */
   final int     casFeatCode_text;
-  /** @generated
-   * @param addr low level Feature Structure reference
-   * @return the feature value 
-   */ 
+  /** @generated */ 
   public String getText(int addr) {
         if (featOkTst && casFeat_text == null)
       jcas.throwFeatMissing("text", "jgreg.internship.nii.types.Citation");
     return ll_cas.ll_getStringValue(addr, casFeatCode_text);
   }
-  /** @generated
-   * @param addr low level Feature Structure reference
-   * @param v value to set 
-   */    
+  /** @generated */    
   public void setText(int addr, String v) {
         if (featOkTst && casFeat_text == null)
       jcas.throwFeatMissing("text", "jgreg.internship.nii.types.Citation");
@@ -121,10 +101,7 @@ public class Citation_Type extends Annotation_Type {
 
 
   /** initialize variables to correspond with Cas Type and Features
-	 * @generated
-	 * @param jcas JCas
-	 * @param casType Type 
-	 */
+	* @generated */
   public Citation_Type(JCas jcas, Type casType) {
     super(jcas, casType);
     casImpl.getFSClassRegistry().addGeneratorForType((TypeImpl)this.casType, getFSGenerator());

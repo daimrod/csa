@@ -1,5 +1,5 @@
 
-/* First created by JCasGen Fri Sep 26 17:16:48 CEST 2014 */
+/* First created by JCasGen Thu Dec 18 14:16:20 CET 2014 */
 package jgreg.internship.nii.types;
 
 import org.apache.uima.jcas.JCas;
@@ -14,12 +14,10 @@ import org.apache.uima.cas.Feature;
 import org.apache.uima.jcas.tcas.Annotation_Type;
 
 /** filename of the document.
- * Updated by JCasGen Fri Sep 26 17:16:48 CEST 2014
+ * Updated by JCasGen Thu Dec 18 14:16:20 CET 2014
  * @generated */
 public class Filename_Type extends Annotation_Type {
-  /** @generated 
-   * @return the generator for this type
-   */
+  /** @generated */
   @Override
   protected FSGenerator getFSGenerator() {return fsGenerator;}
   /** @generated */
@@ -50,19 +48,13 @@ public class Filename_Type extends Annotation_Type {
   final Feature casFeat_Filename;
   /** @generated */
   final int     casFeatCode_Filename;
-  /** @generated
-   * @param addr low level Feature Structure reference
-   * @return the feature value 
-   */ 
+  /** @generated */ 
   public String getFilename(int addr) {
         if (featOkTst && casFeat_Filename == null)
       jcas.throwFeatMissing("Filename", "jgreg.internship.nii.types.Filename");
     return ll_cas.ll_getStringValue(addr, casFeatCode_Filename);
   }
-  /** @generated
-   * @param addr low level Feature Structure reference
-   * @param v value to set 
-   */    
+  /** @generated */    
   public void setFilename(int addr, String v) {
         if (featOkTst && casFeat_Filename == null)
       jcas.throwFeatMissing("Filename", "jgreg.internship.nii.types.Filename");
@@ -73,10 +65,7 @@ public class Filename_Type extends Annotation_Type {
 
 
   /** initialize variables to correspond with Cas Type and Features
-	 * @generated
-	 * @param jcas JCas
-	 * @param casType Type 
-	 */
+	* @generated */
   public Filename_Type(JCas jcas, Type casType) {
     super(jcas, casType);
     casImpl.getFSClassRegistry().addGeneratorForType((TypeImpl)this.casType, getFSGenerator());

@@ -1,6 +1,6 @@
 
 
-/* First created by JCasGen Fri Sep 26 17:16:48 CEST 2014 */
+/* First created by JCasGen Thu Dec 18 14:16:20 CET 2014 */
 package jgreg.internship.nii.types;
 
 import org.apache.uima.jcas.JCas; 
@@ -11,7 +11,7 @@ import org.apache.uima.jcas.tcas.Annotation;
 
 
 /** A citation.
- * Updated by JCasGen Fri Sep 26 17:16:48 CEST 2014
+ * Updated by JCasGen Thu Dec 18 14:16:20 CET 2014
  * XML source: src/main/resources/jgreg/internship/nii/types/CitationSentimentAnalysisTS.xml
  * @generated */
 public class Citation extends Annotation {
@@ -25,9 +25,7 @@ public class Citation extends Annotation {
    */
   @SuppressWarnings ("hiding")
   public final static int type = typeIndexID;
-  /** @generated
-   * @return index of the type  
-   */
+  /** @generated  */
   @Override
   public              int getTypeIndexID() {return typeIndexID;}
  
@@ -36,28 +34,19 @@ public class Citation extends Annotation {
   protected Citation() {/* intentionally empty block */}
     
   /** Internal - constructor used by generator 
-   * @generated
-   * @param addr low level Feature Structure reference
-   * @param type the type of this Feature Structure 
-   */
+   * @generated */
   public Citation(int addr, TOP_Type type) {
     super(addr, type);
     readObject();
   }
   
-  /** @generated
-   * @param jcas JCas to which this Feature Structure belongs 
-   */
+  /** @generated */
   public Citation(JCas jcas) {
     super(jcas);
     readObject();   
   } 
 
-  /** @generated
-   * @param jcas JCas to which this Feature Structure belongs
-   * @param begin offset to the begin spot in the SofA
-   * @param end offset to the end spot in the SofA 
-  */  
+  /** @generated */  
   public Citation(JCas jcas, int begin, int end) {
     super(jcas);
     setBegin(begin);
@@ -65,13 +54,10 @@ public class Citation extends Annotation {
     readObject();
   }   
 
-  /** 
-   * <!-- begin-user-doc -->
-   * Write your own initialization here
-   * <!-- end-user-doc -->
-   *
-   * @generated modifiable 
-   */
+  /** <!-- begin-user-doc -->
+    * Write your own initialization here
+    * <!-- end-user-doc -->
+  @generated modifiable */
   private void readObject() {/*default - does nothing empty block */}
      
  
@@ -80,18 +66,14 @@ public class Citation extends Annotation {
   //* Feature: PMID
 
   /** getter for PMID - gets 
-   * @generated
-   * @return value of the feature 
-   */
+   * @generated */
   public String getPMID() {
     if (Citation_Type.featOkTst && ((Citation_Type)jcasType).casFeat_PMID == null)
       jcasType.jcas.throwFeatMissing("PMID", "jgreg.internship.nii.types.Citation");
     return jcasType.ll_cas.ll_getStringValue(addr, ((Citation_Type)jcasType).casFeatCode_PMID);}
     
   /** setter for PMID - sets  
-   * @generated
-   * @param v value to set into the feature 
-   */
+   * @generated */
   public void setPMID(String v) {
     if (Citation_Type.featOkTst && ((Citation_Type)jcasType).casFeat_PMID == null)
       jcasType.jcas.throwFeatMissing("PMID", "jgreg.internship.nii.types.Citation");
@@ -102,18 +84,14 @@ public class Citation extends Annotation {
   //* Feature: RID
 
   /** getter for RID - gets 
-   * @generated
-   * @return value of the feature 
-   */
+   * @generated */
   public String getRID() {
     if (Citation_Type.featOkTst && ((Citation_Type)jcasType).casFeat_RID == null)
       jcasType.jcas.throwFeatMissing("RID", "jgreg.internship.nii.types.Citation");
     return jcasType.ll_cas.ll_getStringValue(addr, ((Citation_Type)jcasType).casFeatCode_RID);}
     
   /** setter for RID - sets  
-   * @generated
-   * @param v value to set into the feature 
-   */
+   * @generated */
   public void setRID(String v) {
     if (Citation_Type.featOkTst && ((Citation_Type)jcasType).casFeat_RID == null)
       jcasType.jcas.throwFeatMissing("RID", "jgreg.internship.nii.types.Citation");
@@ -124,18 +102,14 @@ public class Citation extends Annotation {
   //* Feature: text
 
   /** getter for text - gets 
-   * @generated
-   * @return value of the feature 
-   */
+   * @generated */
   public String getText() {
     if (Citation_Type.featOkTst && ((Citation_Type)jcasType).casFeat_text == null)
       jcasType.jcas.throwFeatMissing("text", "jgreg.internship.nii.types.Citation");
     return jcasType.ll_cas.ll_getStringValue(addr, ((Citation_Type)jcasType).casFeatCode_text);}
     
   /** setter for text - sets  
-   * @generated
-   * @param v value to set into the feature 
-   */
+   * @generated */
   public void setText(String v) {
     if (Citation_Type.featOkTst && ((Citation_Type)jcasType).casFeat_text == null)
       jcasType.jcas.throwFeatMissing("text", "jgreg.internship.nii.types.Citation");

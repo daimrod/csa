@@ -1,6 +1,6 @@
 
 
-/* First created by JCasGen Fri Sep 26 17:16:48 CEST 2014 */
+/* First created by JCasGen Thu Dec 18 14:16:20 CET 2014 */
 package jgreg.internship.nii.types;
 
 import org.apache.uima.jcas.JCas; 
@@ -11,7 +11,7 @@ import org.apache.uima.jcas.tcas.Annotation;
 
 
 /** ID(s) of the document.
- * Updated by JCasGen Fri Sep 26 17:16:48 CEST 2014
+ * Updated by JCasGen Thu Dec 18 14:16:20 CET 2014
  * XML source: src/main/resources/jgreg/internship/nii/types/CitationSentimentAnalysisTS.xml
  * @generated */
 public class ID extends Annotation {
@@ -25,9 +25,7 @@ public class ID extends Annotation {
    */
   @SuppressWarnings ("hiding")
   public final static int type = typeIndexID;
-  /** @generated
-   * @return index of the type  
-   */
+  /** @generated  */
   @Override
   public              int getTypeIndexID() {return typeIndexID;}
  
@@ -36,28 +34,19 @@ public class ID extends Annotation {
   protected ID() {/* intentionally empty block */}
     
   /** Internal - constructor used by generator 
-   * @generated
-   * @param addr low level Feature Structure reference
-   * @param type the type of this Feature Structure 
-   */
+   * @generated */
   public ID(int addr, TOP_Type type) {
     super(addr, type);
     readObject();
   }
   
-  /** @generated
-   * @param jcas JCas to which this Feature Structure belongs 
-   */
+  /** @generated */
   public ID(JCas jcas) {
     super(jcas);
     readObject();   
   } 
 
-  /** @generated
-   * @param jcas JCas to which this Feature Structure belongs
-   * @param begin offset to the begin spot in the SofA
-   * @param end offset to the end spot in the SofA 
-  */  
+  /** @generated */  
   public ID(JCas jcas, int begin, int end) {
     super(jcas);
     setBegin(begin);
@@ -65,13 +54,10 @@ public class ID extends Annotation {
     readObject();
   }   
 
-  /** 
-   * <!-- begin-user-doc -->
-   * Write your own initialization here
-   * <!-- end-user-doc -->
-   *
-   * @generated modifiable 
-   */
+  /** <!-- begin-user-doc -->
+    * Write your own initialization here
+    * <!-- end-user-doc -->
+  @generated modifiable */
   private void readObject() {/*default - does nothing empty block */}
      
  
@@ -80,18 +66,14 @@ public class ID extends Annotation {
   //* Feature: PMID
 
   /** getter for PMID - gets The PMID of the document.
-   * @generated
-   * @return value of the feature 
-   */
+   * @generated */
   public String getPMID() {
     if (ID_Type.featOkTst && ((ID_Type)jcasType).casFeat_PMID == null)
       jcasType.jcas.throwFeatMissing("PMID", "jgreg.internship.nii.types.ID");
     return jcasType.ll_cas.ll_getStringValue(addr, ((ID_Type)jcasType).casFeatCode_PMID);}
     
   /** setter for PMID - sets The PMID of the document. 
-   * @generated
-   * @param v value to set into the feature 
-   */
+   * @generated */
   public void setPMID(String v) {
     if (ID_Type.featOkTst && ((ID_Type)jcasType).casFeat_PMID == null)
       jcasType.jcas.throwFeatMissing("PMID", "jgreg.internship.nii.types.ID");
@@ -102,18 +84,14 @@ public class ID extends Annotation {
   //* Feature: year
 
   /** getter for year - gets The Year of the document.
-   * @generated
-   * @return value of the feature 
-   */
+   * @generated */
   public long getYear() {
     if (ID_Type.featOkTst && ((ID_Type)jcasType).casFeat_year == null)
       jcasType.jcas.throwFeatMissing("year", "jgreg.internship.nii.types.ID");
     return jcasType.ll_cas.ll_getLongValue(addr, ((ID_Type)jcasType).casFeatCode_year);}
     
   /** setter for year - sets The Year of the document. 
-   * @generated
-   * @param v value to set into the feature 
-   */
+   * @generated */
   public void setYear(long v) {
     if (ID_Type.featOkTst && ((ID_Type)jcasType).casFeat_year == null)
       jcasType.jcas.throwFeatMissing("year", "jgreg.internship.nii.types.ID");
@@ -124,22 +102,36 @@ public class ID extends Annotation {
   //* Feature: title
 
   /** getter for title - gets The title of the document.
-   * @generated
-   * @return value of the feature 
-   */
+   * @generated */
   public String getTitle() {
     if (ID_Type.featOkTst && ((ID_Type)jcasType).casFeat_title == null)
       jcasType.jcas.throwFeatMissing("title", "jgreg.internship.nii.types.ID");
     return jcasType.ll_cas.ll_getStringValue(addr, ((ID_Type)jcasType).casFeatCode_title);}
     
   /** setter for title - sets The title of the document. 
-   * @generated
-   * @param v value to set into the feature 
-   */
+   * @generated */
   public void setTitle(String v) {
     if (ID_Type.featOkTst && ((ID_Type)jcasType).casFeat_title == null)
       jcasType.jcas.throwFeatMissing("title", "jgreg.internship.nii.types.ID");
     jcasType.ll_cas.ll_setStringValue(addr, ((ID_Type)jcasType).casFeatCode_title, v);}    
+   
+    
+  //*--------------*
+  //* Feature: Filename
+
+  /** getter for Filename - gets The Filename of the document.
+   * @generated */
+  public String getFilename() {
+    if (ID_Type.featOkTst && ((ID_Type)jcasType).casFeat_Filename == null)
+      jcasType.jcas.throwFeatMissing("Filename", "jgreg.internship.nii.types.ID");
+    return jcasType.ll_cas.ll_getStringValue(addr, ((ID_Type)jcasType).casFeatCode_Filename);}
+    
+  /** setter for Filename - sets The Filename of the document. 
+   * @generated */
+  public void setFilename(String v) {
+    if (ID_Type.featOkTst && ((ID_Type)jcasType).casFeat_Filename == null)
+      jcasType.jcas.throwFeatMissing("Filename", "jgreg.internship.nii.types.ID");
+    jcasType.ll_cas.ll_setStringValue(addr, ((ID_Type)jcasType).casFeatCode_Filename, v);}    
   }
 
     

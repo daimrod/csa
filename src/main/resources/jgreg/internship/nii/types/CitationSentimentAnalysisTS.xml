@@ -137,6 +137,11 @@
         <description>The title of the document.</description>
         <rangeTypeName>uima.cas.String</rangeTypeName>
       </featureDescription>
+      <featureDescription>
+        <name>Filename</name>
+        <description>The Filename of the document.</description>
+        <rangeTypeName>uima.cas.String</rangeTypeName>
+      </featureDescription>
     </typeDescription>
     
     <typeDescription>

@@ -1,6 +1,6 @@
 
 
-/* First created by JCasGen Fri Sep 26 17:16:48 CEST 2014 */
+/* First created by JCasGen Thu Dec 18 14:16:20 CET 2014 */
 package jgreg.internship.nii.types;
 
 import org.apache.uima.jcas.JCas; 
@@ -11,7 +11,7 @@ import org.apache.uima.jcas.tcas.Annotation;
 
 
 /** 
- * Updated by JCasGen Fri Sep 26 17:16:48 CEST 2014
+ * Updated by JCasGen Thu Dec 18 14:16:20 CET 2014
  * XML source: src/main/resources/jgreg/internship/nii/types/CitationSentimentAnalysisTS.xml
  * @generated */
 public class Sentiment extends Annotation {
@@ -25,9 +25,7 @@ public class Sentiment extends Annotation {
    */
   @SuppressWarnings ("hiding")
   public final static int type = typeIndexID;
-  /** @generated
-   * @return index of the type  
-   */
+  /** @generated  */
   @Override
   public              int getTypeIndexID() {return typeIndexID;}
  
@@ -36,28 +34,19 @@ public class Sentiment extends Annotation {
   protected Sentiment() {/* intentionally empty block */}
     
   /** Internal - constructor used by generator 
-   * @generated
-   * @param addr low level Feature Structure reference
-   * @param type the type of this Feature Structure 
-   */
+   * @generated */
   public Sentiment(int addr, TOP_Type type) {
     super(addr, type);
     readObject();
   }
   
-  /** @generated
-   * @param jcas JCas to which this Feature Structure belongs 
-   */
+  /** @generated */
   public Sentiment(JCas jcas) {
     super(jcas);
     readObject();   
   } 
 
-  /** @generated
-   * @param jcas JCas to which this Feature Structure belongs
-   * @param begin offset to the begin spot in the SofA
-   * @param end offset to the end spot in the SofA 
-  */  
+  /** @generated */  
   public Sentiment(JCas jcas, int begin, int end) {
     super(jcas);
     setBegin(begin);
@@ -65,13 +54,10 @@ public class Sentiment extends Annotation {
     readObject();
   }   
 
-  /** 
-   * <!-- begin-user-doc -->
-   * Write your own initialization here
-   * <!-- end-user-doc -->
-   *
-   * @generated modifiable 
-   */
+  /** <!-- begin-user-doc -->
+    * Write your own initialization here
+    * <!-- end-user-doc -->
+  @generated modifiable */
   private void readObject() {/*default - does nothing empty block */}
      
  
@@ -80,18 +66,14 @@ public class Sentiment extends Annotation {
   //* Feature: score
 
   /** getter for score - gets 
-   * @generated
-   * @return value of the feature 
-   */
+   * @generated */
   public long getScore() {
     if (Sentiment_Type.featOkTst && ((Sentiment_Type)jcasType).casFeat_score == null)
       jcasType.jcas.throwFeatMissing("score", "jgreg.internship.nii.types.Sentiment");
     return jcasType.ll_cas.ll_getLongValue(addr, ((Sentiment_Type)jcasType).casFeatCode_score);}
     
   /** setter for score - sets  
-   * @generated
-   * @param v value to set into the feature 
-   */
+   * @generated */
   public void setScore(long v) {
     if (Sentiment_Type.featOkTst && ((Sentiment_Type)jcasType).casFeat_score == null)
       jcasType.jcas.throwFeatMissing("score", "jgreg.internship.nii.types.Sentiment");
@@ -102,18 +84,14 @@ public class Sentiment extends Annotation {
   //* Feature: name
 
   /** getter for name - gets 
-   * @generated
-   * @return value of the feature 
-   */
+   * @generated */
   public String getName() {
     if (Sentiment_Type.featOkTst && ((Sentiment_Type)jcasType).casFeat_name == null)
       jcasType.jcas.throwFeatMissing("name", "jgreg.internship.nii.types.Sentiment");
     return jcasType.ll_cas.ll_getStringValue(addr, ((Sentiment_Type)jcasType).casFeatCode_name);}
     
   /** setter for name - sets  
-   * @generated
-   * @param v value to set into the feature 
-   */
+   * @generated */
   public void setName(String v) {
     if (Sentiment_Type.featOkTst && ((Sentiment_Type)jcasType).casFeat_name == null)
       jcasType.jcas.throwFeatMissing("name", "jgreg.internship.nii.types.Sentiment");
@@ -124,18 +102,14 @@ public class Sentiment extends Annotation {
   //* Feature: correct
 
   /** getter for correct - gets 
-   * @generated
-   * @return value of the feature 
-   */
+   * @generated */
   public String getCorrect() {
     if (Sentiment_Type.featOkTst && ((Sentiment_Type)jcasType).casFeat_correct == null)
       jcasType.jcas.throwFeatMissing("correct", "jgreg.internship.nii.types.Sentiment");
     return jcasType.ll_cas.ll_getStringValue(addr, ((Sentiment_Type)jcasType).casFeatCode_correct);}
     
   /** setter for correct - sets  
-   * @generated
-   * @param v value to set into the feature 
-   */
+   * @generated */
   public void setCorrect(String v) {
     if (Sentiment_Type.featOkTst && ((Sentiment_Type)jcasType).casFeat_correct == null)
       jcasType.jcas.throwFeatMissing("correct", "jgreg.internship.nii.types.Sentiment");
@@ -146,18 +120,14 @@ public class Sentiment extends Annotation {
   //* Feature: valid
 
   /** getter for valid - gets 
-   * @generated
-   * @return value of the feature 
-   */
+   * @generated */
   public String getValid() {
     if (Sentiment_Type.featOkTst && ((Sentiment_Type)jcasType).casFeat_valid == null)
       jcasType.jcas.throwFeatMissing("valid", "jgreg.internship.nii.types.Sentiment");
     return jcasType.ll_cas.ll_getStringValue(addr, ((Sentiment_Type)jcasType).casFeatCode_valid);}
     
   /** setter for valid - sets  
-   * @generated
-   * @param v value to set into the feature 
-   */
+   * @generated */
   public void setValid(String v) {
     if (Sentiment_Type.featOkTst && ((Sentiment_Type)jcasType).casFeat_valid == null)
       jcasType.jcas.throwFeatMissing("valid", "jgreg.internship.nii.types.Sentiment");
@@ -168,18 +138,14 @@ public class Sentiment extends Annotation {
   //* Feature: context
 
   /** getter for context - gets 
-   * @generated
-   * @return value of the feature 
-   */
+   * @generated */
   public CitationContext getContext() {
     if (Sentiment_Type.featOkTst && ((Sentiment_Type)jcasType).casFeat_context == null)
       jcasType.jcas.throwFeatMissing("context", "jgreg.internship.nii.types.Sentiment");
     return (CitationContext)(jcasType.ll_cas.ll_getFSForRef(jcasType.ll_cas.ll_getRefValue(addr, ((Sentiment_Type)jcasType).casFeatCode_context)));}
     
   /** setter for context - sets  
-   * @generated
-   * @param v value to set into the feature 
-   */
+   * @generated */
   public void setContext(CitationContext v) {
     if (Sentiment_Type.featOkTst && ((Sentiment_Type)jcasType).casFeat_context == null)
       jcasType.jcas.throwFeatMissing("context", "jgreg.internship.nii.types.Sentiment");
