@@ -209,7 +209,7 @@ public class ParserWF {
 		builder.add(tokenizer);
 		builder.add(xmiWriter);
 		SimplePipeline
-				.runPipeline(reader, builder.createAggregateDescription());
+					.runPipeline(reader, builder.createAggregateDescription());
 	}
 
 	/**
