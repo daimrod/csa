@@ -211,7 +211,7 @@ public class PubMedParserAE extends
 							+ citationText + "'");
 
 					for (String citationId : citationIds.split(" ")) {
-						String placeholder = "CITE";
+                        String placeholder = "CITE ";
 						Citation citation = new Citation(jCas);
 
 						citation.setBegin(text.length());
