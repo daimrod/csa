@@ -153,7 +153,7 @@ public class DirectoryReaderCR extends JCasCollectionReader_ImplBase {
 	 * .apache.uima.jcas.JCas)
 	 */
 	@Override
-	public void getNext(JCas jCas) throws IOException, CollectionException,
+    public void getNext(JCas jCas) throws CollectionException,
 			FileNotFoundException {
 		docIndex++;
 
@@ -161,14 +161,14 @@ public class DirectoryReaderCR extends JCasCollectionReader_ImplBase {
 		logger.info("Reading[" + docIndex + "/" + files.size() + " ] `"
 				+ file.getAbsolutePath() + "'...");
 		try {
-			JCas originalText = ViewCreatorAnnotator.createViewSafely(jCas,
+            JCas originalText = ViewCreatorAnnotator.createViewSafely(jCas,
 					"originalText");
 			originalText.setDocumentText(FileUtils.readFileToString(file));
 			Filename filename = new Filename(originalText);
 			filename.setFilename(file.getAbsolutePath());
 			filename.addToIndexes();
-		} catch (Exception ex) {
-			throw new CollectionException(ex);
+        } catch (Exception ex) {
+            throw new CollectionException(ex);
 		}
 	}
 
