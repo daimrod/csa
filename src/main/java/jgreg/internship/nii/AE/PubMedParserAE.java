@@ -215,7 +215,7 @@ public class PubMedParserAE extends
                         String placeholder = "<CITE>";
 						Citation citation = new Citation(jCas);
 
-						citation.setBegin(text.length());
+                        citation.setBegin(text.length() + 1);
 						citation.setEnd(citation.getBegin()
                                 + placeholder.length());
 						citation.setRID(citationId);
@@ -224,7 +224,7 @@ public class PubMedParserAE extends
 
 						citations.put(citationId, citation);
 
-						addText(placeholder);
+                        addRawText(" " + placeholder + " ");
 					}
 				} else {
 					// Ignore references to anything else (table, fig, ...)
@@ -427,12 +427,21 @@ public class PubMedParserAE extends
 	/**
 	 * Add text after having trimmed it.
 	 *
-	 * @param text
-	 *            to add
+     * @param text to add
 	 * @return a StringBuilder to continue the processing if needed
 	 */
 	private StringBuilder addText(String text) {
 		return this.text.append(StringUtils.trim(text));
+    }
+
+    /**
+     * Add raw text (without triming)
+	 *
+     * @param text to add
+	 * @return a StringBuilder to continue the processing if needed
+	 */
+    private StringBuilder addRawText(String text) {
+        return this.text.append(text);
 	}
 
 	/**
