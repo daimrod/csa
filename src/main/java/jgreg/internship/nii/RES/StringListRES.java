@@ -38,6 +38,8 @@ package jgreg.internship.nii.RES;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -68,13 +70,21 @@ public final class StringListRES implements SharedResourceObject {
 	/* (non-Javadoc)
 	 * @see org.apache.uima.resource.SharedResourceObject#load(org.apache.uima.resource.DataResource)
 	 */
-	public void load(DataResource aData) throws ResourceInitializationException {
-		String filename = aData.getUri().toString();
+    public void load(DataResource aData) throws ResourceInitializationException {
+        String filename = aData.getUri().toString();
+        try {
+            filename = URLDecoder.decode(filename, "UTF-8");
+        } catch (UnsupportedEncodingException ex) {
+            logger.error("Couldn't decode " + filename, ex);
+            throw new ResourceInitializationException();
+        }
+
 		File file = new File(filename);
 
 		try {
 			list = Utils.readLines(file);
-		} catch (IOException ex) {
+        } catch (IOException ex) {
+            logger.error("Couldn't read " + filename, ex);
 			throw new ResourceInitializationException(ex);
 		}
 	}
