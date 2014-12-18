@@ -44,6 +44,7 @@ import java.io.OutputStream;
 import jgreg.internship.nii.types.ID;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.log4j.Logger;
 import org.apache.uima.UimaContext;
 import org.apache.uima.analysis_engine.AnalysisEngineProcessException;
@@ -144,9 +145,9 @@ public class XMIWriter extends
         if (!ts_dumped) {
             writeTs(jCas);
         }
-        String pmid = JCasUtil.selectSingle(jCas, ID.class).getPMID();
+        String filename = FilenameUtils.getBaseName(JCasUtil.selectSingle(jCas, ID.class).getFilename()) + ".xmi";
 
-        File outputFile = new File(outputDir, pmid + ".xmi");
+        File outputFile = new File(outputDir, filename);
 
         logger.info("Dumping to `" + outputFile.getAbsolutePath() + "'...");
         try {
