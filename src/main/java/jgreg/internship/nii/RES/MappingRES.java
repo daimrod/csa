@@ -36,6 +36,8 @@
 
 package jgreg.internship.nii.RES;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
@@ -74,7 +76,14 @@ public final class MappingRES implements SharedResourceObject {
 	 * @see org.apache.uima.resource.SharedResourceObject#load(org.apache.uima.resource.DataResource)
 	 */
 	public void load(DataResource aData) throws ResourceInitializationException {
-		String filename = aData.getUri().toString();
+        String filename = aData.getUri().toString();
+        try {
+            filename = URLDecoder.decode(filename, "UTF-8");
+        } catch (UnsupportedEncodingException ex) {
+            logger.error("Couldn't decode " + filename, ex);
+            throw new ResourceInitializationException();
+        }
+
         PropertiesConfiguration config;
         try {
             config = new PropertiesConfiguration(filename);
