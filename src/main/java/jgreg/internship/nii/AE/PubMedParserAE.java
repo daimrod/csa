@@ -217,7 +217,7 @@ public class PubMedParserAE extends
 
 						citation.setBegin(text.length());
 						citation.setEnd(citation.getBegin()
-                                + placeholder.length() - 1);
+                                + placeholder.length());
 						citation.setRID(citationId);
 						citation.setText(citationText);
 						citation.addToIndexes();
