@@ -176,7 +176,7 @@ public class XMIWriter extends
      */
     private void writeTs(JCas jcas) throws AnalysisEngineProcessException {
         try (OutputStream os = new FileOutputStream(new File(outputDir,
-                "ts.xml"))) {
+                "TypeSystem.xml"))) {
             TypeSystem ts = jcas.getTypeSystem();
             TypeSystemUtil.typeSystem2TypeSystemDescription(ts).toXML(os);
             nameT = ts.getType(nameType);
