@@ -61,135 +61,144 @@ import org.xml.sax.SAXException;
 
 /**
  * Dump all CAS as XMI in {@link #OUTPUT_DIRECTORY}. The complete TypeSystem is
- * also dumped in {@link #OUTPUT_DIRECTORY}/ts.xml.
+ * also dumped in {@link #OUTPUT_DIRECTORY}/{@link #TYPE_SYSTEM_FILENAME}.
  *
  * @author Grégoire Jadi
  */
 public class XMIWriter extends
-        org.apache.uima.fit.component.JCasAnnotator_ImplBase {
+		org.apache.uima.fit.component.JCasAnnotator_ImplBase {
 
-    /** The Constant logger. */
-    private static final Logger logger = Logger.getLogger(XMIWriter.class
-            .getCanonicalName());
+	/** The Constant logger. */
+	private static final Logger logger = Logger.getLogger(XMIWriter.class
+			.getCanonicalName());
 
-    /**
-     * The directory in which the XMI and XML are written.
-     */
-    public static final String OUTPUT_DIRECTORY = "outputDirName";
-    @ConfigurationParameter(name = OUTPUT_DIRECTORY, mandatory = true)
-    private String outputDirName;
+	/**
+	 * The directory in which the XMI and XML are written.
+	 */
+	public static final String OUTPUT_DIRECTORY = "outputDirName";
+	@ConfigurationParameter(name = OUTPUT_DIRECTORY, mandatory = true)
+	private String outputDirName;
 
-    /** The output dir. */
-    private File outputDir;
+	/**
+	 * The filename of the type system to be dumped.
+	 */
+	public static final String TYPE_SYSTEM_FILENAME = "typeSystemName";
+	@ConfigurationParameter(name = TYPE_SYSTEM_FILENAME, mandatory = false, defaultValue = "TypeSystem.xml")
+	private String typeSystemFilename;
 
-    /**
-     * Empty the directory before writing to it or not.
-     */
-    public static final String CLEAR_DIRECTORY = "clearDirectory";
-    @ConfigurationParameter(name = CLEAR_DIRECTORY, mandatory = false, defaultValue = "false")
-    private boolean clearDirectory;
+	/** The output dir. */
+	private File outputDir;
 
-    /** The name of the Type annotation that contains the name of a CAS. */
-    public static final String NAME_TYPE = "nameTYPE";
-    @ConfigurationParameter(name = NAME_TYPE, mandatory = true)
-    private String nameType;
+	/**
+	 * Empty the directory before writing to it or not.
+	 */
+	public static final String CLEAR_DIRECTORY = "clearDirectory";
+	@ConfigurationParameter(name = CLEAR_DIRECTORY, mandatory = false, defaultValue = "false")
+	private boolean clearDirectory;
 
-    /** The name t. */
-    private Type nameT;
+	/** The name of the Type annotation that contains the name of a CAS. */
+	public static final String NAME_TYPE = "nameTYPE";
+	@ConfigurationParameter(name = NAME_TYPE, mandatory = true)
+	private String nameType;
 
-    /** The name of the Feature that contains the name of a CAS. */
-    public static final String NAME_FEATURE = "nameFeature";
+	/** The name t. */
+	private Type nameT;
 
-    /** The name feature. */
-    @ConfigurationParameter(name = NAME_FEATURE, mandatory = true)
-    private String nameFeature;
+	/** The name of the Feature that contains the name of a CAS. */
+	public static final String NAME_FEATURE = "nameFeature";
 
-    /** The name f. */
-    private Feature nameF;
+	/** The name feature. */
+	@ConfigurationParameter(name = NAME_FEATURE, mandatory = true)
+	private String nameFeature;
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see
-     * org.apache.uima.fit.component.JCasAnnotator_ImplBase#initialize(org.apache
-     * .uima.UimaContext)
-     */
-    @Override
-    public void initialize(UimaContext context)
-            throws ResourceInitializationException {
-        super.initialize(context);
+	/** The name f. */
+	private Feature nameF;
 
-        outputDir = new File(outputDirName);
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see
+	 * org.apache.uima.fit.component.JCasAnnotator_ImplBase#initialize(org.apache
+	 * .uima.UimaContext)
+	 */
+	@Override
+	public void initialize(UimaContext context)
+			throws ResourceInitializationException {
+		super.initialize(context);
 
-        if (clearDirectory && outputDir.exists()) {
-            try {
-                FileUtils.cleanDirectory(outputDir);
-            } catch (IOException ex) {
-                // It doesn't really matter if we couldn't cleanup the
-                // directory, but report the error just in case.
-                logger.fatal(ex);
-            }
-        }
-        outputDir.mkdirs();
-    }
+		outputDir = new File(outputDirName);
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see
-     * org.apache.uima.analysis_component.JCasAnnotator_ImplBase#process(org
-     * .apache.uima.jcas.JCas)
-     */
-    @Override
-    public void process(JCas jCas) throws AnalysisEngineProcessException {
-        if (!ts_dumped) {
-            writeTs(jCas);
-        }
-        String filename = FilenameUtils.getBaseName(JCasUtil.selectSingle(jCas, ID.class).getFilename()) + ".xmi";
+		if (clearDirectory && outputDir.exists()) {
+			try {
+				FileUtils.cleanDirectory(outputDir);
+			} catch (IOException ex) {
+				// It doesn't really matter if we couldn't cleanup the
+				// directory, but report the error just in case.
+				logger.fatal(ex);
+			}
+		}
+		outputDir.mkdirs();
+	}
 
-        File outputFile = new File(outputDir, filename);
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see
+	 * org.apache.uima.analysis_component.JCasAnnotator_ImplBase#process(org
+	 * .apache.uima.jcas.JCas)
+	 */
+	@Override
+	public void process(JCas jCas) throws AnalysisEngineProcessException {
+		if (!ts_dumped) {
+			writeTs(jCas);
+		}
+		String filename = FilenameUtils.getBaseName(JCasUtil.selectSingle(jCas,
+				ID.class).getFilename())
+				+ ".xmi";
 
-        logger.info("Dumping to `" + outputFile.getAbsolutePath() + "'...");
-        try {
-            OutputStream outputStream = new FileOutputStream(outputFile);
-            XmiCasSerializer.serialize(jCas.getCas(), outputStream);
-        } catch (SAXException | IOException ex) {
-            logger.fatal("Couldn't dump `" + outputFile + "''", ex);
-        }
-    }
+		File outputFile = new File(outputDir, filename);
 
-    /**
-     * Dump the Type System to <outputDir>/ts.xml.
-     *
-     * If everything was cool and fine we would not need this function because
-     * jcasgen.sh would merge the TypeSystem for us. Unfortunately it does not
-     * seem to be possible to do it without setting up the UIMA+Eclipse combo.
-     *
-     * Since the XML version of the Type System is used by the annotationViewer
-     * with the XMI, this is a good place to put it here.
-     *
-     * @param jcas
-     *            the jcas
-     * @throws AnalysisEngineProcessException
-     *             if the TypeSystem can not be converted to XML or if
-     *             <outputDir>/ts.xml can not be written.
-     */
-    private void writeTs(JCas jcas) throws AnalysisEngineProcessException {
-        try (OutputStream os = new FileOutputStream(new File(outputDir,
-                "TypeSystem.xml"))) {
-            TypeSystem ts = jcas.getTypeSystem();
-            TypeSystemUtil.typeSystem2TypeSystemDescription(ts).toXML(os);
-            nameT = ts.getType(nameType);
-            nameF = nameT.getFeatureByBaseName(nameFeature);
-        } catch (IOException | SAXException ex) {
-            throw new AnalysisEngineProcessException(ex);
-        }
-        ts_dumped = true;
-    }
+		logger.info("Dumping to `" + outputFile.getAbsolutePath() + "'...");
+		try {
+			OutputStream outputStream = new FileOutputStream(outputFile);
+			XmiCasSerializer.serialize(jCas.getCas(), outputStream);
+		} catch (SAXException | IOException ex) {
+			logger.fatal("Couldn't dump `" + outputFile + "''", ex);
+		}
+	}
 
-    /**
-     * A flag to determine whether or not the TypeSystem has been dumped. @see
-     * writeTs
-     */
-    private boolean ts_dumped = false;
+	/**
+	 * Dump the Type System to <outputDir>/<typeSystemFilename>
+	 *
+	 * If everything was cool and fine we would not need this function because
+	 * jcasgen.sh would merge the TypeSystem for us. Unfortunately it does not
+	 * seem to be possible to do it without setting up the UIMA+Eclipse combo.
+	 *
+	 * Since the XML version of the Type System is used by the annotationViewer
+	 * with the XMI, this is a good place to put it here.
+	 *
+	 * @param jcas
+	 *            the jcas
+	 * @throws AnalysisEngineProcessException
+	 *             if the TypeSystem can not be converted to XML or if
+     *             <outputDir>/<typeSystemFilename> can not be written.
+	 */
+	private void writeTs(JCas jcas) throws AnalysisEngineProcessException {
+		try (OutputStream os = new FileOutputStream(new File(outputDir,
+				typeSystemFilename))) {
+			TypeSystem ts = jcas.getTypeSystem();
+			TypeSystemUtil.typeSystem2TypeSystemDescription(ts).toXML(os);
+			nameT = ts.getType(nameType);
+			nameF = nameT.getFeatureByBaseName(nameFeature);
+		} catch (IOException | SAXException ex) {
+			throw new AnalysisEngineProcessException(ex);
+		}
+		ts_dumped = true;
+	}
+
+	/**
+	 * A flag to determine whether or not the TypeSystem has been dumped. @see
+	 * writeTs
+	 */
+	private boolean ts_dumped = false;
 }
