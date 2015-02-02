@@ -70,7 +70,7 @@ import org.apache.uima.jcas.JCas;
  * <li> {@link jgreg.internship.nii.types.Section}</li>
  * <li> {@link jgreg.internship.nii.types.Title} (the section's title)</li>
  * <li> {@link jgreg.internship.nii.types.Paragraph}</li>
- * <li> {@link jgreg.internship.nii.types.ID} (article's PMID)</li>
+ * <li> {@link jgreg.internship.nii.types.ID} (article's PMID, Year, Title and Filename)</li>
  * </ul>
  *
  * @author Grégoire Jadi
