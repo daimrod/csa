@@ -1,20 +1,20 @@
-// 
+//
 // Author:: Grégoire Jadi <daimrod@gmail.com>
 // Copyright:: Copyright (c) 2014, Grégoire Jadi
 // All rights reserved.
-// 
+//
 // Redistribution and use in source and binary forms, with or without
 // modification, are permitted provided that the following conditions are
 // met:
-// 
+//
 //    1. Redistributions of source code must retain the above copyright
 //       notice, this list of conditions and the following disclaimer.
-// 
+//
 //    2. Redistributions in binary form must reproduce the above
 //       copyright notice, this list of conditions and the following
 //       disclaimer in the documentation and/or other materials provided
 //       with the distribution.
-// 
+//
 // THIS SOFTWARE IS PROVIDED BY GRÉGOIRE JADI ``AS IS'' AND ANY
 // EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
 // IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
@@ -27,12 +27,12 @@
 // OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
 // OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 // SUCH DAMAGE.
-// 
+//
 // The views and conclusions contained in the software and
 // documentation are those of the authors and should not be
 // interpreted as representing official policies, either expressed or
 // implied, of Grégoire Jadi.
-// 
+//
 
 package jgreg.internship.nii.RES;
 
@@ -54,12 +54,11 @@ import org.apache.uima.resource.DataResource;
 import org.apache.uima.resource.ResourceInitializationException;
 import org.apache.uima.resource.SharedResourceObject;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class StringListRES.
  */
 public final class StringListRES implements SharedResourceObject {
-	
+
 	/** The Constant logger. */
 	private static final Logger logger = Logger.getLogger(StringListRES.class
 			.getCanonicalName());
@@ -67,24 +66,28 @@ public final class StringListRES implements SharedResourceObject {
 	/** The list. */
 	private ArrayList<String> list;
 
-	/* (non-Javadoc)
-	 * @see org.apache.uima.resource.SharedResourceObject#load(org.apache.uima.resource.DataResource)
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see
+	 * org.apache.uima.resource.SharedResourceObject#load(org.apache.uima.resource
+	 * .DataResource)
 	 */
-    public void load(DataResource aData) throws ResourceInitializationException {
-        String filename = aData.getUri().toString();
-        try {
-            filename = URLDecoder.decode(filename, "UTF-8");
-        } catch (UnsupportedEncodingException ex) {
-            logger.error("Couldn't decode " + filename, ex);
-            throw new ResourceInitializationException();
-        }
+	public void load(DataResource aData) throws ResourceInitializationException {
+		String filename = aData.getUri().toString();
+		try {
+			filename = URLDecoder.decode(filename, "UTF-8");
+		} catch (UnsupportedEncodingException ex) {
+			logger.error("Couldn't decode " + filename, ex);
+			throw new ResourceInitializationException();
+		}
 
 		File file = new File(filename);
 
 		try {
 			list = Utils.readLines(file);
-        } catch (IOException ex) {
-            logger.error("Couldn't read " + filename, ex);
+		} catch (IOException ex) {
+			logger.error("Couldn't read " + filename, ex);
 			throw new ResourceInitializationException(ex);
 		}
 	}
@@ -92,7 +95,8 @@ public final class StringListRES implements SharedResourceObject {
 	/**
 	 * Adds the.
 	 *
-	 * @param s the s
+	 * @param s
+	 *            the s
 	 * @return true, if successful
 	 */
 	public boolean add(String s) {
@@ -102,8 +106,10 @@ public final class StringListRES implements SharedResourceObject {
 	/**
 	 * Adds the.
 	 *
-	 * @param index the index
-	 * @param s the s
+	 * @param index
+	 *            the index
+	 * @param s
+	 *            the s
 	 */
 	public void add(int index, String s) {
 		list.add(index, s);
@@ -112,7 +118,8 @@ public final class StringListRES implements SharedResourceObject {
 	/**
 	 * Adds the all.
 	 *
-	 * @param c the c
+	 * @param c
+	 *            the c
 	 * @return true, if successful
 	 */
 	public boolean addAll(Collection<String> c) {
@@ -122,8 +129,10 @@ public final class StringListRES implements SharedResourceObject {
 	/**
 	 * Adds the all.
 	 *
-	 * @param index the index
-	 * @param c the c
+	 * @param index
+	 *            the index
+	 * @param c
+	 *            the c
 	 * @return true, if successful
 	 */
 	public boolean addAll(int index, Collection<String> c) {
@@ -137,7 +146,9 @@ public final class StringListRES implements SharedResourceObject {
 		list.clear();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 *
 	 * @see java.lang.Object#clone()
 	 */
 	public Object clone() {
@@ -147,7 +158,8 @@ public final class StringListRES implements SharedResourceObject {
 	/**
 	 * Contains.
 	 *
-	 * @param o the o
+	 * @param o
+	 *            the o
 	 * @return true, if successful
 	 */
 	public boolean contains(Object o) {
@@ -157,7 +169,8 @@ public final class StringListRES implements SharedResourceObject {
 	/**
 	 * Ensure capacity.
 	 *
-	 * @param minCapacity the min capacity
+	 * @param minCapacity
+	 *            the min capacity
 	 */
 	public void ensureCapacity(int minCapacity) {
 		list.ensureCapacity(minCapacity);
@@ -166,7 +179,8 @@ public final class StringListRES implements SharedResourceObject {
 	/**
 	 * Gets the.
 	 *
-	 * @param index the index
+	 * @param index
+	 *            the index
 	 * @return the string
 	 */
 	public String get(int index) {
@@ -176,7 +190,8 @@ public final class StringListRES implements SharedResourceObject {
 	/**
 	 * Index of.
 	 *
-	 * @param o the o
+	 * @param o
+	 *            the o
 	 * @return the int
 	 */
 	public int indexOf(Object o) {
@@ -199,9 +214,9 @@ public final class StringListRES implements SharedResourceObject {
 	 */
 	public Iterator<String> iterator() {
 		return list.iterator();
-    }
+	}
 
-    /**
+	/**
 	 * Stream.
 	 *
 	 * @return the stream
@@ -213,7 +228,8 @@ public final class StringListRES implements SharedResourceObject {
 	/**
 	 * Last index of.
 	 *
-	 * @param o the o
+	 * @param o
+	 *            the o
 	 * @return the int
 	 */
 	public int lastIndexOf(Object o) {
@@ -232,7 +248,8 @@ public final class StringListRES implements SharedResourceObject {
 	/**
 	 * List iterator.
 	 *
-	 * @param index the index
+	 * @param index
+	 *            the index
 	 * @return the list iterator
 	 */
 	public ListIterator<String> listIterator(int index) {
@@ -242,7 +259,8 @@ public final class StringListRES implements SharedResourceObject {
 	/**
 	 * Removes the.
 	 *
-	 * @param index the index
+	 * @param index
+	 *            the index
 	 * @return the string
 	 */
 	public String remove(int index) {
@@ -252,7 +270,8 @@ public final class StringListRES implements SharedResourceObject {
 	/**
 	 * Removes the.
 	 *
-	 * @param o the o
+	 * @param o
+	 *            the o
 	 * @return true, if successful
 	 */
 	public boolean remove(Object o) {
@@ -262,7 +281,8 @@ public final class StringListRES implements SharedResourceObject {
 	/**
 	 * Removes the all.
 	 *
-	 * @param c the c
+	 * @param c
+	 *            the c
 	 * @return true, if successful
 	 */
 	public boolean removeAll(Collection<String> c) {
@@ -272,7 +292,8 @@ public final class StringListRES implements SharedResourceObject {
 	/**
 	 * Retain all.
 	 *
-	 * @param c the c
+	 * @param c
+	 *            the c
 	 * @return true, if successful
 	 */
 	public boolean retainAll(Collection<String> c) {
@@ -282,8 +303,10 @@ public final class StringListRES implements SharedResourceObject {
 	/**
 	 * Sets the.
 	 *
-	 * @param index the index
-	 * @param s the s
+	 * @param index
+	 *            the index
+	 * @param s
+	 *            the s
 	 * @return the string
 	 */
 	public String set(int index, String s) {
@@ -302,8 +325,10 @@ public final class StringListRES implements SharedResourceObject {
 	/**
 	 * Sub list.
 	 *
-	 * @param fromIndex the from index
-	 * @param toIndex the to index
+	 * @param fromIndex
+	 *            the from index
+	 * @param toIndex
+	 *            the to index
 	 * @return the list
 	 */
 	public List<String> subList(int fromIndex, int toIndex) {
@@ -322,7 +347,8 @@ public final class StringListRES implements SharedResourceObject {
 	/**
 	 * To array.
 	 *
-	 * @param a the a
+	 * @param a
+	 *            the a
 	 * @return the string[]
 	 */
 	public String[] toArray(String[] a) {

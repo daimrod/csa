@@ -1,20 +1,20 @@
-// 
+//
 // Author:: Grégoire Jadi <daimrod@gmail.com>
 // Copyright:: Copyright (c) 2014, Grégoire Jadi
 // All rights reserved.
-// 
+//
 // Redistribution and use in source and binary forms, with or without
 // modification, are permitted provided that the following conditions are
 // met:
-// 
+//
 //    1. Redistributions of source code must retain the above copyright
 //       notice, this list of conditions and the following disclaimer.
-// 
+//
 //    2. Redistributions in binary form must reproduce the above
 //       copyright notice, this list of conditions and the following
 //       disclaimer in the documentation and/or other materials provided
 //       with the distribution.
-// 
+//
 // THIS SOFTWARE IS PROVIDED BY GRÉGOIRE JADI ``AS IS'' AND ANY
 // EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
 // IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
@@ -27,12 +27,12 @@
 // OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
 // OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 // SUCH DAMAGE.
-// 
+//
 // The views and conclusions contained in the software and
 // documentation are those of the authors and should not be
 // interpreted as representing official policies, either expressed or
 // implied, of Grégoire Jadi.
-// 
+//
 
 package jgreg.internship.nii.RES;
 
@@ -53,7 +53,6 @@ import org.apache.uima.resource.DataResource;
 import org.apache.uima.resource.ResourceInitializationException;
 import org.apache.uima.resource.SharedResourceObject;
 
-// TODO: Auto-generated Javadoc
 /**
  * Describe a mapping
  *
@@ -64,7 +63,7 @@ import org.apache.uima.resource.SharedResourceObject;
  * @author
  */
 public final class MappingRES implements SharedResourceObject {
-	
+
 	/** The Constant logger. */
 	private static final Logger logger = Logger.getLogger(MappingRES.class
 			.getCanonicalName());
@@ -72,38 +71,44 @@ public final class MappingRES implements SharedResourceObject {
 	/** The mapping. */
 	private Map<String, Set<String>> mapping;
 
-	/* (non-Javadoc)
-	 * @see org.apache.uima.resource.SharedResourceObject#load(org.apache.uima.resource.DataResource)
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see
+	 * org.apache.uima.resource.SharedResourceObject#load(org.apache.uima.resource
+	 * .DataResource)
 	 */
 	public void load(DataResource aData) throws ResourceInitializationException {
-        String filename = aData.getUri().toString();
-        try {
-            filename = URLDecoder.decode(filename, "UTF-8");
-        } catch (UnsupportedEncodingException ex) {
-            logger.error("Couldn't decode " + filename, ex);
-            throw new ResourceInitializationException();
-        }
+		String filename = aData.getUri().toString();
+		try {
+			filename = URLDecoder.decode(filename, "UTF-8");
+		} catch (UnsupportedEncodingException ex) {
+			logger.error("Couldn't decode " + filename, ex);
+			throw new ResourceInitializationException();
+		}
 
-        PropertiesConfiguration config;
-        try {
-            config = new PropertiesConfiguration(filename);
-        } catch (ConfigurationException ex) {
-            throw new ResourceInitializationException(ex);
-        }
+		PropertiesConfiguration config;
+		try {
+			config = new PropertiesConfiguration(filename);
+		} catch (ConfigurationException ex) {
+			throw new ResourceInitializationException(ex);
+		}
 
 		mapping = new HashMap<>();
-        for (Iterator<String> iter = config.getKeys(); iter.hasNext();) {
-            String key = iter.next();
-            Set<String> set = new LinkedHashSet<>(Arrays.asList(config.getStringArray(key)));
-            logger.debug(key + " = " + set);
-            mapping.put(key, set);
-        }
+		for (Iterator<String> iter = config.getKeys(); iter.hasNext();) {
+			String key = iter.next();
+			Set<String> set = new LinkedHashSet<>(Arrays.asList(config
+					.getStringArray(key)));
+			logger.debug(key + " = " + set);
+			mapping.put(key, set);
+		}
 	}
 
 	/**
 	 * Contains key.
 	 *
-	 * @param key the key
+	 * @param key
+	 *            the key
 	 * @return true, if successful
 	 */
 	public boolean containsKey(Object key) {
@@ -113,7 +118,8 @@ public final class MappingRES implements SharedResourceObject {
 	/**
 	 * Contains value.
 	 *
-	 * @param value the value
+	 * @param value
+	 *            the value
 	 * @return true, if successful
 	 */
 	public boolean containsValue(Object value) {
@@ -132,7 +138,8 @@ public final class MappingRES implements SharedResourceObject {
 	/**
 	 * Gets the.
 	 *
-	 * @param key the key
+	 * @param key
+	 *            the key
 	 * @return the sets the
 	 */
 	public Set<String> get(Object key) {
@@ -151,7 +158,8 @@ public final class MappingRES implements SharedResourceObject {
 	/**
 	 * Removes the.
 	 *
-	 * @param key the key
+	 * @param key
+	 *            the key
 	 * @return the sets the
 	 */
 	public Set<String> remove(Object key) {
@@ -167,12 +175,12 @@ public final class MappingRES implements SharedResourceObject {
 		return mapping.size();
 	}
 
-    /**
-     * Values.
-     *
-     * @return the collection
-     */
-    public Collection<Set<String>> values() {
-        return mapping.values();
-    }
+	/**
+	 * Values.
+	 *
+	 * @return the collection
+	 */
+	public Collection<Set<String>> values() {
+		return mapping.values();
+ }
 }
