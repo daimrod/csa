@@ -57,6 +57,16 @@ import org.apache.uima.fit.util.JCasUtil;
 import org.apache.uima.jcas.JCas;
 import org.apache.uima.resource.ResourceInitializationException;
 
+/**
+ * Extract citation and co-citation information.
+ *
+ * 1. Extract all citations for every articles (every CAS).
+ * 2. Extract compute a list of co-cited articles from the citations previously extracted.
+ * 3. Dump the list to @{link #OUTPUT_FILE}
+ *
+ * @author Grégoire Jadi
+ */
+
 public class CoCitationExtractorAE extends org.apache.uima.fit.component.JCasAnnotator_ImplBase {
     private static final Logger logger = Logger.getLogger(CoCitationExtractorAE.class.getCanonicalName());
     
@@ -75,23 +85,24 @@ public class CoCitationExtractorAE extends org.apache.uima.fit.component.JCasAnn
 
     @Override
     public void process(JCas jCas) throws AnalysisEngineProcessException {
-        String from = JCasUtil.selectSingle(jCas, ID.class).getPMID();
+        String citer = JCasUtil.selectSingle(jCas, ID.class).getPMID();
 
-        for (Citation citation : JCasUtil.select(jCas, Citation.class)) {
-            addCitation(from, citation.getPMID());
+        for (Citation citee : JCasUtil.select(jCas, Citation.class)) {
+            // <current jCas> -- cites --> <citation>
+            addCitation(citee.getPMID(), citer);
         }
     }
 
-    private void addCitation(String from, String to) {
-        if (references.containsKey(to)) {
-            references.get(to).add(from);
+    private void addCitation(String citer, String citee) {
+        if (references.containsKey(citee)) {
+            references.get(citee).add(citer);
         } else {
             Set<String> set = new HashSet<>();
-            set.add(from);
-            references.put(to, set);
+            set.add(citer);
+            references.put(citee, set);
         }
 
-        logger.debug("`" + to + "' is cited by `" + from + "' (" + references.keySet().size() + ")");
+        logger.debug("`" + citee + "' is cited by `" + citer + "' (" + references.keySet().size() + ")");
     }
 
     private Set<Pair<String, String>> getCoCitations() {
@@ -105,6 +116,7 @@ public class CoCitationExtractorAE extends org.apache.uima.fit.component.JCasAnn
             String a = articles[i];
             for (int j = i + 1; j < length; j++) {
                 String b = articles[j];
+                // Looking for an intersection between references[a] and references[b]
                 // if a ∩ b ≠ ∅ ...
                 if (references.get(a).stream().anyMatch((o) -> references.get(b).contains(o))) {
                     ret.add(new ImmutablePair<>(a, b));
