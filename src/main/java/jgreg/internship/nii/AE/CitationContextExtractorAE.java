@@ -59,8 +59,18 @@ import org.apache.uima.jcas.JCas;
 import org.apache.uima.resource.ResourceInitializationException;
 
 /**
- * TODO
+ * Extract {@link jgreg.internship.nii.types.CitationContext} and their {@link jgreg.internship.nii.types.Sentiment} and dump them to {@link #outputDir}.
  *
+ * The format for each context is the following (between !BEGIN
+ * and !END):
+ * !BEGIN
+ * #<num>
+ * word word word word/_/annotation word word
+ * word word
+ *
+ *
+ * !END
+ * Note that only articles with a PMID are dumped.
  * @author Grégoire Jadi
  */
 public class CitationContextExtractorAE extends
