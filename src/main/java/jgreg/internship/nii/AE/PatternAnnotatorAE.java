@@ -113,7 +113,7 @@ public class PatternAnnotatorAE extends
 
         try {
 			// Combine all patterns in one big pattern using the
-			// conjunction operator.
+            // conjunction operator (|).
 			for (String className : mapping.keySet()) {
 				if ("order".equals(className)) {
 					continue;
