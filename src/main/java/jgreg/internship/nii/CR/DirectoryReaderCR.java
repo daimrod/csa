@@ -63,10 +63,10 @@ import org.apache.uima.util.Progress;
  * List files in {@link #INPUT_DIRECTORY} and make CAS from the raw text.
  *
  * The text isn't stored in the default view but in the view named originalText.
- * This way, the AnalysisEngine that follow can parse the original text and set
+ * This way, the AnalysiEngine that follows can parse the original text and set
  * the CAS text in the default view.
  *
- * This is useful to parse large collection of documents and you really don't
+ * This is useful to parse large collection of documents when you really don't
  * want to see your pipelane interrupted because of parsing errors.
  *
  * @author Grégoire Jadi
