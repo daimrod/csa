@@ -66,7 +66,6 @@ import org.apache.uima.jcas.JCas;
 import org.apache.uima.jcas.cas.FSArray;
 import org.apache.uima.resource.ResourceInitializationException;
 
-// TODO: Auto-generated Javadoc
 /**
  * Extract {@link jgreg.internship.nii.types.Sentiment} information from
  * {@link jgreg.internship.nii.types.CitationContext} using the most frequent
