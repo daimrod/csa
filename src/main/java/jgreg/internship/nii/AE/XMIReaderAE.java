@@ -49,9 +49,8 @@ import org.apache.uima.cas.impl.XmiCasDeserializer;
 import org.apache.uima.fit.util.JCasUtil;
 import org.apache.uima.jcas.JCas;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class XMIReaderAE.
+ * Retrieve the CAS contained in XMI format associated with the current CAS.
  *
  * @author Grégoire Jadi
  */
