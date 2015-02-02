@@ -39,7 +39,7 @@ package jgreg.internship.nii.WF;
 import jgreg.internship.nii.AE.CitationContextAnnotatorAE;
 import jgreg.internship.nii.AE.PubMedParserAE;
 import jgreg.internship.nii.AE.PatternAnnotatorAE;
-import jgreg.internship.nii.AE.XMIWriter;
+import jgreg.internship.nii.AE.XMIWriterAE;
 import jgreg.internship.nii.CR.DirectoryReaderCR;
 import jgreg.internship.nii.RES.MappingRES;
 import jgreg.internship.nii.RES.StringListRES;
@@ -218,10 +218,10 @@ public class AnnotatorWF {
 
 		// XMI Writer
 		AnalysisEngineDescription xmiWriter = AnalysisEngineFactory
-				.createEngineDescription(XMIWriter.class,
-						XMIWriter.OUTPUT_DIRECTORY, outputDirectory,
-						XMIWriter.NAME_TYPE, "jgreg.internship.nii.types.ID",
-						XMIWriter.NAME_FEATURE, "PMID");
+				.createEngineDescription(XMIWriterAE.class,
+						XMIWriterAE.OUTPUT_DIRECTORY, outputDirectory,
+						XMIWriterAE.NAME_TYPE, "jgreg.internship.nii.types.ID",
+						XMIWriterAE.NAME_FEATURE, "PMID");
 
 		/*
 		 * The type priority is important especially to retrieve tokens. The

@@ -36,7 +36,7 @@
 
 package jgreg.internship.nii.WF;
 
-import jgreg.internship.nii.AE.XMIWriter;
+import jgreg.internship.nii.AE.XMIWriterAE;
 import jgreg.internship.nii.CR.DirectoryReaderCR;
 import opennlp.uima.sentdetect.SentenceDetector;
 import opennlp.uima.sentdetect.SentenceModelResourceImpl;
@@ -81,7 +81,7 @@ public class TestWF03 {
 						"opennlp.uima.IsRemoveExistingAnnotations", false);
 
 		AnalysisEngineDescription writer = AnalysisEngineFactory
-				.createEngineDescription(XMIWriter.class);
+				.createEngineDescription(XMIWriterAE.class);
 
 		SimplePipeline.runPipeline(reader, sentenceSplitter, writer);
 	}

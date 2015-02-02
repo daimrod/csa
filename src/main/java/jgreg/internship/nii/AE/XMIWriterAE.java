@@ -65,11 +65,11 @@ import org.xml.sax.SAXException;
  *
  * @author Grégoire Jadi
  */
-public class XMIWriter extends
+public class XMIWriterAE extends
 		org.apache.uima.fit.component.JCasAnnotator_ImplBase {
 
 	/** The Constant logger. */
-	private static final Logger logger = Logger.getLogger(XMIWriter.class
+	private static final Logger logger = Logger.getLogger(XMIWriterAE.class
 			.getCanonicalName());
 
 	/**

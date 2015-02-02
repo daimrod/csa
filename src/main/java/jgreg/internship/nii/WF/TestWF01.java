@@ -36,7 +36,7 @@
 
 package jgreg.internship.nii.WF;
 
-import jgreg.internship.nii.AE.XMIWriter;
+import jgreg.internship.nii.AE.XMIWriterAE;
 import jgreg.internship.nii.CR.DirectoryReaderCR;
 
 import org.apache.uima.analysis_engine.AnalysisEngineDescription;
@@ -66,7 +66,7 @@ public class TestWF01 {
 						"/home/daimrod/corpus/pubmed/cpa_dump/");
 
 		AnalysisEngineDescription writer = AnalysisEngineFactory
-				.createEngineDescription(XMIWriter.class);
+				.createEngineDescription(XMIWriterAE.class);
 
 		SimplePipeline.runPipeline(reader, writer);
 	}
