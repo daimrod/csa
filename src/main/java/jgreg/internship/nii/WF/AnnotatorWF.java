@@ -1,4 +1,4 @@
-//
+ //
 // Author:: Grégoire Jadi <daimrod@gmail.com>
 // Copyright:: Copyright (c) 2014, Grégoire Jadi
 // All rights reserved.
@@ -91,7 +91,7 @@ public class AnnotatorWF {
 	/**
 	 * Run the Pipeline.
 	 *
-	 * @param inputDirectory
+     * @param inputDirectory
 	 *            contains all articles.
 	 * @param outputDirectory
 	 *            stores all output data (XMI, ...).
@@ -155,7 +155,7 @@ public class AnnotatorWF {
 
 		// Mapping
 		ExternalResourceDescription mapping = ExternalResourceFactory
-				.createExternalResourceDescription(MappingRES.class,
+            .createExternalResourceDescription(MappingRES.class,
 						mappingFilename);
 
 		/*
@@ -182,8 +182,8 @@ public class AnnotatorWF {
 						"opennlp.uima.ContainerType",
 						"jgreg.internship.nii.types.Paragraph");
 
-		// Citation Context Detector
-		AnalysisEngineDescription citationContextDetector = AnalysisEngineFactory
+		// Citation Context Annotator
+		AnalysisEngineDescription citationContextAnnotator = AnalysisEngineFactory
 				.createEngineDescription(CitationContextAnnotatorAE.class,
 						CitationContextAnnotatorAE.FOCUSED_ARTICLES,
 						focusedArticles,
@@ -235,7 +235,7 @@ public class AnnotatorWF {
 
 		builder.add(xmlParser);
 		builder.add(sentenceDetector);
-		builder.add(citationContextDetector);
+		builder.add(citationContextAnnotator);
 		builder.add(tokenizer);
 		builder.add(POSTagger);
 		builder.add(sentimentFinder);
