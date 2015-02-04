@@ -61,7 +61,7 @@ import org.apache.uima.resource.ResourceInitializationException;
  * Extract citation and co-citation information.
  *
  * 1. Extract all citations for every articles (every CAS).
- * 2. Extract compute a list of co-cited articles from the citations previously extracted.
+ * 2. Compute a list of co-cited articles from the citations previously extracted.
  * 3. Dump the list to @{link #OUTPUT_FILE}
  *
  * @author Grégoire Jadi
