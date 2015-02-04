@@ -136,14 +136,11 @@ public class DirectoryReaderCR extends JCasCollectionReader_ImplBase {
                             return false;
                         }
                     }).collect(Collectors.toList());
-        } else if (extensions != null) {
+        } else {
             logger.info("Looking for files matching " + extensions + "...");
             files = new ArrayList<>(FileUtils.listFiles(inputDirectory, extensions, true));
-        } else {
-            logger.fatal("You need to set either CORPUS_ARTICLES or EXTENSIONS.");
-            throw new ResourceInitializationException();
         }
-        
+
 		filesIt = files.iterator();
 	}
 
