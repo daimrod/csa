@@ -59,6 +59,7 @@ import jgreg.internship.nii.types.Title;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.uima.analysis_engine.AnalysisEngineProcessException;
+import org.apache.uima.cas.AbstractCas;
 import org.apache.uima.cas.CASException;
 import org.apache.uima.fit.util.JCasUtil;
 import org.apache.uima.jcas.JCas;
@@ -70,13 +71,14 @@ import org.apache.uima.jcas.JCas;
  * <li> {@link jgreg.internship.nii.types.Section}</li>
  * <li> {@link jgreg.internship.nii.types.Title} (the section's title)</li>
  * <li> {@link jgreg.internship.nii.types.Paragraph}</li>
- * <li> {@link jgreg.internship.nii.types.ID} (article's PMID, Year, Title and Filename)</li>
+ * <li> {@link jgreg.internship.nii.types.ID} (article's PMID, Year, Title and
+ * Filename)</li>
  * </ul>
  *
  * @author Grégoire Jadi
  */
 public class PubMedParserAE extends
-		org.apache.uima.fit.component.JCasAnnotator_ImplBase {
+		org.apache.uima.fit.component.JCasMultiplier_ImplBase {
 
 	/** The Constant logger. */
 	private static final Logger logger = Logger.getLogger(PubMedParserAE.class
@@ -90,7 +92,7 @@ public class PubMedParserAE extends
 	 * .apache.uima.jcas.JCas)
 	 */
 
-	private JCas jCas;
+	private JCas jCas = null;
 
 	/** The text. */
 	private StringBuilder text;
@@ -132,32 +134,47 @@ public class PubMedParserAE extends
 		try {
 			originalText = jCas.getView("originalText");
 		} catch (CASException ex) {
-			throw new AnalysisEngineProcessException(ex);
-		}
-
-        Filename filename = JCasUtil.selectSingle(originalText, Filename.class);
-        logger.info("Parsing `" + filename.getFilename() + "'...");
-
-        reader = new StringReader(originalText.getDocumentText());
-        try {
-            parse();
-
-            jCas.setDocumentText(text.toString());
-
-            article.setFilename(filename.getFilename());
-
-            ID docId = new ID(jCas);
-            docId.setPMID(article.getPMID());
-            docId.setYear(article.getYear());
-            docId.setTitle(article.getTitle());
-            docId.setFilename(article.getFilename());
-            docId.setBegin(0);
-            docId.setEnd(1);
-            docId.addToIndexes();
-        } catch (Exception ex) {
-            logger.error("Couldn't parse " + filename.getFilename() + "\n" + ex);
-            throw new AnalysisEngineProcessException();
+			jCas = null;
+			return;
         }
+
+		Filename filename = JCasUtil.selectSingle(originalText, Filename.class);
+		logger.info("Parsing `" + filename.getFilename() + "'...");
+
+        try {
+            reader = new StringReader(originalText.getDocumentText());
+
+			parse();
+
+			jCas.setDocumentText(text.toString());
+
+			article.setFilename(filename.getFilename());
+
+			ID docId = new ID(jCas);
+			docId.setPMID(article.getPMID());
+			docId.setYear(article.getYear());
+			docId.setTitle(article.getTitle());
+			docId.setFilename(article.getFilename());
+			docId.setBegin(0);
+			docId.setEnd(1);
+			docId.addToIndexes();
+		} catch (Exception ex) {
+			logger.error("Couldn't parse " + filename.getFilename() + "\n" + ex);
+			jCas = null;
+			return;
+        }
+	}
+
+	@Override
+	public boolean hasNext() throws AnalysisEngineProcessException {
+		return jCas != null;
+	}
+
+	@Override
+	public AbstractCas next() throws AnalysisEngineProcessException {
+		JCas result = jCas;
+		jCas = null;
+		return result;
 	}
 
 	/**
@@ -212,19 +229,19 @@ public class PubMedParserAE extends
 							+ citationText + "'");
 
 					for (String citationId : citationIds.split(" ")) {
-                        String placeholder = "<CITE>";
+						String placeholder = "<CITE>";
 						Citation citation = new Citation(jCas);
 
-                        citation.setBegin(text.length() + 1);
+						citation.setBegin(text.length() + 1);
 						citation.setEnd(citation.getBegin()
-                                + placeholder.length());
+								+ placeholder.length());
 						citation.setRID(citationId);
 						citation.setText(citationText);
 						citation.addToIndexes();
 
 						citations.put(citationId, citation);
 
-                        addRawText(" " + placeholder + " ");
+						addRawText(" " + placeholder + " ");
 					}
 				} else {
 					// Ignore references to anything else (table, fig, ...)
@@ -341,7 +358,7 @@ public class PubMedParserAE extends
 	/**
 	 * Extract the important stuff from the XML.
 	 */
-    private void parse() throws XMLStreamException {
+	private void parse() throws XMLStreamException {
 		text = new StringBuilder();
 		citations = new HashMap<>();
 		article = new Article("");
@@ -427,21 +444,23 @@ public class PubMedParserAE extends
 	/**
 	 * Add text after having trimmed it.
 	 *
-     * @param text to add
+	 * @param text
+	 *            to add
 	 * @return a StringBuilder to continue the processing if needed
 	 */
 	private StringBuilder addText(String text) {
 		return this.text.append(StringUtils.trim(text));
-    }
+	}
 
-    /**
-     * Add raw text (without triming)
+	/**
+	 * Add raw text (without triming)
 	 *
-     * @param text to add
+	 * @param text
+	 *            to add
 	 * @return a StringBuilder to continue the processing if needed
 	 */
-    private StringBuilder addRawText(String text) {
-        return this.text.append(text);
+	private StringBuilder addRawText(String text) {
+		return this.text.append(text);
 	}
 
 	/**
