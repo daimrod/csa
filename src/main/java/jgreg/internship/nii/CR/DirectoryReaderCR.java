@@ -90,7 +90,7 @@ public class DirectoryReaderCR extends JCasCollectionReader_ImplBase {
 
     /** The extensions of file we want to analyze. */
 	public static final String EXTENSIONS = "extensions";
-	@ConfigurationParameter(name = EXTENSIONS, mandatory = false, defaultValue = "null")
+    @ConfigurationParameter(name = EXTENSIONS, mandatory = false)
 	private String[] extensions;
 
 	/** The files. */
