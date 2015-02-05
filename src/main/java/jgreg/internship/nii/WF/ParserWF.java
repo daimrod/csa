@@ -70,8 +70,10 @@ import org.apache.uima.fit.factory.AggregateBuilder;
 import org.apache.uima.fit.factory.AnalysisEngineFactory;
 import org.apache.uima.fit.factory.CollectionReaderFactory;
 import org.apache.uima.fit.factory.ExternalResourceFactory;
+import org.apache.uima.fit.factory.FlowControllerFactory;
 import org.apache.uima.fit.factory.TypePrioritiesFactory;
 import org.apache.uima.fit.pipeline.SimplePipeline;
+import org.apache.uima.flow.impl.FixedFlowController;
 import org.apache.uima.resource.ExternalResourceDescription;
 
 /**
@@ -80,7 +82,7 @@ import org.apache.uima.resource.ExternalResourceDescription;
 public class ParserWF {
 
 	/** The Constant logger. */
-	private static final Logger logger = Logger.getLogger(AnnotatorWF.class
+    private static final Logger logger = Logger.getLogger(ParserWF.class
 			.getCanonicalName());
 
 	/**
@@ -135,14 +137,6 @@ public class ParserWF {
 							listFocusedArticlesFilename);
 		}
 
-		// CoCited Articles
-		ExternalResourceDescription coCitedArticles = null;
-		if (!listCoCitedArticlesFilename.isEmpty()) {
-			coCitedArticles = ExternalResourceFactory
-					.createExternalResourceDescription(StringListRES.class,
-							listCoCitedArticlesFilename);
-		}
-
 		/*
 		 * Collection Reader
 		 */
@@ -166,16 +160,6 @@ public class ParserWF {
 						"jgreg.internship.nii.types.Sentence",
 						"opennlp.uima.ContainerType",
 						"jgreg.internship.nii.types.Paragraph");
-
-		// Citation Context Detector
-		AnalysisEngineDescription citationContextAnnotator = AnalysisEngineFactory
-				.createEngineDescription(CitationContextAnnotatorAE.class,
-						CitationContextAnnotatorAE.FOCUSED_ARTICLES,
-						focusedArticles,
-						CitationContextAnnotatorAE.COCITED_ARTICLES,
-						coCitedArticles,
-						CitationContextAnnotatorAE.PARAM_WINDOW_SIZE,
-						windowSize);
 
 		// Tokenizer
 		AnalysisEngineDescription tokenizer = AnalysisEngineFactory
@@ -201,15 +185,20 @@ public class ParserWF {
 				TypePrioritiesFactory.createTypePriorities(ID.class,
 						Title.class, Section.class, Paragraph.class,
 						CitationContext.class, Sentence.class, Citation.class,
-						Token.class, Sentiment.class), null);
+						Token.class, Sentiment.class),
+				FlowControllerFactory.createFlowControllerDescription(
+						FixedFlowController.class,
+						FixedFlowController.PARAM_ACTION_AFTER_CAS_MULTIPLIER,
+						"drop"));
 
 		builder.add(xmlParser);
 		builder.add(sentenceDetector);
-		builder.add(citationContextAnnotator);
 		builder.add(tokenizer);
 		builder.add(xmiWriter);
 		SimplePipeline
-					.runPipeline(reader, builder.createAggregateDescription());
+				.runPipeline(reader, builder.createAggregateDescription());
+
+		logger.info("Done!");
 	}
 
 	/**
@@ -283,10 +272,9 @@ public class ParserWF {
 		Integer windowSize = new Integer(line.getOptionValue("windowSize",
 				annotatorConfig.getString("windowSize")));
 
-        ParserWF.process(inputDirectory, outputDirectory,
-				listArticlesFilename, listFocusedArticlesFilename,
-				listCoCitedArticlesFilename, mappingFilename, windowSize);
+		ParserWF.process(inputDirectory, outputDirectory, listArticlesFilename,
+				listFocusedArticlesFilename, listCoCitedArticlesFilename,
+				mappingFilename, windowSize);
 
-		logger.info("done!");
  }
 }
