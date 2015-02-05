@@ -136,13 +136,13 @@ public class PubMedParserAE extends
 		} catch (CASException ex) {
 			jCas = null;
 			return;
-        }
+		}
 
 		Filename filename = JCasUtil.selectSingle(originalText, Filename.class);
 		logger.info("Parsing `" + filename.getFilename() + "'...");
 
-        try {
-            reader = new StringReader(originalText.getDocumentText());
+		try {
+			reader = new StringReader(originalText.getDocumentText());
 
 			parse();
 
@@ -162,7 +162,7 @@ public class PubMedParserAE extends
 			logger.error("Couldn't parse " + filename.getFilename() + "\n" + ex);
 			jCas = null;
 			return;
-        }
+		}
 	}
 
 	@Override
@@ -338,8 +338,9 @@ public class PubMedParserAE extends
 			(article.getYear() == null
 					&& XMLStreamConstants.START_ELEMENT == eventType
 					&& xmlr.hasName() && "pub-date".equals(xmlr.getLocalName())) {
-				if (gotoTag("year")) {
-					article.setYear(new Integer(xmlr.getElementText()));
+                if (gotoTag("year")) {
+                    Integer year = new Integer(StringUtils.trim(xmlr.getElementText()));
+                    article.setYear(year);
 				}
 			} else if
 			/**
