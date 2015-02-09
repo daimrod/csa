@@ -88,7 +88,7 @@ public class CoCitationExtractorAE extends org.apache.uima.fit.component.JCasAnn
         String citer = JCasUtil.selectSingle(jCas, ID.class).getPMID();
 
         for (Citation citee : JCasUtil.select(jCas, Citation.class)) {
-            // <current jCas> -- cites --> <citation>
+            // <citation> -- cited by --> <current jCas>
             addCitation(citee.getPMID(), citer);
         }
     }
@@ -123,6 +123,7 @@ public class CoCitationExtractorAE extends org.apache.uima.fit.component.JCasAnn
                 }
             }
         }
+        logger.info("CoCitation extracted");
 
         return ret;
     }
