@@ -38,7 +38,7 @@ package jgreg.internship.nii.WF;
 
 import jgreg.internship.nii.AE.CitationContextAnnotatorAE;
 import jgreg.internship.nii.AE.PatternAnnotatorAE;
-import jgreg.internship.nii.AE.PubMedParserAE;
+import jgreg.internship.nii.AE.XMIReaderAE;
 import jgreg.internship.nii.AE.XMIWriterAE;
 import jgreg.internship.nii.CR.DirectoryReaderCR;
 import jgreg.internship.nii.RES.MappingRES;
@@ -55,10 +55,6 @@ import jgreg.internship.nii.types.Token;
 
 import opennlp.uima.postag.POSModelResourceImpl;
 import opennlp.uima.postag.POSTagger;
-import opennlp.uima.sentdetect.SentenceDetector;
-import opennlp.uima.sentdetect.SentenceModelResourceImpl;
-import opennlp.uima.tokenize.Tokenizer;
-import opennlp.uima.tokenize.TokenizerModelResourceImpl;
 
 import org.apache.commons.cli.BasicParser;
 import org.apache.commons.cli.CommandLine;
@@ -116,17 +112,6 @@ public class AnnotatorWF {
 		/*
 		 * Resources
 		 */
-		// Sentence Model
-		ExternalResourceDescription sentenceModel = ExternalResourceFactory
-				.createExternalResourceDescription(
-						SentenceModelResourceImpl.class,
-						"file:org/apache/ctakes/core/sentdetect/sd-med-model.bin");
-		// Token Model
-		ExternalResourceDescription tokenModel = ExternalResourceFactory
-				.createExternalResourceDescription(
-						TokenizerModelResourceImpl.class,
-						"file:opennlp/uima/models/en-token.bin");
-
 		// POS tagger Model
 		ExternalResourceDescription POSModel = ExternalResourceFactory
 				.createExternalResourceDescription(POSModelResourceImpl.class,
@@ -169,18 +154,9 @@ public class AnnotatorWF {
 		/*
 		 * Analysis Engine
 		 */
-		// Parser XML
-		AnalysisEngineDescription xmlParser = AnalysisEngineFactory
-				.createEngineDescription(PubMedParserAE.class);
-
-		// Sentence Detector
-		AnalysisEngineDescription sentenceDetector = AnalysisEngineFactory
-				.createEngineDescription(SentenceDetector.class,
-						"opennlp.uima.ModelName", sentenceModel,
-						"opennlp.uima.SentenceType",
-						"jgreg.internship.nii.types.Sentence",
-						"opennlp.uima.ContainerType",
-						"jgreg.internship.nii.types.Paragraph");
+		// XMI Reader
+		AnalysisEngineDescription xmiReader = AnalysisEngineFactory
+				.createEngineDescription(XMIReaderAE.class);
 
 		// Citation Context Annotator
 		AnalysisEngineDescription citationContextAnnotator = AnalysisEngineFactory
@@ -191,15 +167,6 @@ public class AnnotatorWF {
 						coCitedArticles,
 						CitationContextAnnotatorAE.PARAM_WINDOW_SIZE,
 						windowSize);
-
-		// Tokenizer
-		AnalysisEngineDescription tokenizer = AnalysisEngineFactory
-				.createEngineDescription(Tokenizer.class,
-						"opennlp.uima.ModelName", tokenModel,
-						"opennlp.uima.SentenceType",
-						"jgreg.internship.nii.types.Sentence",
-						"opennlp.uima.TokenType",
-						"jgreg.internship.nii.types.Token");
 
 		// POS Tagger
 		AnalysisEngineDescription POSTagger = AnalysisEngineFactory
@@ -233,10 +200,8 @@ public class AnnotatorWF {
 						CitationContext.class, Sentence.class, Citation.class,
 						Token.class, Sentiment.class), null);
 
-		builder.add(xmlParser);
-		builder.add(sentenceDetector);
+		builder.add(xmiReader);
 		builder.add(citationContextAnnotator);
-		builder.add(tokenizer);
 		builder.add(POSTagger);
 		builder.add(sentimentFinder);
 		builder.add(xmiWriter);
