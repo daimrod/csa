@@ -71,7 +71,7 @@ public class XMIReaderAE extends
         }
 
         Filename filename = JCasUtil.selectSingle(originalText, Filename.class);
-        logger.info("Deserializing `" + filename.getFilename() + "'...");
+        logger.info("Reading `" + filename.getFilename() + "'...");
         File file = new File(filename.getFilename());
         
 		try {
