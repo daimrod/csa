@@ -146,16 +146,19 @@ public class CoCitationExtractorAE extends
 		return ret;
 	}
 
-	private Integer getCoCitationScore(String a, String b) {
+    private Integer getCoCitationScore(String a, String b) {
+        Integer score;
 		Set<String> citersA = references.get(a);
         Set<String> citersB = references.get(b);
         if (citersA == null || citersB == null) {
-            return 0;
+            score = 0;
         }
 
 		Set<String> intersection = new HashSet<>(citersA);
-		intersection.retainAll(citersB);
-		return intersection.size();
+        intersection.retainAll(citersB);
+        score = intersection.size();
+
+        return score;
 	}
 
 	@Override
