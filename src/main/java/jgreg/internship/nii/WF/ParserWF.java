@@ -204,12 +204,12 @@ public class ParserWF {
 		builder.add(sentenceDetector);
 		builder.add(tokenizer);
 		builder.add(coCitationExtractor);
-		builder.add(xmiWriter);
-		SimplePipeline
-				.runPipeline(reader, builder.createAggregateDescription());
-
+        builder.add(xmiWriter);
+        SimplePipeline
+                .runPipeline(reader, builder.createAggregateDescription());
+        
 		logger.info("Done!");
-	}
+    }
 
 	/**
 	 * The main method.
@@ -219,7 +219,9 @@ public class ParserWF {
 	 * @throws Exception
 	 *             the exception
 	 */
-	public static void main(String[] args) throws Exception {
+    public static void main(String[] args) throws Exception {
+        logger.info("Starting " + ParserWF.class + "...");
+
 		Options options = new Options();
 		options.addOption("help", false, "print this message");
 
