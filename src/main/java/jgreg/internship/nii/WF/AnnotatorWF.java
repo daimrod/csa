@@ -1,4 +1,4 @@
- //
+//
 // Author:: Grégoire Jadi <daimrod@gmail.com>
 // Copyright:: Copyright (c) 2014, Grégoire Jadi
 // All rights reserved.
@@ -37,8 +37,8 @@
 package jgreg.internship.nii.WF;
 
 import jgreg.internship.nii.AE.CitationContextAnnotatorAE;
-import jgreg.internship.nii.AE.PubMedParserAE;
 import jgreg.internship.nii.AE.PatternAnnotatorAE;
+import jgreg.internship.nii.AE.PubMedParserAE;
 import jgreg.internship.nii.AE.XMIWriterAE;
 import jgreg.internship.nii.CR.DirectoryReaderCR;
 import jgreg.internship.nii.RES.MappingRES;
@@ -91,7 +91,7 @@ public class AnnotatorWF {
 	/**
 	 * Run the Pipeline.
 	 *
-     * @param inputDirectory
+	 * @param inputDirectory
 	 *            contains all articles.
 	 * @param outputDirectory
 	 *            stores all output data (XMI, ...).
@@ -155,7 +155,7 @@ public class AnnotatorWF {
 
 		// Mapping
 		ExternalResourceDescription mapping = ExternalResourceFactory
-            .createExternalResourceDescription(MappingRES.class,
+				.createExternalResourceDescription(MappingRES.class,
 						mappingFilename);
 
 		/*
