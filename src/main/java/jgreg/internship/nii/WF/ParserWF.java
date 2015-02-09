@@ -82,7 +82,7 @@ import org.apache.uima.resource.ExternalResourceDescription;
 public class ParserWF {
 
 	/** The Constant logger. */
-    private static final Logger logger = Logger.getLogger(ParserWF.class
+	private static final Logger logger = Logger.getLogger(ParserWF.class
 			.getCanonicalName());
 
 	/**
