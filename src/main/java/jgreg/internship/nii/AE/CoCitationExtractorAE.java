@@ -122,7 +122,7 @@ public class CoCitationExtractorAE extends
 				+ references.keySet().size() + ")");
 	}
 
-	private Set<Pair<String, String>> getCoCitations() {
+    private Set<Pair<String, String>> getCoCitations() {
 		HashSet<Pair<String, String>> ret = new HashSet<>();
 
 		int length = references.keySet().size();
@@ -144,6 +144,30 @@ public class CoCitationExtractorAE extends
 		logger.info("CoCitation extracted");
 
 		return ret;
+    }
+
+    private String getCoCitationsAsString() {
+        StringBuffer ret = new StringBuffer();
+
+		int length = references.keySet().size();
+		String[] articles = references.keySet().toArray(new String[length]);
+		logger.debug("Set of articles created");
+
+		for (int i = 0; i < length; i++) {
+			String a = articles[i];
+			for (int j = i + 1; j < length; j++) {
+				String b = articles[j];
+				// Looking for an intersection between references[a] and
+				// references[b]
+                // if a ∩ b ≠ ∅ ...
+                if (getCoCitationScore(a, b) >= coCitationThreshold) {
+                    ret.append(a).append(' ').append(b).append('\n');
+                }
+			}
+		}
+		logger.info("CoCitation extracted");
+
+        return ret.toString();
 	}
 
     private Integer getCoCitationScore(String a, String b) {
@@ -168,7 +192,7 @@ public class CoCitationExtractorAE extends
 				+ outputFile.getAbsolutePath() + "'...");
 
 		try {
-			FileUtils.writeLines(outputFile, getCoCitations());
+            FileUtils.writeLines(outputFile, getCoCitationsAsString(), null, true);
 		} catch (IOException ex) {
 			logger.fatal(null, ex);
   }

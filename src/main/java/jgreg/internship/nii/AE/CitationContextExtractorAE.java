@@ -59,18 +59,16 @@ import org.apache.uima.jcas.JCas;
 import org.apache.uima.resource.ResourceInitializationException;
 
 /**
- * Extract {@link jgreg.internship.nii.types.CitationContext} and their {@link jgreg.internship.nii.types.Sentiment} and dump them to {@link #outputDir}.
+ * Extract {@link jgreg.internship.nii.types.CitationContext} and their
+ * {@link jgreg.internship.nii.types.Sentiment} and dump them to
+ * {@link #outputDir}.
  *
- * The format for each context is the following (between !BEGIN
- * and !END):
- * !BEGIN
- * #<num>
- * word word word word/_/annotation word word
- * word word
+ * The format for each context is the following (between !BEGIN and !END):
+ * !BEGIN #<num> word word word word/_/annotation word word word word
  *
  *
- * !END
- * Note that only articles with a PMID are dumped.
+ * !END Note that only articles with a PMID are dumped.
+ *
  * @author Grégoire Jadi
  */
 public class CitationContextExtractorAE extends
@@ -109,11 +107,11 @@ public class CitationContextExtractorAE extends
 		ID id = JCasUtil.selectSingle(jCas, ID.class);
 
 		// if there is no contexts, leave
-        if (!config.containsKey(id.getPMID()))
+		if (!config.containsKey(id.getPMID()))
 			return;
 
-        // otherwise, get the list of contexts to extract from the current JCas
-        List<String> contexts = new ArrayList<String>(Arrays.asList(config
+		// otherwise, get the list of contexts to extract from the current JCas
+		List<String> contexts = new ArrayList<String>(Arrays.asList(config
 				.getString(id.getPMID()).split(" ")));
 
 		// prepare a temporary buffer
@@ -164,7 +162,7 @@ public class CitationContextExtractorAE extends
 		// finally dump the buffer to the output file
 		try {
 			FileUtils.writeStringToFile(new File(outputDir, id.getPMID()
-					+ ".ctx"), buffer.toString());
+					+ ".ctx"), buffer.toString(), null, true);
 		} catch (IOException ex) {
 			logger.fatal(ex);
 			throw new AnalysisEngineProcessException(ex);
