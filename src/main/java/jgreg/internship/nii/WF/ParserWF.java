@@ -37,6 +37,7 @@
 package jgreg.internship.nii.WF;
 
 import jgreg.internship.nii.AE.CitationContextAnnotatorAE;
+import jgreg.internship.nii.AE.CoCitationExtractorAE;
 import jgreg.internship.nii.AE.PubMedParserAE;
 import jgreg.internship.nii.AE.XMIWriterAE;
 import jgreg.internship.nii.CR.DirectoryReaderCR;
@@ -108,7 +109,7 @@ public class ParserWF {
 	public static void process(String inputDirectory, String outputDirectory,
 			String listArticlesFilename, String listFocusedArticlesFilename,
 			String listCoCitedArticlesFilename, String mappingFilename,
-			Integer windowSize) throws Exception {
+			Integer windowSize, String coCitationFilename) throws Exception {
 
 		/*
 		 * Resources
@@ -170,6 +171,11 @@ public class ParserWF {
 						"opennlp.uima.TokenType",
 						"jgreg.internship.nii.types.Token");
 
+		// CoCitatio Extractor
+		AnalysisEngineDescription coCitationExtractor = AnalysisEngineFactory
+				.createEngineDescription(CoCitationExtractorAE.class,
+						CoCitationExtractorAE.OUTPUT_FILE, coCitationFilename);
+
 		// XMI Writer
 		AnalysisEngineDescription xmiWriter = AnalysisEngineFactory
 				.createEngineDescription(XMIWriterAE.class,
@@ -194,6 +200,7 @@ public class ParserWF {
 		builder.add(xmlParser);
 		builder.add(sentenceDetector);
 		builder.add(tokenizer);
+		builder.add(coCitationExtractor);
 		builder.add(xmiWriter);
 		SimplePipeline
 				.runPipeline(reader, builder.createAggregateDescription());
@@ -229,6 +236,8 @@ public class ParserWF {
 				.isRequired(false).create("mappingFilename"));
 		options.addOption(OptionBuilder.withArgName("windowSize").hasArg()
 				.withType(Integer.class).isRequired(false).create("windowSize"));
+		options.addOption(OptionBuilder.withArgName("coCitationFilename")
+				.hasArg().isRequired(false).create("coCitationFilename"));
 
 		options.addOption(OptionBuilder.withArgName("config").hasArg()
 				.isRequired(false).create("config"));
@@ -272,9 +281,12 @@ public class ParserWF {
 		Integer windowSize = new Integer(line.getOptionValue("windowSize",
 				annotatorConfig.getString("windowSize")));
 
+		String coCitationFilename = line.getOptionValue("coCitationFilename",
+				annotatorConfig.getString("coCitationFilename"));
+
 		ParserWF.process(inputDirectory, outputDirectory, listArticlesFilename,
 				listFocusedArticlesFilename, listCoCitedArticlesFilename,
-				mappingFilename, windowSize);
+				mappingFilename, windowSize, coCitationFilename);
 
  }
 }
