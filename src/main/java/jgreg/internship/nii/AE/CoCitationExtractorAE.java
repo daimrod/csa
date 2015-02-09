@@ -1,20 +1,20 @@
-// 
+//
 // Author:: Grégoire Jadi <daimrod@gmail.com>
 // Copyright:: Copyright (c) 2014, Grégoire Jadi
 // All rights reserved.
-// 
+//
 // Redistribution and use in source and binary forms, with or without
 // modification, are permitted provided that the following conditions are
 // met:
-// 
+//
 //    1. Redistributions of source code must retain the above copyright
 //       notice, this list of conditions and the following disclaimer.
-// 
+//
 //    2. Redistributions in binary form must reproduce the above
 //       copyright notice, this list of conditions and the following
 //       disclaimer in the documentation and/or other materials provided
 //       with the distribution.
-// 
+//
 // THIS SOFTWARE IS PROVIDED BY GRÉGOIRE JADI ``AS IS'' AND ANY
 // EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
 // IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
@@ -27,12 +27,12 @@
 // OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
 // OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 // SUCH DAMAGE.
-// 
+//
 // The views and conclusions contained in the software and
 // documentation are those of the authors and should not be
 // interpreted as representing official policies, either expressed or
 // implied, of Grégoire Jadi.
-// 
+//
 
 package jgreg.internship.nii.AE;
 
@@ -60,82 +60,114 @@ import org.apache.uima.resource.ResourceInitializationException;
 /**
  * Extract citation and co-citation information.
  *
- * 1. Extract all citations for every articles (every CAS).
- * 2. Compute a list of co-cited articles from the citations previously extracted.
- * 3. Dump the list to @{link #OUTPUT_FILE}
+ * 1. Extract all citations for every articles (every CAS). 2. Compute a list of
+ * co-cited articles from the citations previously extracted. 3. Dump the list
+ * to @{link #OUTPUT_FILE}
+ *
+ * Two articles are cocited, if they have a coCitationScore superior or equal to
+ * @{link #COCITATION_THRESHOLD}.
  *
  * @author Grégoire Jadi
  */
 
-public class CoCitationExtractorAE extends org.apache.uima.fit.component.JCasAnnotator_ImplBase {
-    private static final Logger logger = Logger.getLogger(CoCitationExtractorAE.class.getCanonicalName());
-    
-    public static final String OUTPUT_FILE = "outputFilePath";
-    @ConfigurationParameter(name = OUTPUT_FILE, mandatory = true)
-    private File outputFile;
+public class CoCitationExtractorAE extends
+		org.apache.uima.fit.component.JCasAnnotator_ImplBase {
+	private static final Logger logger = Logger
+			.getLogger(CoCitationExtractorAE.class.getCanonicalName());
 
-    // references[A] -- cited by --> B, C, D, ...
-    private Map<String, Set<String>> references;
+	public static final String OUTPUT_FILE = "outputFilePath";
+	@ConfigurationParameter(name = OUTPUT_FILE, mandatory = true)
+	private File outputFile;
 
-    @Override
-    public void initialize(UimaContext context) throws ResourceInitializationException {
-        references = new HashMap<>();
-        outputFile = new File((String) context.getConfigParameterValue(OUTPUT_FILE));
-    }
+	public static final String COCITATION_THRESHOLD = "coCitationThreshold";
+	@ConfigurationParameter(name = COCITATION_THRESHOLD, mandatory = true)
+    private Integer coCitationThreshold;
 
-    @Override
-    public void process(JCas jCas) throws AnalysisEngineProcessException {
-        String citer = JCasUtil.selectSingle(jCas, ID.class).getPMID();
+	// references[A] -- cited by --> B, C, D, ...
+	private Map<String, Set<String>> references;
+
+	@Override
+	public void initialize(UimaContext context)
+			throws ResourceInitializationException {
+		references = new HashMap<>();
+		outputFile = new File(
+                (String) context.getConfigParameterValue(OUTPUT_FILE));
+        coCitationThreshold = (Integer) context.getConfigParameterValue(COCITATION_THRESHOLD);
+	}
+
+	@Override
+	public void process(JCas jCas) throws AnalysisEngineProcessException {
+		String citer = JCasUtil.selectSingle(jCas, ID.class).getPMID();
 
         for (Citation citee : JCasUtil.select(jCas, Citation.class)) {
-            // citer = <current jCas>
-            // citee = inside citer
+            // Skip citation without PMID
+            if (citee.getPMID() == null) {
+                continue;
+            }
+			// citer = <current jCas>
+			// citee = inside citer
             // <citee> -- cited by --> <citer>
             addCitation(citee.getPMID(), citer);
-        }
-    }
+		}
+	}
 
-    private void addCitation(String citee, String citer) {
-        if (!references.containsKey(citee)) {
-            Set<String> set = new HashSet<>();
-            references.put(citee, set);
-        }
-        references.get(citee).add(citer);
+	private void addCitation(String citee, String citer) {
+		if (!references.containsKey(citee)) {
+			Set<String> set = new HashSet<>();
+			references.put(citee, set);
+		}
+		references.get(citee).add(citer);
 
-        logger.debug("`" + citee + "' is cited by `" + citer + "' (" + references.keySet().size() + ")");
-    }
+		logger.debug("`" + citee + "' is cited by `" + citer + "' ("
+				+ references.keySet().size() + ")");
+	}
 
-    private Set<Pair<String, String>> getCoCitations() {
-        HashSet<Pair<String, String>> ret = new HashSet<>();
+	private Set<Pair<String, String>> getCoCitations() {
+		HashSet<Pair<String, String>> ret = new HashSet<>();
 
-        int length = references.keySet().size();
-        String[] articles = references.keySet().toArray(new String[length]);
-        logger.debug("Set of articles created");
+		int length = references.keySet().size();
+		String[] articles = references.keySet().toArray(new String[length]);
+		logger.debug("Set of articles created");
 
-        for (int i = 0; i < length; i++) {
-            String a = articles[i];
-            for (int j = i + 1; j < length; j++) {
-                String b = articles[j];
-                // Looking for an intersection between references[a] and references[b]
+		for (int i = 0; i < length; i++) {
+			String a = articles[i];
+			for (int j = i + 1; j < length; j++) {
+				String b = articles[j];
+				// Looking for an intersection between references[a] and
+				// references[b]
                 // if a ∩ b ≠ ∅ ...
-                if (references.get(a).stream().anyMatch((o) -> references.get(b).contains(o))) {
-                    ret.add(new ImmutablePair<>(a, b));
-                }
-            }
+                if (getCoCitationScore(a, b) >= coCitationThreshold) {
+					ret.add(new ImmutablePair<>(a, b));
+				}
+			}
+		}
+		logger.info("CoCitation extracted");
+
+		return ret;
+	}
+
+	private Integer getCoCitationScore(String a, String b) {
+		Set<String> citersA = references.get(a);
+        Set<String> citersB = references.get(b);
+        if (citersA == null || citersB == null) {
+            return 0;
         }
-        logger.info("CoCitation extracted");
 
-        return ret;
-    }
+		Set<String> intersection = new HashSet<>(citersA);
+		intersection.retainAll(citersB);
+		return intersection.size();
+	}
 
-    @Override
-    public void collectionProcessComplete() throws AnalysisEngineProcessException {
-        logger.info("Dumping cocitation information to `" + outputFile.getAbsolutePath() + "'...");
+	@Override
+	public void collectionProcessComplete()
+			throws AnalysisEngineProcessException {
+		logger.info("Dumping cocitation information to `"
+				+ outputFile.getAbsolutePath() + "'...");
 
-        try {
-            FileUtils.writeLines(outputFile, getCoCitations());
-        } catch (IOException ex) {
-            logger.fatal(null, ex);
-        }
+		try {
+			FileUtils.writeLines(outputFile, getCoCitations());
+		} catch (IOException ex) {
+			logger.fatal(null, ex);
+  }
     }
 }

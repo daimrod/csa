@@ -109,7 +109,8 @@ public class ParserWF {
 	public static void process(String inputDirectory, String outputDirectory,
 			String listArticlesFilename, String listFocusedArticlesFilename,
 			String listCoCitedArticlesFilename, String mappingFilename,
-			Integer windowSize, String coCitationFilename) throws Exception {
+			Integer windowSize, String coCitationFilename,
+			Integer coCitationThreshold) throws Exception {
 
 		/*
 		 * Resources
@@ -171,10 +172,12 @@ public class ParserWF {
 						"opennlp.uima.TokenType",
 						"jgreg.internship.nii.types.Token");
 
-		// CoCitatio Extractor
-		AnalysisEngineDescription coCitationExtractor = AnalysisEngineFactory
+        // CoCitatio Extractor
+        AnalysisEngineDescription coCitationExtractor = AnalysisEngineFactory
 				.createEngineDescription(CoCitationExtractorAE.class,
-						CoCitationExtractorAE.OUTPUT_FILE, coCitationFilename);
+						CoCitationExtractorAE.OUTPUT_FILE, coCitationFilename,
+						CoCitationExtractorAE.COCITATION_THRESHOLD,
+						coCitationThreshold);
 
 		// XMI Writer
 		AnalysisEngineDescription xmiWriter = AnalysisEngineFactory
@@ -238,6 +241,9 @@ public class ParserWF {
 				.withType(Integer.class).isRequired(false).create("windowSize"));
 		options.addOption(OptionBuilder.withArgName("coCitationFilename")
 				.hasArg().isRequired(false).create("coCitationFilename"));
+		options.addOption(OptionBuilder.withArgName("coCitationThreshold")
+				.hasArg().withType(Integer.class).isRequired(false)
+				.create("coCitationThreshold"));
 
 		options.addOption(OptionBuilder.withArgName("config").hasArg()
 				.isRequired(false).create("config"));
@@ -284,9 +290,14 @@ public class ParserWF {
 		String coCitationFilename = line.getOptionValue("coCitationFilename",
 				annotatorConfig.getString("coCitationFilename"));
 
+		Integer coCitationThreshold = new Integer(line.getOptionValue(
+				"coCitationThreshold",
+                annotatorConfig.getString("coCitationThreshold")));
+
 		ParserWF.process(inputDirectory, outputDirectory, listArticlesFilename,
 				listFocusedArticlesFilename, listCoCitedArticlesFilename,
-				mappingFilename, windowSize, coCitationFilename);
+				mappingFilename, windowSize, coCitationFilename,
+				coCitationThreshold);
 
  }
 }
