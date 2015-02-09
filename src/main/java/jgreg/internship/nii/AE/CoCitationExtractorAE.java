@@ -88,12 +88,14 @@ public class CoCitationExtractorAE extends org.apache.uima.fit.component.JCasAnn
         String citer = JCasUtil.selectSingle(jCas, ID.class).getPMID();
 
         for (Citation citee : JCasUtil.select(jCas, Citation.class)) {
-            // <citation> -- cited by --> <current jCas>
+            // citer = <current jCas>
+            // citee = inside citer
+            // <citee> -- cited by --> <citer>
             addCitation(citee.getPMID(), citer);
         }
     }
 
-    private void addCitation(String citer, String citee) {
+    private void addCitation(String citee, String citer) {
         if (references.containsKey(citee)) {
             references.get(citee).add(citer);
         } else {
