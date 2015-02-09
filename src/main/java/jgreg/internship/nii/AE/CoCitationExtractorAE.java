@@ -96,13 +96,11 @@ public class CoCitationExtractorAE extends org.apache.uima.fit.component.JCasAnn
     }
 
     private void addCitation(String citee, String citer) {
-        if (references.containsKey(citee)) {
-            references.get(citee).add(citer);
-        } else {
+        if (!references.containsKey(citee)) {
             Set<String> set = new HashSet<>();
-            set.add(citer);
             references.put(citee, set);
         }
+        references.get(citee).add(citer);
 
         logger.debug("`" + citee + "' is cited by `" + citer + "' (" + references.keySet().size() + ")");
     }
