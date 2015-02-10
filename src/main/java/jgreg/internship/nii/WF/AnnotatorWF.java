@@ -149,7 +149,7 @@ public class AnnotatorWF {
 		CollectionReaderDescription reader = CollectionReaderFactory
 				.createReaderDescription(DirectoryReaderCR.class,
 						DirectoryReaderCR.INPUT_DIRECTORY, inputDirectory,
-						DirectoryReaderCR.CORPUS_ARTICLES, corpusArticles);
+						DirectoryReaderCR.LIST_ARTICLES, corpusArticles);
 
 		/*
 		 * Analysis Engine

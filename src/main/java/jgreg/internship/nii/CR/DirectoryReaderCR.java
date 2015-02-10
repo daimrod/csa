@@ -84,8 +84,8 @@ public class DirectoryReaderCR extends JCasCollectionReader_ImplBase {
 	private File inputDirectory;
 
 	/** The list of articles we want to anaylze. */
-	public static final String CORPUS_ARTICLES = "corpusArticles";
-	@ExternalResource(key = CORPUS_ARTICLES, mandatory = false)
+    public static final String LIST_ARTICLES = "corpusArticles";
+    @ExternalResource(key = LIST_ARTICLES, mandatory = false)
 	StringListRES corpusArticles;
 
     /** The extensions of file we want to analyze. */

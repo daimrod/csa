@@ -86,7 +86,7 @@ public class TestWF02 {
 		CollectionReaderDescription reader = CollectionReaderFactory
 				.createReaderDescription(DirectoryReaderCR.class,
 						DirectoryReaderCR.INPUT_DIRECTORY, "/tmp/data",
-						DirectoryReaderCR.CORPUS_ARTICLES, corpusArticles);
+						DirectoryReaderCR.LIST_ARTICLES, corpusArticles);
 
 		// Parser XML
 		AnalysisEngineDescription parser = AnalysisEngineFactory

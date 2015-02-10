@@ -47,8 +47,7 @@ import jgreg.internship.nii.types.Citation;
 import jgreg.internship.nii.types.ID;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang3.tuple.ImmutablePair;
-import org.apache.commons.lang3.tuple.Pair;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.uima.UimaContext;
 import org.apache.uima.analysis_engine.AnalysisEngineProcessException;
@@ -93,6 +92,7 @@ public class CitationExtractorAE extends
         for (Citation citee : JCasUtil.select(jCas, Citation.class)) {
             // Skip citation without PMID
             if (citee.getPMID() == null) {
+                logger.debug("skipping citation without PMID");
                 continue;
             }
 			// citer = <current jCas>
@@ -122,13 +122,10 @@ public class CitationExtractorAE extends
         try {
             StringBuilder builder = new StringBuilder();
             for (String citee : references.keySet()) {
-                builder.append(citee).append(" = ");
-                for (String citer : references.get(citee)) {
-                    builder.append(citer).append(", ");
-                }
-                builder.append('\n');
+                builder.append(citee).append(" = ").append(StringUtils.join(references.get(citee), ",")).append('\n');
             }
-            FileUtils.writeLines(outputFile, builder.toString(), null, true);
+            logger.debug(builder.toString());
+            FileUtils.write(outputFile, builder.toString(), null, true);
 		} catch (IOException ex) {
 			logger.fatal(null, ex);
   }

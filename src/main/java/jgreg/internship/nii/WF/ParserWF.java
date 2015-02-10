@@ -36,7 +36,6 @@
 
 package jgreg.internship.nii.WF;
 
-import jgreg.internship.nii.AE.CitationContextAnnotatorAE;
 import jgreg.internship.nii.AE.CitationExtractorAE;
 import jgreg.internship.nii.AE.PubMedParserAE;
 import jgreg.internship.nii.AE.XMIWriterAE;
@@ -89,24 +88,17 @@ public class ParserWF {
 	/**
 	 * Run the Pipeline.
 	 *
-	 * @param inputDirectory
+	 * @param parser_input
 	 *            contains all articles.
-	 * @param outputDirectory
+	 * @param parser_output
 	 *            stores all output data (XMI, ...).
-	 * @param listArticlesFilename
+	 * @param parser_list_articles_filename
 	 *            lists articles of interest.
-	 * @param listFocusedArticlesFilename
-	 *            lists PMIDS of interest.
-	 * @param mappingFilename
-	 *            describes the mapping system.
-	 * @param windowSize
-	 *            is the size of the citation context.
 	 * @throws Exception
 	 *             the exception
 	 */
-	public static void process(String inputDirectory, String outputDirectory,
-			String listArticlesFilename, String listFocusedArticlesFilename,
-			String mappingFilename, Integer windowSize, String citationFilename)
+	public static void process(String parser_input, String parser_output,
+			String parser_list_articles_filename, String citationFilename)
 			throws Exception {
 
 		/*
@@ -124,25 +116,18 @@ public class ParserWF {
 						"file:opennlp/uima/models/en-token.bin");
 
 		// Corpus Articles
-		ExternalResourceDescription corpusArticles = ExternalResourceFactory
+		ExternalResourceDescription parser_list_articles = ExternalResourceFactory
 				.createExternalResourceDescription(StringListRES.class,
-						listArticlesFilename);
-
-		// Focused Articles
-		ExternalResourceDescription focusedArticles = null;
-		if (!listFocusedArticlesFilename.isEmpty()) {
-			focusedArticles = ExternalResourceFactory
-					.createExternalResourceDescription(StringListRES.class,
-							listFocusedArticlesFilename);
-		}
+						parser_list_articles_filename);
 
 		/*
 		 * Collection Reader
 		 */
 		CollectionReaderDescription reader = CollectionReaderFactory
 				.createReaderDescription(DirectoryReaderCR.class,
-						DirectoryReaderCR.INPUT_DIRECTORY, inputDirectory,
-						DirectoryReaderCR.CORPUS_ARTICLES, corpusArticles);
+						DirectoryReaderCR.INPUT_DIRECTORY, parser_input,
+						DirectoryReaderCR.LIST_ARTICLES,
+						parser_list_articles);
 
 		/*
 		 * Analysis Engine
@@ -177,7 +162,7 @@ public class ParserWF {
 		// XMI Writer
 		AnalysisEngineDescription xmiWriter = AnalysisEngineFactory
 				.createEngineDescription(XMIWriterAE.class,
-						XMIWriterAE.OUTPUT_DIRECTORY, outputDirectory,
+						XMIWriterAE.OUTPUT_DIRECTORY, parser_output,
 						XMIWriterAE.NAME_TYPE, "jgreg.internship.nii.types.ID",
 						XMIWriterAE.NAME_FEATURE, "PMID");
 
@@ -220,23 +205,15 @@ public class ParserWF {
 		Options options = new Options();
 		options.addOption("help", false, "print this message");
 
-		options.addOption(OptionBuilder.withArgName("inputDirectory").hasArg()
-				.isRequired(false).create("inputDirectory"));
-		options.addOption(OptionBuilder.withArgName("outputDirectory").hasArg()
-				.isRequired(false).create("outputDirectory"));
-		options.addOption(OptionBuilder.withArgName("listArticlesFilename")
-				.hasArg().isRequired(false).create("listArticlesFilename"));
-		options.addOption(OptionBuilder
-				.withArgName("listFocusedArticlesFilename").hasArg()
-				.isRequired(false).create("listFocusedArticlesFilename"));
-		options.addOption(OptionBuilder.withArgName("mappingFilename").hasArg()
-				.isRequired(false).create("mappingFilename"));
-		options.addOption(OptionBuilder.withArgName("windowSize").hasArg()
-				.withType(Integer.class).isRequired(false).create("windowSize"));
+		options.addOption(OptionBuilder.withArgName("parser_input").hasArg()
+				.isRequired(false).create("parser_input"));
+		options.addOption(OptionBuilder.withArgName("parser_output").hasArg()
+				.isRequired(false).create("parser_output"));
+		options.addOption(OptionBuilder.withArgName("parser_list_articles")
+				.hasArg().isRequired(false).create("parser_list_articles"));
 		options.addOption(OptionBuilder.withArgName("citationFilename")
 				.hasArg().isRequired(false).create("citationFilename"));
-
-		options.addOption(OptionBuilder.withArgName("config").hasArg()
+        options.addOption(OptionBuilder.withArgName("config").hasArg()
 				.isRequired(false).create("config"));
 
 		CommandLineParser parser = new BasicParser();
@@ -249,37 +226,26 @@ public class ParserWF {
 		}
 
 		// Initialize configuration file if any
-		String configFilename = line.getOptionValue("config", "parser.conf");
+        String configFilename = line.getOptionValue("config", "WF.conf");
 		PropertiesConfiguration annotatorConfig = new PropertiesConfiguration(
 				configFilename);
 
 		// Initialize parameters
-		String inputDirectory = line.getOptionValue("inputDirectory",
-				annotatorConfig.getString("inputDirectory"));
+		String parser_input = line.getOptionValue("parser_input",
+				annotatorConfig.getString("parser_input"));
 
-		String outputDirectory = line.getOptionValue("outputDirectory",
-				annotatorConfig.getString("outputDirectory"));
+		String parser_output = line.getOptionValue("parser_output",
+				annotatorConfig.getString("parser_output"));
 
-		String listArticlesFilename = line.getOptionValue(
-				"listArticlesFilename",
-				annotatorConfig.getString("listArticlesFilename"));
-
-		String listFocusedArticlesFilename = line.getOptionValue(
-				"listFocusedArticlesFilename",
-				annotatorConfig.getString("listFocusedArticlesFilename", ""));
-
-		String mappingFilename = line.getOptionValue("mappingFilename",
-				annotatorConfig.getString("mappingFilename"));
-
-		Integer windowSize = new Integer(line.getOptionValue("windowSize",
-				annotatorConfig.getString("windowSize")));
+		String parser_list_articles_filename = line.getOptionValue(
+				"parser_list_articles",
+				annotatorConfig.getString("parser_list_articles"));
 
 		String citationFilename = line.getOptionValue("citationFilename",
 				annotatorConfig.getString("citationFilename"));
 
-		ParserWF.process(inputDirectory, outputDirectory, listArticlesFilename,
-				listFocusedArticlesFilename, mappingFilename, windowSize,
-				citationFilename);
+		ParserWF.process(parser_input, parser_output,
+				parser_list_articles_filename, citationFilename);
 
  }
 }
