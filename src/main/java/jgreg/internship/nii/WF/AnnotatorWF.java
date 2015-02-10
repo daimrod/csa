@@ -53,9 +53,6 @@ import jgreg.internship.nii.types.Sentiment;
 import jgreg.internship.nii.types.Title;
 import jgreg.internship.nii.types.Token;
 
-import opennlp.uima.postag.POSModelResourceImpl;
-import opennlp.uima.postag.POSTagger;
-
 import org.apache.commons.cli.BasicParser;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -74,9 +71,8 @@ import org.apache.uima.fit.factory.TypePrioritiesFactory;
 import org.apache.uima.fit.pipeline.SimplePipeline;
 import org.apache.uima.resource.ExternalResourceDescription;
 
-// TODO: Auto-generated Javadoc
 /**
- * This my full Pipeline.
+ * The annotator pipeline.
  */
 public class AnnotatorWF {
 
@@ -87,15 +83,13 @@ public class AnnotatorWF {
 	/**
 	 * Run the Pipeline.
 	 *
-	 * @param inputDirectory
+	 * @param annotator_input
 	 *            contains all articles.
-	 * @param outputDirectory
+	 * @param annotator_output
 	 *            stores all output data (XMI, ...).
-	 * @param listArticlesFilename
+	 * @param annotator_list_articles_filename
 	 *            lists articles of interest.
-	 * @param listFocusedArticlesFilename
-	 *            lists PMIDS of interest.
-	 * @param listCoCitedArticlesFilename
+	 * @param coCitationFilename
 	 *            lists co-cited PMIDS.
 	 * @param mappingFilename
 	 *            describes the mapping system.
@@ -104,38 +98,24 @@ public class AnnotatorWF {
 	 * @throws Exception
 	 *             the exception
 	 */
-	public static void process(String inputDirectory, String outputDirectory,
-			String listArticlesFilename, String listFocusedArticlesFilename,
-			String listCoCitedArticlesFilename, String mappingFilename,
-			Integer windowSize) throws Exception {
+	public static void process(String annotator_input, String annotator_output,
+			String annotator_list_articles_filename, String coCitationFilename,
+			String mappingFilename, Integer windowSize) throws Exception {
 
 		/*
 		 * Resources
 		 */
-		// POS tagger Model
-		ExternalResourceDescription POSModel = ExternalResourceFactory
-				.createExternalResourceDescription(POSModelResourceImpl.class,
-						"file:opennlp/uima/models/en-pos-perceptron.bin");
-
 		// Corpus Articles
-		ExternalResourceDescription corpusArticles = ExternalResourceFactory
+		ExternalResourceDescription annotator_list_articles = ExternalResourceFactory
 				.createExternalResourceDescription(StringListRES.class,
-						listArticlesFilename);
-
-		// Focused Articles
-		ExternalResourceDescription focusedArticles = null;
-		if (!listFocusedArticlesFilename.isEmpty()) {
-			focusedArticles = ExternalResourceFactory
-					.createExternalResourceDescription(StringListRES.class,
-							listFocusedArticlesFilename);
-		}
+						annotator_list_articles_filename);
 
 		// CoCited Articles
 		ExternalResourceDescription coCitedArticles = null;
-		if (!listCoCitedArticlesFilename.isEmpty()) {
+		if (!coCitationFilename.isEmpty()) {
 			coCitedArticles = ExternalResourceFactory
 					.createExternalResourceDescription(StringListRES.class,
-							listCoCitedArticlesFilename);
+							coCitationFilename);
 		}
 
 		// Mapping
@@ -146,10 +126,11 @@ public class AnnotatorWF {
 		/*
 		 * Collection Reader
 		 */
-		CollectionReaderDescription reader = CollectionReaderFactory
+		CollectionReaderDescription directoryReader = CollectionReaderFactory
 				.createReaderDescription(DirectoryReaderCR.class,
-						DirectoryReaderCR.INPUT_DIRECTORY, inputDirectory,
-						DirectoryReaderCR.LIST_ARTICLES, corpusArticles);
+						DirectoryReaderCR.INPUT_DIRECTORY, annotator_input,
+						DirectoryReaderCR.LIST_ARTICLES,
+						annotator_list_articles);
 
 		/*
 		 * Analysis Engine
@@ -161,22 +142,10 @@ public class AnnotatorWF {
 		// Citation Context Annotator
 		AnalysisEngineDescription citationContextAnnotator = AnalysisEngineFactory
 				.createEngineDescription(CitationContextAnnotatorAE.class,
-						CitationContextAnnotatorAE.FOCUSED_ARTICLES,
-						focusedArticles,
 						CitationContextAnnotatorAE.COCITED_ARTICLES,
 						coCitedArticles,
 						CitationContextAnnotatorAE.PARAM_WINDOW_SIZE,
 						windowSize);
-
-		// POS Tagger
-		AnalysisEngineDescription POSTagger = AnalysisEngineFactory
-				.createEngineDescription(POSTagger.class,
-						"opennlp.uima.ModelName", POSModel,
-						"opennlp.uima.SentenceType",
-						"jgreg.internship.nii.types.Sentence",
-						"opennlp.uima.TokenType",
-						"jgreg.internship.nii.types.Token",
-						"opennlp.uima.POSFeature", "POS");
 
 		// Sentiment Finder
 		AnalysisEngineDescription sentimentFinder = AnalysisEngineFactory
@@ -186,7 +155,7 @@ public class AnnotatorWF {
 		// XMI Writer
 		AnalysisEngineDescription xmiWriter = AnalysisEngineFactory
 				.createEngineDescription(XMIWriterAE.class,
-						XMIWriterAE.OUTPUT_DIRECTORY, outputDirectory,
+						XMIWriterAE.OUTPUT_DIRECTORY, annotator_output,
 						XMIWriterAE.NAME_TYPE, "jgreg.internship.nii.types.ID",
 						XMIWriterAE.NAME_FEATURE, "PMID");
 
@@ -202,11 +171,10 @@ public class AnnotatorWF {
 
 		builder.add(xmiReader);
 		builder.add(citationContextAnnotator);
-		builder.add(POSTagger);
 		builder.add(sentimentFinder);
 		builder.add(xmiWriter);
-		SimplePipeline
-				.runPipeline(reader, builder.createAggregateDescription());
+		SimplePipeline.runPipeline(directoryReader,
+				builder.createAggregateDescription());
 	}
 
 	/**
@@ -251,28 +219,23 @@ public class AnnotatorWF {
 		}
 
 		// Initialize configuration file if any
-		String configFilename = line.getOptionValue("config", "annotator.conf");
+		String configFilename = line.getOptionValue("config", "WF.conf");
 		PropertiesConfiguration annotatorConfig = new PropertiesConfiguration(
 				configFilename);
 
 		// Initialize parameters
-		String inputDirectory = line.getOptionValue("inputDirectory",
-				annotatorConfig.getString("inputDirectory"));
+		String annotator_input = line.getOptionValue("annotator_input",
+				annotatorConfig.getString("annotator_input"));
 
-		String outputDirectory = line.getOptionValue("outputDirectory",
-				annotatorConfig.getString("outputDirectory"));
+		String annotator_output = line.getOptionValue("annotator_output",
+				annotatorConfig.getString("annotator_output"));
 
-		String listArticlesFilename = line.getOptionValue(
-				"listArticlesFilename",
-				annotatorConfig.getString("listArticlesFilename"));
+		String annotator_list_articles_filename = line.getOptionValue(
+				"annotator_list_articles",
+				annotatorConfig.getString("annotator_list_articles"));
 
-		String listFocusedArticlesFilename = line.getOptionValue(
-				"listFocusedArticlesFilename",
-				annotatorConfig.getString("listFocusedArticlesFilename", ""));
-
-		String listCoCitedArticlesFilename = line.getOptionValue(
-				"listCoCitedArticlesFilename",
-				annotatorConfig.getString("listCoCitedArticlesFilename", ""));
+		String coCitationFilename = line.getOptionValue("coCitationFilename",
+				annotatorConfig.getString("coCitationFilename", ""));
 
 		String mappingFilename = line.getOptionValue("mappingFilename",
 				annotatorConfig.getString("mappingFilename"));
@@ -280,9 +243,9 @@ public class AnnotatorWF {
 		Integer windowSize = new Integer(line.getOptionValue("windowSize",
 				annotatorConfig.getString("windowSize")));
 
-		AnnotatorWF.process(inputDirectory, outputDirectory,
-				listArticlesFilename, listFocusedArticlesFilename,
-				listCoCitedArticlesFilename, mappingFilename, windowSize);
+		AnnotatorWF.process(annotator_input, annotator_output,
+				annotator_list_articles_filename, coCitationFilename,
+				mappingFilename, windowSize);
 
 		logger.info("done!");
  }

@@ -51,6 +51,8 @@ import jgreg.internship.nii.types.Sentiment;
 import jgreg.internship.nii.types.Title;
 import jgreg.internship.nii.types.Token;
 
+import opennlp.uima.postag.POSModelResourceImpl;
+import opennlp.uima.postag.POSTagger;
 import opennlp.uima.sentdetect.SentenceDetector;
 import opennlp.uima.sentdetect.SentenceModelResourceImpl;
 import opennlp.uima.tokenize.Tokenizer;
@@ -120,14 +122,18 @@ public class ParserWF {
 				.createExternalResourceDescription(StringListRES.class,
 						parser_list_articles_filename);
 
+		// POS tagger Model
+		ExternalResourceDescription POSModel = ExternalResourceFactory
+				.createExternalResourceDescription(POSModelResourceImpl.class,
+						"file:opennlp/uima/models/en-pos-perceptron.bin");
+
 		/*
 		 * Collection Reader
 		 */
-		CollectionReaderDescription reader = CollectionReaderFactory
+		CollectionReaderDescription directoryReader = CollectionReaderFactory
 				.createReaderDescription(DirectoryReaderCR.class,
 						DirectoryReaderCR.INPUT_DIRECTORY, parser_input,
-						DirectoryReaderCR.LIST_ARTICLES,
-						parser_list_articles);
+						DirectoryReaderCR.LIST_ARTICLES, parser_list_articles);
 
 		/*
 		 * Analysis Engine
@@ -153,6 +159,16 @@ public class ParserWF {
 						"jgreg.internship.nii.types.Sentence",
 						"opennlp.uima.TokenType",
 						"jgreg.internship.nii.types.Token");
+
+		// POS Tagger
+		AnalysisEngineDescription POSTagger = AnalysisEngineFactory
+				.createEngineDescription(POSTagger.class,
+						"opennlp.uima.ModelName", POSModel,
+						"opennlp.uima.SentenceType",
+						"jgreg.internship.nii.types.Sentence",
+						"opennlp.uima.TokenType",
+						"jgreg.internship.nii.types.Token",
+						"opennlp.uima.POSFeature", "POS");
 
 		// CoCitatio Extractor
 		AnalysisEngineDescription citationExtractor = AnalysisEngineFactory
@@ -183,10 +199,11 @@ public class ParserWF {
 		builder.add(xmlParser);
 		builder.add(sentenceDetector);
 		builder.add(tokenizer);
+		builder.add(POSTagger);
 		builder.add(citationExtractor);
 		builder.add(xmiWriter);
-		SimplePipeline
-				.runPipeline(reader, builder.createAggregateDescription());
+		SimplePipeline.runPipeline(directoryReader,
+				builder.createAggregateDescription());
 
 		logger.info("Done!");
 	}
@@ -213,7 +230,7 @@ public class ParserWF {
 				.hasArg().isRequired(false).create("parser_list_articles"));
 		options.addOption(OptionBuilder.withArgName("citationFilename")
 				.hasArg().isRequired(false).create("citationFilename"));
-        options.addOption(OptionBuilder.withArgName("config").hasArg()
+		options.addOption(OptionBuilder.withArgName("config").hasArg()
 				.isRequired(false).create("config"));
 
 		CommandLineParser parser = new BasicParser();
@@ -226,7 +243,7 @@ public class ParserWF {
 		}
 
 		// Initialize configuration file if any
-        String configFilename = line.getOptionValue("config", "WF.conf");
+		String configFilename = line.getOptionValue("config", "WF.conf");
 		PropertiesConfiguration annotatorConfig = new PropertiesConfiguration(
 				configFilename);
 
