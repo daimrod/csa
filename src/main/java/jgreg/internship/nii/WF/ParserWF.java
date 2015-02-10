@@ -37,7 +37,7 @@
 package jgreg.internship.nii.WF;
 
 import jgreg.internship.nii.AE.CitationContextAnnotatorAE;
-import jgreg.internship.nii.AE.CoCitationExtractorAE;
+import jgreg.internship.nii.AE.CitationExtractorAE;
 import jgreg.internship.nii.AE.PubMedParserAE;
 import jgreg.internship.nii.AE.XMIWriterAE;
 import jgreg.internship.nii.CR.DirectoryReaderCR;
@@ -97,8 +97,6 @@ public class ParserWF {
 	 *            lists articles of interest.
 	 * @param listFocusedArticlesFilename
 	 *            lists PMIDS of interest.
-	 * @param listCoCitedArticlesFilename
-	 *            lists co-cited PMIDS.
 	 * @param mappingFilename
 	 *            describes the mapping system.
 	 * @param windowSize
@@ -108,9 +106,8 @@ public class ParserWF {
 	 */
 	public static void process(String inputDirectory, String outputDirectory,
 			String listArticlesFilename, String listFocusedArticlesFilename,
-			String listCoCitedArticlesFilename, String mappingFilename,
-			Integer windowSize, String coCitationFilename,
-			Integer coCitationThreshold) throws Exception {
+			String mappingFilename, Integer windowSize, String citationFilename)
+			throws Exception {
 
 		/*
 		 * Resources
@@ -172,12 +169,10 @@ public class ParserWF {
 						"opennlp.uima.TokenType",
 						"jgreg.internship.nii.types.Token");
 
-        // CoCitatio Extractor
-        AnalysisEngineDescription coCitationExtractor = AnalysisEngineFactory
-				.createEngineDescription(CoCitationExtractorAE.class,
-						CoCitationExtractorAE.OUTPUT_FILE, coCitationFilename,
-						CoCitationExtractorAE.COCITATION_THRESHOLD,
-						coCitationThreshold);
+		// CoCitatio Extractor
+		AnalysisEngineDescription citationExtractor = AnalysisEngineFactory
+				.createEngineDescription(CitationExtractorAE.class,
+						CitationExtractorAE.OUTPUT_FILE, citationFilename);
 
 		// XMI Writer
 		AnalysisEngineDescription xmiWriter = AnalysisEngineFactory
@@ -203,13 +198,13 @@ public class ParserWF {
 		builder.add(xmlParser);
 		builder.add(sentenceDetector);
 		builder.add(tokenizer);
-		builder.add(coCitationExtractor);
-        builder.add(xmiWriter);
-        SimplePipeline
-                .runPipeline(reader, builder.createAggregateDescription());
-        
+		builder.add(citationExtractor);
+		builder.add(xmiWriter);
+		SimplePipeline
+				.runPipeline(reader, builder.createAggregateDescription());
+
 		logger.info("Done!");
-    }
+	}
 
 	/**
 	 * The main method.
@@ -219,8 +214,8 @@ public class ParserWF {
 	 * @throws Exception
 	 *             the exception
 	 */
-    public static void main(String[] args) throws Exception {
-        logger.info("Starting " + ParserWF.class + "...");
+	public static void main(String[] args) throws Exception {
+		logger.info("Starting " + ParserWF.class + "...");
 
 		Options options = new Options();
 		options.addOption("help", false, "print this message");
@@ -234,18 +229,12 @@ public class ParserWF {
 		options.addOption(OptionBuilder
 				.withArgName("listFocusedArticlesFilename").hasArg()
 				.isRequired(false).create("listFocusedArticlesFilename"));
-		options.addOption(OptionBuilder
-				.withArgName("listCoCitedArticlesFilename").hasArg()
-				.isRequired(false).create("listCoCitedArticlesFilename"));
 		options.addOption(OptionBuilder.withArgName("mappingFilename").hasArg()
 				.isRequired(false).create("mappingFilename"));
 		options.addOption(OptionBuilder.withArgName("windowSize").hasArg()
 				.withType(Integer.class).isRequired(false).create("windowSize"));
-		options.addOption(OptionBuilder.withArgName("coCitationFilename")
-				.hasArg().isRequired(false).create("coCitationFilename"));
-		options.addOption(OptionBuilder.withArgName("coCitationThreshold")
-				.hasArg().withType(Integer.class).isRequired(false)
-				.create("coCitationThreshold"));
+		options.addOption(OptionBuilder.withArgName("citationFilename")
+				.hasArg().isRequired(false).create("citationFilename"));
 
 		options.addOption(OptionBuilder.withArgName("config").hasArg()
 				.isRequired(false).create("config"));
@@ -279,27 +268,18 @@ public class ParserWF {
 				"listFocusedArticlesFilename",
 				annotatorConfig.getString("listFocusedArticlesFilename", ""));
 
-		String listCoCitedArticlesFilename = line.getOptionValue(
-				"listCoCitedArticlesFilename",
-				annotatorConfig.getString("listCoCitedArticlesFilename", ""));
-
 		String mappingFilename = line.getOptionValue("mappingFilename",
 				annotatorConfig.getString("mappingFilename"));
 
 		Integer windowSize = new Integer(line.getOptionValue("windowSize",
 				annotatorConfig.getString("windowSize")));
 
-		String coCitationFilename = line.getOptionValue("coCitationFilename",
-				annotatorConfig.getString("coCitationFilename"));
-
-		Integer coCitationThreshold = new Integer(line.getOptionValue(
-				"coCitationThreshold",
-                annotatorConfig.getString("coCitationThreshold")));
+		String citationFilename = line.getOptionValue("citationFilename",
+				annotatorConfig.getString("citationFilename"));
 
 		ParserWF.process(inputDirectory, outputDirectory, listArticlesFilename,
-				listFocusedArticlesFilename, listCoCitedArticlesFilename,
-				mappingFilename, windowSize, coCitationFilename,
-				coCitationThreshold);
+				listFocusedArticlesFilename, mappingFilename, windowSize,
+				citationFilename);
 
  }
 }
