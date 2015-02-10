@@ -80,6 +80,11 @@ public final class MappingRES implements SharedResourceObject {
 	 */
 	public void load(DataResource aData) throws ResourceInitializationException {
 		String filename = aData.getUri().toString();
+
+		load(filename);
+	}
+
+	public void load(String filename) throws ResourceInitializationException {
 		try {
 			filename = URLDecoder.decode(filename, "UTF-8");
 		} catch (UnsupportedEncodingException ex) {
