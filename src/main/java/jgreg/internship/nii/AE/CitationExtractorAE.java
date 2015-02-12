@@ -70,7 +70,7 @@ public class CitationExtractorAE extends
 	private static final Logger logger = Logger
 			.getLogger(CitationExtractorAE.class.getCanonicalName());
 
-	public static final String OUTPUT_FILE = "outputFilePath";
+    public static final String OUTPUT_FILE = "outputFile";
 	@ConfigurationParameter(name = OUTPUT_FILE, mandatory = true)
 	private File outputFile;
 
