@@ -89,7 +89,7 @@ public class AnnotatorWF {
 	 *            stores all output data (XMI, ...).
 	 * @param annotator_list_articles_filename
 	 *            lists articles of interest.
-	 * @param coCitationFilename
+	 * @param coCitationsFilename
 	 *            lists co-cited PMIDS.
 	 * @param mappingFilename
 	 *            describes the mapping system.
@@ -99,7 +99,7 @@ public class AnnotatorWF {
 	 *             the exception
 	 */
 	public static void process(String annotator_input, String annotator_output,
-			String annotator_list_articles_filename, String coCitationFilename,
+			String annotator_list_articles_filename, String coCitationsFilename,
 			String mappingFilename, Integer windowSize) throws Exception {
 
 		/*
@@ -112,10 +112,10 @@ public class AnnotatorWF {
 
 		// CoCited Articles
 		ExternalResourceDescription coCitedArticles = null;
-		if (!coCitationFilename.isEmpty()) {
+		if (!coCitationsFilename.isEmpty()) {
 			coCitedArticles = ExternalResourceFactory
 					.createExternalResourceDescription(StringListRES.class,
-							coCitationFilename);
+							coCitationsFilename);
 		}
 
 		// Mapping
@@ -195,12 +195,8 @@ public class AnnotatorWF {
 				.isRequired(false).create("outputDirectory"));
 		options.addOption(OptionBuilder.withArgName("listArticlesFilename")
 				.hasArg().isRequired(false).create("listArticlesFilename"));
-		options.addOption(OptionBuilder
-				.withArgName("listFocusedArticlesFilename").hasArg()
-				.isRequired(false).create("listFocusedArticlesFilename"));
-		options.addOption(OptionBuilder
-				.withArgName("listCoCitedArticlesFilename").hasArg()
-				.isRequired(false).create("listCoCitedArticlesFilename"));
+        options.addOption(OptionBuilder.withArgName("coCitationsFilename")
+                .hasArg().isRequired(false).create("coCitationsFilename"));
 		options.addOption(OptionBuilder.withArgName("mappingFilename").hasArg()
 				.isRequired(false).create("mappingFilename"));
 		options.addOption(OptionBuilder.withArgName("windowSize").hasArg()
@@ -234,8 +230,8 @@ public class AnnotatorWF {
 				"annotator_list_articles",
 				annotatorConfig.getString("annotator_list_articles"));
 
-		String coCitationFilename = line.getOptionValue("coCitationFilename",
-				annotatorConfig.getString("coCitationFilename", ""));
+        String coCitationsFilename = line.getOptionValue("coCitationsFilename",
+                annotatorConfig.getString("coCitationsFilename", ""));
 
 		String mappingFilename = line.getOptionValue("mappingFilename",
 				annotatorConfig.getString("mappingFilename"));
@@ -244,7 +240,7 @@ public class AnnotatorWF {
 				annotatorConfig.getString("windowSize")));
 
 		AnnotatorWF.process(annotator_input, annotator_output,
-				annotator_list_articles_filename, coCitationFilename,
+                annotator_list_articles_filename, coCitationsFilename,
 				mappingFilename, windowSize);
 
 		logger.info("done!");
