@@ -267,9 +267,11 @@ public class CitationContextAnnotatorAE extends
 	private void step2() {
 
 		for (String rawPMIDS : coCitedArticles.getList()) {
-			List<CitationContext> contexts = new ArrayList<>();
-			for (String pmid : rawPMIDS.split(" ")) {
-				contexts.addAll(citation2ctxs.get(pmid));
+            List<CitationContext> contexts = new ArrayList<>();
+            for (String pmid : rawPMIDS.split(" ")) {
+                if (citation2ctxs.get(pmid) != null) {
+                    contexts.addAll(citation2ctxs.get(pmid));
+                }
 			}
 
 			for (int i = 0; i < contexts.size() - 1; i++) {
