@@ -87,13 +87,11 @@ public class StatisticsWF {
 	 *            the mapping filename
 	 * @param outputFile
 	 *            the output file
-	 * @param infoFile
-	 *            the info file
-	 * @throws Exception
+     * @throws Exception
 	 *             the exception
 	 */
 	public static void process(String inputDirectory, String mappingFilename,
-			String outputFile, String infoFile) throws Exception {
+            String outputFile) throws Exception {
 		String[] extensions = { "xmi" };
 		CollectionReaderDescription reader = CollectionReaderFactory
                 .createReaderDescription(DirectoryReaderCR.class,
@@ -117,8 +115,7 @@ public class StatisticsWF {
 		AnalysisEngineDescription extractor = AnalysisEngineFactory
 				.createEngineDescription(ExtractAllAE.class,
 						ExtractAllAE.MAPPING, mapping,
-						ExtractAllAE.OUTPUT_FILE, outputFile,
-						ExtractAllAE.INFO_FILE, infoFile);
+                        ExtractAllAE.OUTPUT_FILE, outputFile);
 
 		builder.add(deserializer);
 		builder.add(extractor);
@@ -140,14 +137,12 @@ public class StatisticsWF {
 
         options.addOption(OptionBuilder.withArgName("config").hasArg()
 				.isRequired(false).create("config"));
-		options.addOption(OptionBuilder.withArgName("inputDirectory").hasArg()
-				.isRequired(false).create("inputDirectory"));
+		options.addOption(OptionBuilder.withArgName("statistics_input").hasArg()
+				.isRequired(false).create("statistics_input"));
 		options.addOption(OptionBuilder.withArgName("mappingFilename").hasArg()
 				.isRequired(false).create("mappingFilename"));
-		options.addOption(OptionBuilder.withArgName("outputFile").hasArg()
-				.isRequired(false).create("outputFile"));
-		options.addOption(OptionBuilder.withArgName("infoFile").hasArg()
-				.isRequired(false).create("infoFile"));
+		options.addOption(OptionBuilder.withArgName("statisticsFilename").hasArg()
+				.isRequired(false).create("statisticsFilename"));
 
 		CommandLineParser parser = new BasicParser();
 		CommandLine line = parser.parse(options, args);
@@ -160,24 +155,20 @@ public class StatisticsWF {
 
 		// Initialize configuration file if any
 		String configFilename;
-		configFilename = line.getOptionValue("config", "statistic.conf");
-		PropertiesConfiguration statisticConfig = new PropertiesConfiguration(
+        configFilename = line.getOptionValue("config", "WF.conf");
+		PropertiesConfiguration statisticsConfig = new PropertiesConfiguration(
 				configFilename);
 
-		String inputDirectory = line.getOptionValue("inputDirectory",
-				statisticConfig.getString("inputDirectory"));
+		String statistics_input = line.getOptionValue("statistics_input",
+				statisticsConfig.getString("statistics_input"));
 
 		String mappingFilename = line.getOptionValue("mappingFilename",
-				statisticConfig.getString("mappingFilename"));
+                statisticsConfig.getString("mappingFilename"));
 
-		String outputFile = line.getOptionValue("outputFile",
-				statisticConfig.getString("outputFile"));
+		String statisticsFilename = line.getOptionValue("statisticsFilename",
+				statisticsConfig.getString("statisticsFilename"));
 
-		String infoFile = line.getOptionValue("infoFile",
-				statisticConfig.getString("infoFile"));
-
-		StatisticsWF.process(inputDirectory, mappingFilename, outputFile,
-				infoFile);
+        StatisticsWF.process(statistics_input, mappingFilename, statisticsFilename);
 		logger.info("done!");
 	}
 }
