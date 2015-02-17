@@ -38,6 +38,7 @@ package jgreg.internship.nii.WF;
 
 import jgreg.internship.nii.AE.CitationContextAnnotatorAE;
 import jgreg.internship.nii.AE.CitationExtractorAE;
+import jgreg.internship.nii.AE.ExtractAllAE;
 import jgreg.internship.nii.AE.PatternAnnotatorAE;
 import jgreg.internship.nii.AE.PubMedParserAE;
 import jgreg.internship.nii.AE.XMIWriterAE;
@@ -105,7 +106,8 @@ public class FullWF {
 	public static void process(String parser_input, String annotator_output,
 			String parser_list_articles_filename, String citationsFilename,
 			String coCitationsFilename, Integer windowSize,
-			String mappingFilename) throws Exception {
+			String mappingFilename, String statistics_input,
+			String statisticsFilename) throws Exception {
 
 		/*
 		 * Resources
@@ -187,8 +189,8 @@ public class FullWF {
 						"jgreg.internship.nii.types.Token",
 						"opennlp.uima.POSFeature", "POS");
 
-        // CoCitatio Extractor
-        AnalysisEngineDescription citationExtractor = AnalysisEngineFactory
+		// CoCitatio Extractor
+		AnalysisEngineDescription citationExtractor = AnalysisEngineFactory
 				.createEngineDescription(CitationExtractorAE.class,
 						CitationExtractorAE.OUTPUT_FILE, citationsFilename);
 
@@ -203,7 +205,14 @@ public class FullWF {
 		// Sentiment Finder
 		AnalysisEngineDescription sentimentFinder = AnalysisEngineFactory
 				.createEngineDescription(PatternAnnotatorAE.class,
-						PatternAnnotatorAE.MAPPING, mapping);
+                        PatternAnnotatorAE.MAPPING, mapping);
+
+        // Statistics extractor
+        AnalysisEngineDescription statisticsExtractor = AnalysisEngineFactory
+				.createEngineDescription(ExtractAllAE.class,
+						ExtractAllAE.MAPPING, mapping,
+                        ExtractAllAE.OUTPUT_FILE, statisticsFilename);
+
 
 		// XMI Writer
 		AnalysisEngineDescription xmiWriter = AnalysisEngineFactory
@@ -232,7 +241,8 @@ public class FullWF {
 		builder.add(POSTagger);
 		builder.add(citationExtractor);
 		builder.add(citationContextAnnotator);
-		builder.add(sentimentFinder);
+        builder.add(sentimentFinder);
+        builder.add(statisticsExtractor);
 		builder.add(xmiWriter);
 		SimplePipeline.runPipeline(directoryReader,
 				builder.createAggregateDescription());
@@ -267,6 +277,12 @@ public class FullWF {
 				.isRequired(false).create("mappingFilename"));
 		options.addOption(OptionBuilder.withArgName("windowSize").hasArg()
 				.withType(Integer.class).isRequired(false).create("windowSize"));
+		options.addOption(OptionBuilder.withArgName("statistics_input")
+				.hasArg().isRequired(false).create("statistics_input"));
+		options.addOption(OptionBuilder.withArgName("mappingFilename").hasArg()
+				.isRequired(false).create("mappingFilename"));
+		options.addOption(OptionBuilder.withArgName("statisticsFilename")
+				.hasArg().isRequired(false).create("statisticsFilename"));
 
 		options.addOption(OptionBuilder.withArgName("config").hasArg()
 				.isRequired(false).create("config"));
@@ -308,9 +324,16 @@ public class FullWF {
 		Integer windowSize = new Integer(line.getOptionValue("windowSize",
 				annotatorConfig.getString("windowSize")));
 
-        FullWF.process(parser_input, annotator_output,
+		String statistics_input = line.getOptionValue("statistics_input",
+				annotatorConfig.getString("statistics_input"));
+
+		String statisticsFilename = line.getOptionValue("statisticsFilename",
+				annotatorConfig.getString("statisticsFilename"));
+
+		FullWF.process(parser_input, annotator_output,
 				parser_list_articles_filename, citationsFilename,
-				coCitationsFilename, windowSize, mappingFilename);
+				coCitationsFilename, windowSize, mappingFilename,
+				statistics_input, statisticsFilename);
 
  }
 }
