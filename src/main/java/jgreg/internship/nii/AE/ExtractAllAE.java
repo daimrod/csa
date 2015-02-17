@@ -117,14 +117,7 @@ public class ExtractAllAE extends
 	/** The output file. */
 	private File outputFile;
 
-	public static final String INFO_FILE = "infoFileName";
-	@ConfigurationParameter(name = INFO_FILE, mandatory = true)
-	private String infoFileName;
-	// Another output file
-	private File infoFile;
-	private StringBuilder infoAcc;
-
-	/** The str acc. */
+    /** The str acc. */
 	private StringBuilder strAcc;
 
 	/*
@@ -139,11 +132,6 @@ public class ExtractAllAE extends
 			throws ResourceInitializationException {
 		super.initialize(context);
 		outputFile = new File(outputFileName);
-		infoFile = new File(infoFileName);
-		infoAcc = new StringBuilder();
-		infoAcc.append("pmid").append(separator).append("year")
-				.append(separator).append("title").append(separator)
-				.append("filename").append('\n');
 
 		headers = new ArrayList<String>(mapping.get("order"));
 
@@ -175,9 +163,6 @@ public class ExtractAllAE extends
 		}
 
 		Filename filename = JCasUtil.selectSingle(originalText, Filename.class);
-		infoAcc.append(id.getPMID()).append(separator).append(id.getYear())
-				.append(separator).append(id.getTitle()).append(separator)
-				.append(filename.getFilename()).append('\n');
 
 		for (CitationContext context : JCasUtil.select(jCas,
 				CitationContext.class)) {
@@ -230,8 +215,7 @@ public class ExtractAllAE extends
 				+ "'...");
 		try {
 			FileUtils.write(outputFile, strAcc.toString());
-			FileUtils.write(infoFile, infoAcc.toString());
-		} catch (IOException ex) {
+        } catch (IOException ex) {
 			throw new AnalysisEngineProcessException(ex);
 		}
 	}
