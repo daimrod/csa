@@ -36,7 +36,9 @@
 
 package jgreg.internship.nii.AE;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -117,7 +119,9 @@ public class ExtractAllAE extends
 	/** The output file. */
 	private File outputFile;
 
-    /** The str acc. */
+	/** The BufferedWriter */
+	private BufferedWriter out;
+
 	private StringBuilder strAcc;
 
 	/*
@@ -132,13 +136,33 @@ public class ExtractAllAE extends
 			throws ResourceInitializationException {
 		super.initialize(context);
 		outputFile = new File(outputFileName);
+		logger.info("Dumping information to `" + outputFile.getAbsolutePath()
+				+ "'...");
 
 		headers = new ArrayList<String>(mapping.get("order"));
 
-		strAcc = new StringBuilder();
-		strAcc.append("cites").append(separator).append("ctxID")
-				.append(separator).append("cited").append(separator)
-				.append(StringUtils.join(headers, separator)).append("\n");
+		if (!outputFile.exists()) {
+			try {
+				outputFile.createNewFile();
+			} catch (IOException ex) {
+				logger.info("Error when creating "
+						+ outputFile.getAbsolutePath() + " " + ex);
+				throw new ResourceInitializationException(ex);
+			}
+		}
+		try {
+			FileWriter fw = new FileWriter(outputFile);
+			out = new BufferedWriter(fw);
+			strAcc = new StringBuilder();
+			strAcc.append("cites").append(separator).append("ctxID")
+					.append(separator).append("cited").append(separator)
+					.append(StringUtils.join(headers, separator)).append("\n");
+			out.write(strAcc.toString());
+		} catch (IOException ex) {
+			logger.info("Error when writing to " + outputFile.getAbsolutePath()
+					+ " " + ex);
+			throw new ResourceInitializationException(ex);
+		}
 	}
 
 	/*
@@ -166,14 +190,15 @@ public class ExtractAllAE extends
 
 		for (CitationContext context : JCasUtil.select(jCas,
 				CitationContext.class)) {
-            FSArray citationsFSA = context.getCitations();
+			FSArray citationsFSA = context.getCitations();
 
 			// Well, this shouldn't happen, but who knows...
 			if (citationsFSA.size() <= 0) {
 				continue;
 			}
-            strAcc.append(id.getPMID()).append(separator)
-                    .append(context.getID()).append(separator);
+			strAcc = new StringBuilder();
+			strAcc.append(id.getPMID()).append(separator)
+					.append(context.getID()).append(separator);
 
 			ArrayList<Integer> acc = Utils.List(headers.size(), 0);
 
@@ -199,6 +224,13 @@ public class ExtractAllAE extends
 			strAcc.append(separator).append(StringUtils.join(acc, separator));
 
 			strAcc.append('\n');
+			try {
+				out.write(strAcc.toString());
+			} catch (IOException ex) {
+				logger.info("Error when writing to "
+						+ outputFile.getAbsolutePath() + " " + ex);
+				throw new AnalysisEngineProcessException(ex);
+			}
 		}
 	}
 
@@ -211,12 +243,12 @@ public class ExtractAllAE extends
 	@Override
 	public void collectionProcessComplete()
 			throws AnalysisEngineProcessException {
-		logger.info("Dumping information to `" + outputFile.getAbsolutePath()
-				+ "'...");
 		try {
-			FileUtils.write(outputFile, strAcc.toString());
-        } catch (IOException ex) {
+			out.close();
+		} catch (IOException ex) {
+			logger.info("Couldn't close " + outputFile.getAbsolutePath() + " "
+					+ ex);
 			throw new AnalysisEngineProcessException(ex);
 		}
-	}
+  }
 }
