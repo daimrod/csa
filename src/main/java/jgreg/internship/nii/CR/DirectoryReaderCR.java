@@ -140,7 +140,13 @@ public class DirectoryReaderCR extends JCasCollectionReader_ImplBase {
                         return ret;
                     }).collect(Collectors.toList());
         } else {
-            logger.info("Looking for files matching " + extensions + "...");
+            StringBuilder sb = new StringBuilder();
+            sb.append("Looking for files matching ");
+            for (int i = 0; i < extensions.length; i++) {
+                sb.append(extensions[i]).append(' ');
+            }
+            sb.append("...");
+            logger.info(sb.toString());
             files = new ArrayList<>(FileUtils.listFiles(inputDirectory, extensions, true));
         }
 
