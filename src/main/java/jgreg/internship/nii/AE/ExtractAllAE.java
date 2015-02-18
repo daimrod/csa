@@ -157,7 +157,7 @@ public class ExtractAllAE extends
 			strAcc.append("cites").append(separator).append("ctxID")
 					.append(separator).append("cited").append(separator)
 					.append(StringUtils.join(headers, separator)).append("\n");
-			out.write(strAcc.toString());
+            out.append(strAcc);
 		} catch (IOException ex) {
 			logger.info("Error when writing to " + outputFile.getAbsolutePath()
 					+ " " + ex);
@@ -225,7 +225,7 @@ public class ExtractAllAE extends
 
 			strAcc.append('\n');
 			try {
-				out.write(strAcc.toString());
+                out.append(strAcc);
 			} catch (IOException ex) {
 				logger.info("Error when writing to "
 						+ outputFile.getAbsolutePath() + " " + ex);
