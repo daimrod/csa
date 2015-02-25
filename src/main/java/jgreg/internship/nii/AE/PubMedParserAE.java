@@ -125,7 +125,7 @@ public class PubMedParserAE extends
 	Reader reader;
 
 	@Override
-	public void process(JCas aJCas) throws AnalysisEngineProcessException {
+    public void process(JCas aJCas) throws AnalysisEngineProcessException {
 		jCas = aJCas;
 
 		// retrieve the originalText read in
@@ -146,7 +146,7 @@ public class PubMedParserAE extends
 
 			parse();
 
-			jCas.setDocumentText(text.toString());
+            jCas.setDocumentText(text.toString());
 
 			article.setFilename(filename.getFilename());
 

@@ -91,7 +91,7 @@ public class CitationContextExtractorWF {
 		CollectionReaderDescription reader = CollectionReaderFactory
 				.createReaderDescription(DirectoryReaderCR.class,
 						DirectoryReaderCR.INPUT_DIRECTORY, inputDirectory,
-						DirectoryReaderCR.EXTENSIONS, extensions);
+                                         DirectoryReaderCR.EXTENSIONS, extensions);
 
 		AggregateBuilder builder = new AggregateBuilder(null,
 				TypePrioritiesFactory.createTypePriorities(ID.class,
