@@ -41,9 +41,12 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 import jgreg.internship.nii.RES.MappingRES;
 import jgreg.internship.nii.Utils.Utils;
@@ -202,11 +205,16 @@ public class ExtractLogLikelihood extends
 
 			ArrayList<Integer> acc = Utils.List(headers.size(), 0);
 
-			// Compute the number of each kind of Sentiment within the context
-			for (Sentiment sentiment : map.get(context)) {
-				int idx = headers.indexOf(sentiment.getName());
-				acc.set(idx, acc.get(idx) + 1);
+            // Skip the context if it doesn't contain any Sentiment
+            if (map.get(context).isEmpty()) {
+                continue;
             }
+            // Compute the number of each kind of Sentiment within the context
+            for (Sentiment sentiment : map.get(context)) {
+				int idx = headers.indexOf(sentiment.getName());
+                acc.set(idx, acc.get(idx) + 1);
+            }
+
 
             for (int idx = 0; idx < acc.size(); idx++) {
                 globalStats.get(idx).addValue(acc.get(idx));
@@ -264,7 +272,9 @@ public class ExtractLogLikelihood extends
             double e1 = c * (a+b) / (c+d);
             double e2 = d * (a+b) / (c+d);
             Double G2 = 2 * ((a * Math.log(a / e1)) + (b * Math.log(b / e2)));
-            ret.add(idx, G2.isNaN() ? 0 : G2);
+            G2 = G2.isNaN() ? 0 : G2;
+            logger.debug("a = " + a + "; b = " + b + "; c = " + c + "; d = " + d + "; e1 = " + e1 + "; e2 = " + e2 + "; G2 = " + G2);
+            ret.add(idx, G2);
         }
         return ret;
     }
@@ -279,7 +289,20 @@ public class ExtractLogLikelihood extends
 	public void collectionProcessComplete()
             throws AnalysisEngineProcessException {
         for (Pair<String, String> cocitation : cocitationsStats.keySet()) {
-            logger.info("Looking at " + cocitation + " = " + loglikelihood(cocitationsStats.get(cocitation), globalStats));
+            List<Double> logs = loglikelihood(cocitationsStats.get(cocitation), globalStats);
+            Map<Double, Integer> map = new TreeMap<>();
+            for (int idx = 0; idx < logs.size(); idx++) {
+                map.put(logs.get(idx), idx);
+            }
+            Collection<Integer> indices = map.values();
+            Iterator<Integer> it = indices.iterator();
+            int top1 = 0, top2 = 0;
+            // TreeMap uses ascending order
+            while (it.hasNext()) {
+                top2 = top1;
+                top1 = it.next();
+            }
+            logger.info(cocitation + " = " + headers.get(top1) + ", " + headers.get(top2));
         }
   }
 }
