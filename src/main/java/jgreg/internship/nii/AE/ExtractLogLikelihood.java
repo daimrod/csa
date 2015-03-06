@@ -263,8 +263,8 @@ public class ExtractLogLikelihood extends
             double b = exp.get(idx).getSum();
             double e1 = c * (a+b) / (c+d);
             double e2 = d * (a+b) / (c+d);
-            double G2 = 2 * ((a * Math.log(a / e1)) + (b * Math.log(b / e2)));
-            ret.add(idx, G2);
+            Double G2 = 2 * ((a * Math.log(a / e1)) + (b * Math.log(b / e2)));
+            ret.add(idx, G2.isNaN() ? 0 : G2);
         }
         return ret;
     }
@@ -277,6 +277,9 @@ public class ExtractLogLikelihood extends
 	 */
 	@Override
 	public void collectionProcessComplete()
-			throws AnalysisEngineProcessException {
+            throws AnalysisEngineProcessException {
+        for (Pair<String, String> cocitation : cocitationsStats.keySet()) {
+            logger.info("Looking at " + cocitation + " = " + loglikelihood(cocitationsStats.get(cocitation), globalStats));
+        }
   }
 }

@@ -36,7 +36,7 @@
 
 package jgreg.internship.nii.WF;
 
-import jgreg.internship.nii.AE.ExtractAllAE;
+import jgreg.internship.nii.AE.ExtractLogLikelihood;
 import jgreg.internship.nii.AE.XMIReaderAE;
 import jgreg.internship.nii.CR.DirectoryReaderCR;
 import jgreg.internship.nii.RES.MappingRES;
@@ -113,9 +113,9 @@ public class StatisticsWF {
 				.createEngineDescription(XMIReaderAE.class);
 
 		AnalysisEngineDescription extractor = AnalysisEngineFactory
-				.createEngineDescription(ExtractAllAE.class,
-						ExtractAllAE.MAPPING, mapping,
-                        ExtractAllAE.OUTPUT_FILE, outputFile);
+            .createEngineDescription(ExtractLogLikelihood.class,
+                        ExtractLogLikelihood.MAPPING, mapping,
+                        ExtractLogLikelihood.OUTPUT_FILE, outputFile);
 
 		builder.add(deserializer);
 		builder.add(extractor);
