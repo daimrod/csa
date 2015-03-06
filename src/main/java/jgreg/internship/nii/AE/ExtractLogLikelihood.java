@@ -36,7 +36,6 @@
 
 package jgreg.internship.nii.AE;
 
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -53,7 +52,6 @@ import jgreg.internship.nii.types.Filename;
 import jgreg.internship.nii.types.ID;
 import jgreg.internship.nii.types.Sentiment;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
@@ -245,9 +243,33 @@ public class ExtractLogLikelihood extends
                 }
 			}
         }
-	}
+    }
 
-	/*
+    // http://wordhoard.northwestern.edu/userman/analysis-comparewords.html
+    private List<Double> loglikelihood(List<DescriptiveStatistics> obs, List<DescriptiveStatistics> exp) {
+        List<Double> ret = new ArrayList<>(obs.size());
+        double c = 0;
+        for (int idx = 0; idx < obs.size(); idx++) {
+            c += obs.get(idx).getSum();
+        }
+
+        double d = 0;
+        for (int idx = 0; idx < exp.size(); idx++) {
+            d += exp.get(idx).getSum();
+        }
+
+        for (int idx = 0; idx < obs.size(); idx++) {
+            double a = obs.get(idx).getSum();
+            double b = exp.get(idx).getSum();
+            double e1 = c * (a+b) / (c+d);
+            double e2 = d * (a+b) / (c+d);
+            double G2 = 2 * ((a * Math.log(a / e1)) + (b * Math.log(b / e2)));
+            ret.add(idx, G2);
+        }
+        return ret;
+    }
+
+    /*
 	 * (non-Javadoc)
 	 *
 	 * @see org.apache.uima.analysis_component.AnalysisComponent_ImplBase#
