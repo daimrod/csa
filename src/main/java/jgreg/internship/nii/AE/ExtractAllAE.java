@@ -157,7 +157,7 @@ public class ExtractAllAE extends
 			strAcc.append("cites").append(separator).append("ctxID")
 					.append(separator).append("cited").append(separator)
 					.append(StringUtils.join(headers, separator)).append("\n");
-            out.append(strAcc);
+			out.append(strAcc);
 		} catch (IOException ex) {
 			logger.info("Error when writing to " + outputFile.getAbsolutePath()
 					+ " " + ex);
@@ -215,17 +215,23 @@ public class ExtractAllAE extends
 
 			for (int idx = 0; idx < citationsFSA.size() - 1; idx++) {
 				FeatureStructure citationFS = citationsFSA.get(idx);
-				strAcc.append(citationFS.getStringValue(citationPMIDF)).append(
-						',');
+				// skip empty PMID
+                if (citationFS.getStringValue(citationPMIDF) != null) {
+					strAcc.append(citationFS.getStringValue(citationPMIDF))
+							.append(',');
+				}
 			}
-			strAcc.append(citationsFSA.get(citationsFSA.size() - 1)
-					.getStringValue(citationPMIDF));
+			if (citationsFSA.get(citationsFSA.size() - 1).getStringValue(
+					citationPMIDF) != null) {
+				strAcc.append(citationsFSA.get(citationsFSA.size() - 1)
+						.getStringValue(citationPMIDF));
+			}
 
 			strAcc.append(separator).append(StringUtils.join(acc, separator));
 
 			strAcc.append('\n');
 			try {
-                out.append(strAcc);
+				out.append(strAcc);
 			} catch (IOException ex) {
 				logger.info("Error when writing to "
 						+ outputFile.getAbsolutePath() + " " + ex);
