@@ -252,8 +252,7 @@ public class ExtractAllAE extends
 		try {
 			out.close();
 		} catch (IOException ex) {
-			logger.info("Couldn't close " + outputFile.getAbsolutePath() + " "
-					+ ex);
+            logger.info("Couldn't close " + outputFile.getAbsolutePath(), ex);
 			throw new AnalysisEngineProcessException(ex);
 		}
   }
