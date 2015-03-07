@@ -36,12 +36,12 @@
 
 package jgreg.internship.nii.AE;
 
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -49,6 +49,7 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import jgreg.internship.nii.RES.MappingRES;
+import jgreg.internship.nii.RES.StringListRES;
 import jgreg.internship.nii.Utils.Utils;
 import jgreg.internship.nii.types.CitationContext;
 import jgreg.internship.nii.types.Filename;
@@ -119,10 +120,17 @@ public class ExtractLogLikelihood extends
 	 */
 	public static final String OUTPUT_FILE = "outputFileName";
 	@ConfigurationParameter(name = OUTPUT_FILE, mandatory = true)
-	private String outputFileName;
+    private String outputFileName;
 
-	/** The output file. */
+    /** The output file. */
 	private File outputFile;
+
+	/** The BufferedWriter */
+	private BufferedWriter out;
+
+    public static final String COCITED_ARTICLES = "coCitedArticles";
+	@ExternalResource(key = COCITED_ARTICLES, mandatory = false)
+	StringListRES coCitedArticles;
 
     // Global stats
     List<DescriptiveStatistics> globalStats;
@@ -141,7 +149,8 @@ public class ExtractLogLikelihood extends
 	public void initialize(UimaContext context)
 			throws ResourceInitializationException {
 		super.initialize(context);
-		outputFile = new File(outputFileName);
+        outputFile = new File(outputFileName);
+
 		logger.info("Dumping information to `" + outputFile.getAbsolutePath()
 				+ "'...");
 
@@ -163,7 +172,8 @@ public class ExtractLogLikelihood extends
 			}
 		}
 		try {
-			FileWriter fw = new FileWriter(outputFile);
+            FileWriter fw = new FileWriter(outputFile);
+            out = new BufferedWriter(fw);
         } catch (IOException ex) {
 			logger.info("Error when writing to " + outputFile.getAbsolutePath()
 					+ " " + ex);
@@ -231,6 +241,12 @@ public class ExtractLogLikelihood extends
                 if (citationFS.getStringValue(citationPMIDF) != null) {
                     String pmid1 = id.getPMID();
                     String pmid2 = citationFS.getStringValue(citationPMIDF);
+                    // skip non interesting cocitations
+                    if (!coCitedArticles.contains(pmid1 + " " + pmid2)
+                        && !coCitedArticles.contains(pmid2 + " " + pmid1)) {
+                        continue;
+                    }
+
                     Pair<String, String> p1 = new ImmutablePair<>(pmid1, pmid2);
                     Pair<String, String> p2 = new ImmutablePair<>(pmid2, pmid1);
                     List<DescriptiveStatistics> lst;
@@ -288,21 +304,32 @@ public class ExtractLogLikelihood extends
 	@Override
 	public void collectionProcessComplete()
             throws AnalysisEngineProcessException {
-        for (Pair<String, String> cocitation : cocitationsStats.keySet()) {
-            List<Double> logs = loglikelihood(cocitationsStats.get(cocitation), globalStats);
-            Map<Double, Integer> map = new TreeMap<>();
-            for (int idx = 0; idx < logs.size(); idx++) {
-                map.put(logs.get(idx), idx);
+        try {
+            for (Pair<String, String> cocitation : cocitationsStats.keySet()) {
+                List<Double> logs = loglikelihood(cocitationsStats.get(cocitation), globalStats);
+                Map<Double, Integer> map = new TreeMap<>();
+                for (int idx = 0; idx < logs.size(); idx++) {
+                    map.put(logs.get(idx), idx);
+                }
+                Collection<Integer> indices = map.values();
+                Iterator<Integer> it = indices.iterator();
+                int top1 = 0, top2 = 0;
+                Collection<Double> keys = map.keySet();
+                Iterator<Double> it2 = keys.iterator();
+                double sco1 = 0, sco2 = 0;
+                // TreeMap uses ascending order
+                while (it.hasNext() && it2.hasNext()) {
+                    top2 = top1;
+                    top1 = it.next();
+                    sco2 = sco1;
+                    sco1 = it2.next();
+                }
+                out.append("| " + cocitation + " | " + headers.get(top1) + " (" + sco1 + ")" + " | " + headers.get(top2) + " (" + sco2 + ") |");
             }
-            Collection<Integer> indices = map.values();
-            Iterator<Integer> it = indices.iterator();
-            int top1 = 0, top2 = 0;
-            // TreeMap uses ascending order
-            while (it.hasNext()) {
-                top2 = top1;
-                top1 = it.next();
-            }
-            logger.info(cocitation + " = " + headers.get(top1) + ", " + headers.get(top2));
+            out.close();
+        } catch (IOException ex) {
+            logger.error("Error when writing " + outputFile.getAbsolutePath(), ex);
+            throw new AnalysisEngineProcessException(ex);
         }
   }
 }

@@ -40,6 +40,7 @@ import jgreg.internship.nii.AE.ExtractLogLikelihood;
 import jgreg.internship.nii.AE.XMIReaderAE;
 import jgreg.internship.nii.CR.DirectoryReaderCR;
 import jgreg.internship.nii.RES.MappingRES;
+import jgreg.internship.nii.RES.StringListRES;
 import jgreg.internship.nii.types.Citation;
 import jgreg.internship.nii.types.CitationContext;
 import jgreg.internship.nii.types.ID;
@@ -87,14 +88,14 @@ public class StatisticsWF {
 	 *            the mapping filename
 	 * @param outputFile
 	 *            the output file
-     * @throws Exception
+	 * @throws Exception
 	 *             the exception
 	 */
 	public static void process(String inputDirectory, String mappingFilename,
-            String outputFile) throws Exception {
+			String outputFile, String coCitationsFilename) throws Exception {
 		String[] extensions = { "xmi" };
 		CollectionReaderDescription reader = CollectionReaderFactory
-                .createReaderDescription(DirectoryReaderCR.class,
+				.createReaderDescription(DirectoryReaderCR.class,
 						DirectoryReaderCR.INPUT_DIRECTORY, inputDirectory,
 						DirectoryReaderCR.EXTENSIONS, extensions);
 
@@ -103,6 +104,14 @@ public class StatisticsWF {
 						Title.class, Section.class, Paragraph.class,
 						CitationContext.class, Sentence.class, Citation.class,
 						Token.class, Sentiment.class), null);
+
+		// CoCited Articles
+		ExternalResourceDescription coCitedArticles = null;
+		if (!coCitationsFilename.isEmpty()) {
+			coCitedArticles = ExternalResourceFactory
+					.createExternalResourceDescription(StringListRES.class,
+							coCitationsFilename);
+		}
 
 		// Mapping
 		ExternalResourceDescription mapping = ExternalResourceFactory
@@ -113,9 +122,10 @@ public class StatisticsWF {
 				.createEngineDescription(XMIReaderAE.class);
 
 		AnalysisEngineDescription extractor = AnalysisEngineFactory
-            .createEngineDescription(ExtractLogLikelihood.class,
-                        ExtractLogLikelihood.MAPPING, mapping,
-                        ExtractLogLikelihood.OUTPUT_FILE, outputFile);
+				.createEngineDescription(ExtractLogLikelihood.class,
+						ExtractLogLikelihood.MAPPING, mapping,
+						ExtractLogLikelihood.OUTPUT_FILE, outputFile,
+                        ExtractLogLikelihood.COCITED_ARTICLES, coCitedArticles);
 
 		builder.add(deserializer);
 		builder.add(extractor);
@@ -135,14 +145,16 @@ public class StatisticsWF {
 		Options options = new Options();
 		options.addOption("help", false, "print this message");
 
-        options.addOption(OptionBuilder.withArgName("config").hasArg()
+		options.addOption(OptionBuilder.withArgName("config").hasArg()
 				.isRequired(false).create("config"));
-		options.addOption(OptionBuilder.withArgName("statistics_input").hasArg()
-				.isRequired(false).create("statistics_input"));
+		options.addOption(OptionBuilder.withArgName("statistics_input")
+				.hasArg().isRequired(false).create("statistics_input"));
 		options.addOption(OptionBuilder.withArgName("mappingFilename").hasArg()
 				.isRequired(false).create("mappingFilename"));
-		options.addOption(OptionBuilder.withArgName("statisticsFilename").hasArg()
-				.isRequired(false).create("statisticsFilename"));
+		options.addOption(OptionBuilder.withArgName("statisticsFilename")
+				.hasArg().isRequired(false).create("statisticsFilename"));
+		options.addOption(OptionBuilder.withArgName("coCitationsFilename")
+				.hasArg().isRequired(false).create("coCitationsFilename"));
 
 		CommandLineParser parser = new BasicParser();
 		CommandLine line = parser.parse(options, args);
@@ -155,7 +167,7 @@ public class StatisticsWF {
 
 		// Initialize configuration file if any
 		String configFilename;
-        configFilename = line.getOptionValue("config", "WF.conf");
+		configFilename = line.getOptionValue("config", "WF.conf");
 		PropertiesConfiguration statisticsConfig = new PropertiesConfiguration(
 				configFilename);
 
@@ -163,12 +175,16 @@ public class StatisticsWF {
 				statisticsConfig.getString("statistics_input"));
 
 		String mappingFilename = line.getOptionValue("mappingFilename",
-                statisticsConfig.getString("mappingFilename"));
+				statisticsConfig.getString("mappingFilename"));
 
 		String statisticsFilename = line.getOptionValue("statisticsFilename",
 				statisticsConfig.getString("statisticsFilename"));
 
-        StatisticsWF.process(statistics_input, mappingFilename, statisticsFilename);
+		String coCitationsFilename = line.getOptionValue("coCitationsFilename",
+				statisticsConfig.getString("coCitationsFilename", ""));
+
+		StatisticsWF.process(statistics_input, mappingFilename,
+				statisticsFilename, coCitationsFilename);
 		logger.info("done!");
 	}
 }
