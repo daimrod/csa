@@ -170,7 +170,7 @@ public class ParserWF {
 						"jgreg.internship.nii.types.Token",
 						"opennlp.uima.POSFeature", "POS");
 
-		// CoCitatio Extractor
+        // CoCitation Extractor
 		AnalysisEngineDescription citationExtractor = AnalysisEngineFactory
 				.createEngineDescription(CitationExtractorAE.class,
 						CitationExtractorAE.OUTPUT_FILE, citationFilename);
