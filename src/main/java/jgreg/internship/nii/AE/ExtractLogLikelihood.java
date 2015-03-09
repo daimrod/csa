@@ -324,7 +324,7 @@ public class ExtractLogLikelihood extends
                     sco2 = sco1;
                     sco1 = it2.next();
                 }
-                out.append("| " + cocitation + " | " + headers.get(top1) + " (" + sco1 + ")" + " | " + headers.get(top2) + " (" + sco2 + ") |");
+                out.append("| " + cocitation + " | " + headers.get(top1) + " (" + sco1 + ")" + " | " + headers.get(top2) + " (" + sco2 + ") |\n");
             }
             out.close();
         } catch (IOException ex) {
